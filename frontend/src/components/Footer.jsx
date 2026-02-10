@@ -1,5 +1,6 @@
 import { FaWhatsapp, FaInstagram, FaFacebook } from "react-icons/fa";
 import { MapPin, Phone, Mail, Clock, QrCode } from "lucide-react";
+import InteractiveSection from "../components/InteractiveSection";
 
 export default function Footer({ restaurante }) {
   const whatsappLink = restaurante.contacto?.whatsapp
@@ -99,6 +100,8 @@ export default function Footer({ restaurante }) {
                 </a>
               )}
             </div>
+            {/* Sección Interactiva */}
+            <InteractiveSection restaurante={restaurante} />
           </div>
 
           {/* Columna 2: Contacto */}
@@ -181,7 +184,7 @@ export default function Footer({ restaurante }) {
             </h4>
 
             <div className="space-y-4">
-              {/* QR Code */}
+              QR Code
               <div className="flex flex-col items-center space-y-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
                 <div className="bg-white p-3 rounded-lg border border-gray-300">
                   {/* Aquí iría tu componente QR */}
@@ -193,7 +196,6 @@ export default function Footer({ restaurante }) {
                   Escanea para ver el menú en tu celular
                 </p>
               </div>
-
               {/* Delivery Status */}
               {tieneDelivery && (
                 <div className="text-sm text-gray-600">
@@ -215,7 +217,7 @@ export default function Footer({ restaurante }) {
               derechos reservados.
             </p>
             <p className="text-xs text-gray-400">
-              Powered by <span className="font-medium">Con CodigoART</span>
+              Powered by <span className="font-medium">ConCodigoART</span>
             </p>
           </div>
         </div>

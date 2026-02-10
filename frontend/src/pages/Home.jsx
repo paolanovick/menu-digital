@@ -6,7 +6,7 @@ import CategoryIcon from "../components/CategoryIcon";
 import Header from "../components/Header";
 import AnunciosTicker from "../components/AnunciosTicker";
 import Footer from "../components/Footer";
-import InteractiveSection from "../components/InteractiveSection";
+
 
 export default function Home() {
   const { slug } = useParams();
@@ -140,8 +140,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Sección Interactiva */}
-        <InteractiveSection restaurante={restaurante} />
+      
       </div>
 
       <Footer restaurante={restaurante} />
