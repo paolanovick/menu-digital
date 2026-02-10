@@ -55,8 +55,8 @@ export default function InteractiveSection({ restaurante }) {
   const tieneDireccion = restaurante.contacto?.direccion?.calle;
 
   return (
-    <div className="container mx-auto px-4 mt-12 mb-4">
-      <div className="flex items-center justify-center gap-6 md:gap-10 text-gray-400 text-sm">
+    <div className="px-4 mt-12 mb-4">
+      <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8 text-gray-400 text-sm">
         {/* Compartir */}
         <button
           onClick={handleShare}
@@ -66,11 +66,11 @@ export default function InteractiveSection({ restaurante }) {
           <span>Compartir</span>
         </button>
 
-        <span className="text-gray-300">•</span>
+        <span className="hidden sm:inline text-gray-300">•</span>
 
         {/* Calificar */}
         <div className="flex items-center gap-1.5">
-          <span>Calificar</span>
+          <span className="hidden sm:inline">Calificar</span>
           <div className="flex">
             {[1, 2, 3, 4, 5].map((star) => (
               <button
@@ -95,7 +95,7 @@ export default function InteractiveSection({ restaurante }) {
 
         {tieneDireccion && (
           <>
-            <span className="text-gray-300">•</span>
+            <span className="hidden sm:inline text-gray-300">•</span>
 
             {/* Ubicación */}
             <button
