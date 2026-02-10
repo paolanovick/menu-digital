@@ -40,7 +40,7 @@ export default function PlatoForm() {
 
   const fetchCategorias = async () => {
     try {
-      const res = await api.get("/api/categorias/admin/mis-categorias");
+      const res = await api.get("/categorias/admin/mis-categorias");
       setCategorias(res.data.data);
     } catch (error) {
       console.error("Error:", error);
@@ -49,7 +49,7 @@ export default function PlatoForm() {
 
   const fetchPlato = async () => {
     try {
-      const res = await api.get(`/api/platos/${id}`);
+      const res = await api.get(`/platos/${id}`);
       const plato = res.data.data;
 
       setFormData({
@@ -109,10 +109,10 @@ export default function PlatoForm() {
       };
 
       if (isEditing) {
-        await api.put(`/api/platos/${id}`, data);
+        await api.put(`/platos/${id}`, data);
         alert("Plato actualizado correctamente");
       } else {
-        await api.post("/api/platos", data);
+        await api.post("/platos", data);
         alert("Plato creado correctamente");
       }
 

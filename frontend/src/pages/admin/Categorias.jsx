@@ -22,8 +22,8 @@ export default function Categorias() {
  const fetchCategorias = async () => {
    try {
      const [resCategorias, resPlatos] = await Promise.all([
-       api.get("/api/categorias/admin/mis-categorias"),
-       api.get("/api/platos/admin/mis-platos"),
+       api.get("/categorias/admin/mis-categorias"),
+       api.get("/platos/admin/mis-platos"),
      ]);
 
      const platos = resPlatos.data.data;
@@ -46,10 +46,10 @@ export default function Categorias() {
 
     try {
       if (editingCategoria) {
-        await api.put(`/api/categorias/${editingCategoria._id}`, formData);
+        await api.put(`/categorias/${editingCategoria._id}`, formData);
         alert("Categoría actualizada");
       } else {
-        await api.post("/api/categorias", formData);
+        await api.post("/categorias", formData);
         alert("Categoría creada");
       }
 
@@ -76,7 +76,7 @@ export default function Categorias() {
     if (!confirm("¿Estás seguro de eliminar esta categoría?")) return;
 
     try {
-      await api.delete(`/api/categorias/${id}`);
+      await api.delete(`/categorias/${id}`);
       alert("Categoría eliminada");
       fetchCategorias();
     } catch (error) {
@@ -87,7 +87,7 @@ export default function Categorias() {
 
   const toggleVisible = async (id, visible) => {
     try {
-      await api.put(`/api/categorias/${id}`, { visible: !visible });
+      await api.put(`/categorias/${id}`, { visible: !visible });
       setCategorias(
         categorias.map((c) => (c._id === id ? { ...c, visible: !visible } : c)),
       );

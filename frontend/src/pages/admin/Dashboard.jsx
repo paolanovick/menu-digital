@@ -27,7 +27,7 @@ export default function Dashboard() {
     const fetchStats = async () => {
       try {
         // Obtener mis platos
-        const resPlatos = await api.get("/api/platos/admin/mis-platos", {
+        const resPlatos = await api.get("/platos/admin/mis-platos", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -35,7 +35,7 @@ export default function Dashboard() {
 
         // Obtener mis categorías
         const resCategorias = await api.get(
-          "/api/categorias/admin/mis-categorias",
+          "/categorias/admin/mis-categorias",
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,

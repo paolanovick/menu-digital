@@ -50,7 +50,7 @@ export default function Configuracion() {
 
   const fetchRestaurante = async () => {
     try {
-      const res = await api.get("/api/restaurantes/admin/mi-restaurante");
+      const res = await api.get("/restaurantes/admin/mi-restaurante");
       const rest = res.data.data;
 
       setRestaurante(rest);
@@ -98,7 +98,7 @@ export default function Configuracion() {
     setSaving(true);
 
     try {
-      await api.put(`/api/restaurantes/${restaurante._id}/tema`, {
+      await api.put(`/restaurantes/${restaurante._id}/tema`, {
         colorPrimario: formData.colorPrimario,
         colorSecundario: formData.colorSecundario,
         colorFondo: formData.colorFondo,
@@ -107,7 +107,7 @@ export default function Configuracion() {
 
       // Actualizar logo si cambió
       if (formData.logo !== restaurante.logo) {
-        await api.put(`/api/restaurantes/${restaurante._id}`, {
+        await api.put(`/restaurantes/${restaurante._id}`, {
           logo: formData.logo,
         });
       }
@@ -127,7 +127,7 @@ export default function Configuracion() {
     setSaving(true);
 
     try {
-      await api.put(`/api/restaurantes/${restaurante._id}/contacto`, {
+      await api.put(`/restaurantes/${restaurante._id}/contacto`, {
         email: formData.email,
         telefono: formData.telefono,
         whatsapp: formData.whatsapp,
@@ -141,7 +141,7 @@ export default function Configuracion() {
       });
 
       // Actualizar redes sociales
-      await api.put(`/api/restaurantes/${restaurante._id}`, {
+      await api.put(`/restaurantes/${restaurante._id}`, {
         redesSociales: {
           instagram: formData.instagram,
           facebook: formData.facebook,
@@ -163,7 +163,7 @@ export default function Configuracion() {
     setSaving(true);
 
     try {
-      await api.put(`/api/restaurantes/${restaurante._id}/horarios`, {
+      await api.put(`/restaurantes/${restaurante._id}/horarios`, {
         lunes: formData.lunes,
         martes: formData.martes,
         miercoles: formData.miercoles,

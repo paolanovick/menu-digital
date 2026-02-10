@@ -33,7 +33,7 @@ export default function RestauranteForm() {
 
   const fetchRestaurante = async () => {
     try {
-     const res = await api.get(`/api/superadmin/restaurantes/${id}`);
+     const res = await api.get(`/superadmin/restaurantes/${id}`);
       const rest = res.data.data;
 
       setFormData({
@@ -80,10 +80,10 @@ export default function RestauranteForm() {
       };
 
       if (isEditing) {
-        await api.put(`/api/superadmin/restaurantes/${id}`, data);
+        await api.put(`/superadmin/restaurantes/${id}`, data);
         alert("Restaurante actualizado correctamente");
       } else {
-        await api.post("/api/superadmin/restaurantes", data);
+        await api.post("/superadmin/restaurantes", data);
         alert("Restaurante creado correctamente");
       }
 

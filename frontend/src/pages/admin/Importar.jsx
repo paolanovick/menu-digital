@@ -10,7 +10,7 @@ export default function Importar() {
 
   const descargarPlantilla = async () => {
     try {
-      const response = await api.get('/api/import/plantilla', {
+      const response = await api.get('/import/plantilla', {
         responseType: 'blob'
       });
 
@@ -59,7 +59,7 @@ export default function Importar() {
       const formData = new FormData();
       formData.append('archivo', file);
 
-      const response = await api.post('/api/import/menu', formData, {
+      const response = await api.post('/import/menu', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

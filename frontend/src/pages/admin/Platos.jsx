@@ -19,8 +19,8 @@ export default function Platos() {
   const fetchData = async () => {
     try {
       const [resPlatos, resCategorias] = await Promise.all([
-        api.get("/api/platos/admin/mis-platos"),
-        api.get("/api/categorias/admin/mis-categorias"),
+        api.get("/platos/admin/mis-platos"),
+        api.get("/categorias/admin/mis-categorias"),
       ]);
 
       setPlatos(resPlatos.data.data);
@@ -40,7 +40,7 @@ export default function Platos() {
 
    const toggleDestacado = async (platoId, destacado) => {
     try {
-      await api.put(`/api/platos/${platoId}/destacado`);
+      await api.put(`/platos/${platoId}/destacado`);
       setPlatos(
         platos.map((p) =>
           p._id === platoId ? { ...p, destacado: !destacado } : p,
@@ -55,7 +55,7 @@ export default function Platos() {
     if (!confirm("¿Estás seguro de eliminar este plato?")) return;
 
     try {
-      await api.delete(`/api/platos/${platoId}`);
+      await api.delete(`/platos/${platoId}`);
       setPlatos(platos.filter((p) => p._id !== platoId));
       alert("Plato eliminado correctamente");
     } catch (error) {

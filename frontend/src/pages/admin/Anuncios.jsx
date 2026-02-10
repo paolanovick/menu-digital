@@ -23,8 +23,8 @@ export default function Anuncios() {
   const fetchData = async () => {
     try {
       const [resAnuncios, resCategorias] = await Promise.all([
-        api.get("/api/anuncios/admin/mis-anuncios"),
-        api.get("/api/categorias/admin/mis-categorias"),
+        api.get("/anuncios/admin/mis-anuncios"),
+        api.get("/categorias/admin/mis-categorias"),
       ]);
 
       setAnuncios(resAnuncios.data.data);
@@ -48,10 +48,10 @@ export default function Anuncios() {
       };
 
       if (editingAnuncio) {
-        await api.put(`/api/anuncios/${editingAnuncio._id}`, data);
+        await api.put(`/anuncios/${editingAnuncio._id}`, data);
         alert("Anuncio actualizado");
       } else {
-        await api.post("/api/anuncios", data);
+        await api.post("/anuncios", data);
         alert("Anuncio creado");
       }
 
@@ -78,7 +78,7 @@ export default function Anuncios() {
     if (!confirm("¿Estás seguro de eliminar este anuncio?")) return;
 
     try {
-      await api.delete(`/api/anuncios/${id}`);
+      await api.delete(`/anuncios/${id}`);
       alert("Anuncio eliminado");
       fetchData();
     } catch (error) {
@@ -89,7 +89,7 @@ export default function Anuncios() {
 
   const toggleActivo = async (id) => {
     try {
-      await api.put(`/api/anuncios/${id}/toggle`);
+      await api.put(`/anuncios/${id}/toggle`);
       fetchData();
     } catch (error) {
       console.error("Error:", error);
