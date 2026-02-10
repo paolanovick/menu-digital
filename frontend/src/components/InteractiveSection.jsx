@@ -66,7 +66,7 @@ export default function InteractiveSection({ restaurante }) {
           <span>Compartir</span>
         </button>
 
-        <span className="hidden sm:inline text-gray-300">•</span>
+        <span className="hidden sm:inline text-gray-300"></span>
 
         {/* Calificar */}
         <div className="flex items-center gap-1.5">
@@ -95,7 +95,7 @@ export default function InteractiveSection({ restaurante }) {
 
         {tieneDireccion && (
           <>
-            <span className="hidden sm:inline text-gray-300">•</span>
+            <span className="hidden sm:inline text-gray-300"></span>
 
             {/* Ubicación */}
             <button
