@@ -1,8 +1,8 @@
-import { FaWhatsapp, FaInstagram, FaFacebook } from 'react-icons/fa';
-import { MapPin, Phone, Mail } from 'lucide-react';
+import { FaWhatsapp, FaInstagram, FaFacebook } from "react-icons/fa";
+import { MapPin, Phone, Mail, Clock } from "lucide-react";
 
 export default function Footer({ restaurante }) {
-  const whatsappLink = restaurante.contacto?.whatsapp 
+  const whatsappLink = restaurante.contacto?.whatsapp
     ? `https://wa.me/${restaurante.contacto.whatsapp}`
     : null;
 
@@ -13,7 +13,25 @@ export default function Footer({ restaurante }) {
   const facebookLink = restaurante.redesSociales?.facebook
     ? `https://facebook.com/${restaurante.redesSociales.facebook}`
     : null;
+  // Días de la semana en orden
+  const diasSemana = [
+    { key: "lunes", label: "Lunes" },
+    { key: "martes", label: "Martes" },
+    { key: "miercoles", label: "Miércoles" },
+    { key: "jueves", label: "Jueves" },
+    { key: "viernes", label: "Viernes" },
+    { key: "sabado", label: "Sábado" },
+    { key: "domingo", label: "Domingo" },
+  ];
 
+  // Verificar si hay horarios configurados
+  const tieneHorarios =
+    restaurante.horarios &&
+    Object.keys(restaurante.horarios).some(
+      (dia) =>
+        restaurante.horarios[dia]?.apertura ||
+        restaurante.horarios[dia]?.abierto,
+    );
   return (
     <footer
       className="
@@ -142,16 +160,33 @@ export default function Footer({ restaurante }) {
               )}
             </div>
 
-            {/* Horarios */}
-            {restaurante.horarios?.lunes && (
+            {/* Horarios día por día */}
+            {tieneHorarios && (
               <div>
-                <h5 className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-2">
+                <h5 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">
+                  <Clock size={14} />
                   Horarios
                 </h5>
-                <p className="text-xs text-gray-300">
-                  Lunes a Viernes: {restaurante.horarios.lunes.apertura} -{" "}
-                  {restaurante.horarios.lunes.cierre}
-                </p>
+                <div className="space-y-1">
+                  {diasSemana.map(({ key, label }) => {
+                    const horario = restaurante.horarios?.[key];
+                    const estaAbierto =
+                      horario?.abierto !== false && horario?.apertura;
+
+                    return (
+                      <div key={key} className="flex justify-between text-xs">
+                        <span className="text-gray-500">{label}</span>
+                        {estaAbierto ? (
+                          <span className="text-gray-700 font-medium">
+                            {horario.apertura} - {horario.cierre}
+                          </span>
+                        ) : (
+                          <span className="text-red-400">Cerrado</span>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             )}
           </div>
