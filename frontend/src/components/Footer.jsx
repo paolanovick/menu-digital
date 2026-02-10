@@ -13,7 +13,6 @@ export default function Footer({ restaurante }) {
   const facebookLink = restaurante.redesSociales?.facebook
     ? `https://facebook.com/${restaurante.redesSociales.facebook}`
     : null;
-
   // Días de la semana en orden
   const diasSemana = [
     { key: "lunes", label: "Lunes" },
@@ -33,47 +32,97 @@ export default function Footer({ restaurante }) {
         restaurante.horarios[dia]?.apertura ||
         restaurante.horarios[dia]?.abierto,
     );
-
   return (
-    <footer className="bg-gradient-to-b from-white to-gray-50 border-t border-gray-200 text-gray-600">
-      <div className="container mx-auto px-4 py-10 md:py-16">
-        {/* Layout Responsive */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 md:gap-8">
-          
-          {/* Columna 1: Logo y Descripción - Ocupa toda la fila en móvil */}
-          <div className="lg:col-span-1">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
+    <footer
+      className="
+  mt-20
+  border-t
+  border-gray-200
+  bg-cream
+  text-gray-600
+"
+    >
+      <div className="container mx-auto px-4 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Columna 1: Logo y Descripción */}
+          <div>
+            <div className="flex items-center gap-3 mb-4">
               {restaurante.logo ? (
                 <img
                   src={restaurante.logo}
                   alt={restaurante.nombre}
-                  className="h-16 w-auto object-contain max-w-[200px]"
+                  className="h-12 w-auto object-contain"
                 />
               ) : (
-                <div className="text-5xl">🍽️</div>
+                <div className="text-4xl">🍽️</div>
               )}
-              <h3 className="font-display text-2xl md:text-3xl font-bold text-gray-800">
+              <h3 className="font-display text-xl font-semibold tracking-tight text-gray-700">
                 {restaurante.nombre}
               </h3>
             </div>
-            
             {restaurante.descripcion && (
-              <p className="text-base leading-relaxed text-gray-500 mb-6">
+              <p className="text-sm leading-relaxed text-gray-500">
                 {restaurante.descripcion}
               </p>
             )}
-            
-            {/* Redes Sociales - Móvil: debajo del logo, Desktop: mantiene posición */}
-            <div className="flex gap-4 mb-8 lg:mb-0">
+          </div>
+
+          {/* Columna 2: Contacto */}
+          <div>
+            <h4 className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-5">
+              Contacto
+            </h4>
+            <div className="space-y-3">
+              {restaurante.contacto?.direccion?.calle && (
+                <div className="flex items-start gap-3 text-sm text-gray-500">
+                  <MapPin size={18} className="mt-1 flex-shrink-0" />
+                  <span className="text-sm">
+                    {restaurante.contacto.direccion.calle}
+                    {restaurante.contacto.direccion.ciudad &&
+                      `, ${restaurante.contacto.direccion.ciudad}`}
+                  </span>
+                </div>
+              )}
+
+              {restaurante.contacto?.telefono && (
+                <a
+                  href={`tel:${restaurante.contacto.telefono}`}
+                  className="flex items-center gap-2 text-gray-300 hover:text-black transition-colors"
+                >
+                  <Phone size={18} />
+                  <span className="text-sm">
+                    {restaurante.contacto.telefono}
+                  </span>
+                </a>
+              )}
+
+              {restaurante.contacto?.email && (
+                <a
+                  href={`mailto:${restaurante.contacto.email}`}
+                  className="flex items-center gap-2 text-gray-300 hover:text-black transition-colors"
+                >
+                  <Mail size={18} />
+                  <span className="text-sm">{restaurante.contacto.email}</span>
+                </a>
+              )}
+            </div>
+          </div>
+
+          {/* Columna 3: Redes Sociales y Horarios */}
+          <div>
+            <h4 className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-5">
+              Síguenos
+            </h4>
+            <div className="flex gap-4 mb-6">
               {whatsappLink && (
                 <a
                   href={whatsappLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-green-600 hover:bg-green-700 p-3 rounded-full transition-all duration-300 hover:scale-110 shadow-md"
+                  className="bg-green-600 hover:bg-green-700 p-3 rounded-full transition-colors"
                   title="WhatsApp"
                 >
-                  <FaWhatsapp size={22} className="text-white" />
+                  <FaWhatsapp size={20} />
                 </a>
               )}
 
@@ -82,10 +131,19 @@ export default function Footer({ restaurante }) {
                   href={instagramLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500 hover:opacity-90 p-3 rounded-full transition-all duration-300 hover:scale-110 shadow-md"
+                  className="
+  p-3
+  rounded-full
+  border
+  border-gray-300
+  text-gray-500
+  hover:text-wine
+  hover:border-wine
+  transition-colors
+"
                   title="Instagram"
                 >
-                  <FaInstagram size={22} className="text-white" />
+                  <FaInstagram size={20} />
                 </a>
               )}
 
@@ -94,144 +152,52 @@ export default function Footer({ restaurante }) {
                   href={facebookLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-blue-600 hover:bg-blue-700 p-3 rounded-full transition-all duration-300 hover:scale-110 shadow-md"
+                  className="bg-blue-600 hover:bg-blue-700 p-3 rounded-full transition-colors"
                   title="Facebook"
                 >
-                  <FaFacebook size={22} className="text-white" />
+                  <FaFacebook size={20} />
                 </a>
               )}
             </div>
-          </div>
 
-          {/* Columna 2: Contacto */}
-          <div className="lg:col-span-1">
-            <h4 className="text-lg font-bold text-gray-800 mb-6 pb-2 border-b border-gray-300">
-              Contacto
-            </h4>
-            <div className="space-y-5">
-              {restaurante.contacto?.direccion?.calle && (
-                <div className="flex items-start gap-4">
-                  <div className="bg-gray-100 p-2 rounded-full">
-                    <MapPin size={18} className="text-gray-600" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-gray-700">Dirección</p>
-                    <p className="text-gray-500 text-sm mt-1">
-                      {restaurante.contacto.direccion.calle}
-                      {restaurante.contacto.direccion.ciudad &&
-                        `, ${restaurante.contacto.direccion.ciudad}`}
-                      {restaurante.contacto.direccion.provincia &&
-                        `, ${restaurante.contacto.direccion.provincia}`}
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {restaurante.contacto?.telefono && (
-                <a
-                  href={`tel:${restaurante.contacto.telefono}`}
-                  className="flex items-center gap-4 group"
-                >
-                  <div className="bg-gray-100 p-2 rounded-full group-hover:bg-blue-50 transition-colors">
-                    <Phone size={18} className="text-gray-600 group-hover:text-blue-600" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-gray-700 group-hover:text-blue-600 transition-colors">
-                      Teléfono
-                    </p>
-                    <p className="text-gray-500 text-sm mt-1">
-                      {restaurante.contacto.telefono}
-                    </p>
-                  </div>
-                </a>
-              )}
-
-              {restaurante.contacto?.email && (
-                <a
-                  href={`mailto:${restaurante.contacto.email}`}
-                  className="flex items-center gap-4 group"
-                >
-                  <div className="bg-gray-100 p-2 rounded-full group-hover:bg-red-50 transition-colors">
-                    <Mail size={18} className="text-gray-600 group-hover:text-red-600" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-gray-700 group-hover:text-red-600 transition-colors">
-                      Email
-                    </p>
-                    <p className="text-gray-500 text-sm mt-1 break-all">
-                      {restaurante.contacto.email}
-                    </p>
-                  </div>
-                </a>
-              )}
-            </div>
-          </div>
-
-          {/* Columna 3: Horarios */}
-          <div className="lg:col-span-1">
+            {/* Horarios día por día */}
             {tieneHorarios && (
-              <>
-                <h4 className="text-lg font-bold text-gray-800 mb-6 pb-2 border-b border-gray-300 flex items-center gap-2">
-                  <Clock size={20} />
-                  Horarios de Atención
-                </h4>
-                <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-200">
-                  <div className="space-y-3">
-                    {diasSemana.map(({ key, label }) => {
-                      const horario = restaurante.horarios?.[key];
-                      const estaAbierto =
-                        horario?.abierto !== false && horario?.apertura;
+              <div>
+                <h5 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">
+                  <Clock size={14} />
+                  Horarios
+                </h5>
+                <div className="space-y-1">
+                  {diasSemana.map(({ key, label }) => {
+                    const horario = restaurante.horarios?.[key];
+                    const estaAbierto =
+                      horario?.abierto !== false && horario?.apertura;
 
-                      return (
-                        <div
-                          key={key}
-                          className="flex justify-between items-center py-2 border-b border-gray-100 last:border-b-0"
-                        >
-                          <span className="font-medium text-gray-700">
-                            {label}
+                    return (
+                      <div key={key} className="flex justify-between text-xs">
+                        <span className="text-gray-500">{label}</span>
+                        {estaAbierto ? (
+                          <span className="text-gray-700 font-medium">
+                            {horario.apertura} - {horario.cierre}
                           </span>
-                          {estaAbierto ? (
-                            <div className="flex flex-col items-end">
-                              <span className="text-green-600 font-bold">
-                                {horario.apertura} - {horario.cierre}
-                              </span>
-                              <span className="text-xs text-green-500 bg-green-50 px-2 py-1 rounded-full mt-1">
-                                Abierto
-                              </span>
-                            </div>
-                          ) : (
-                            <div className="flex flex-col items-end">
-                              <span className="text-red-500 font-bold">
-                                Cerrado
-                              </span>
-                              <span className="text-xs text-red-400 bg-red-50 px-2 py-1 rounded-full mt-1">
-                                No hay atención
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
+                        ) : (
+                          <span className="text-red-400">Cerrado</span>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
-              </>
+              </div>
             )}
           </div>
         </div>
 
         {/* Copyright */}
-        <div className="mt-12 pt-8 border-t border-gray-300">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-gray-500">
-              © {new Date().getFullYear()} {restaurante.nombre}. Todos los
-              derechos reservados.
-            </p>
-            <div className="text-sm text-gray-400">
-              <span className="hidden md:inline">•</span>
-              <span className="mx-2">Menú Digital v1.0</span>
-              <span className="hidden md:inline">•</span>
-            </div>
-          </div>
+        <div className="border-t border-gray-200 mt-12 pt-6 text-center">
+          <p className="text-sm text-gray-400">
+            © {new Date().getFullYear()} {restaurante.nombre}. Todos los
+            derechos reservados.
+          </p>
         </div>
       </div>
     </footer>
