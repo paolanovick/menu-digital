@@ -11,6 +11,7 @@ import CarouselDestacados from "../components/CarouselDestacados";
 import PlatoCard from "../components/PlatoCard";
 import { ArrowLeft } from "lucide-react";
 import AnunciosTicker from "../components/AnunciosTicker";
+import Footer from "../components/Footer";
 
 export default function CategoryPage() {
   const { slug } = useParams();
@@ -74,66 +75,68 @@ export default function CategoryPage() {
     );
   }
 
- 
-    return (
-      <ThemeProvider tema={restaurante.tema}>
-        <div
-          className="min-h-screen pb-12 relative"
-          style={{
-            backgroundImage: "url(/backgroundMantel.png)",
-            backgroundRepeat: "repeat",
-            backgroundSize: "300px 300px",
-            backgroundAttachment: "fixed",
-          }}
-        >
-          <div className="absolute inset-0 bg-cream opacity-85 -z-10"></div>
-          <Header restaurante={restaurante} />
-          <AnunciosTicker
-            restauranteId={restaurante._id}
-            categoriaId={categoriaId}
-          />
+  return (
+    <ThemeProvider tema={restaurante.tema}>
+      <div
+        className="min-h-screen pb-12 relative"
+        style={{
+          backgroundImage: "url(/backgroundMantel.png)",
+          backgroundRepeat: "repeat",
+          backgroundSize: "300px 300px",
+          backgroundAttachment: "fixed",
+        }}
+      >
+        <div className="absolute inset-0 bg-cream opacity-85 -z-10"></div>
+        <Header restaurante={restaurante} />
+        <AnunciosTicker
+          restauranteId={restaurante._id}
+          categoriaId={categoriaId}
+        />
 
-          <div className="container mx-auto px-4 py-6">
-            {/* Botón volver */}
-            <button
-              onClick={() => navigate(`/${slug}`)}
-              className="flex items-center gap-2 text-gray-600 hover:text-gray-800 mb-6 transition-colors"
-            >
-              <ArrowLeft size={20} />
-              Volver a categorías
-            </button>
+        <div className="container mx-auto px-4 py-6">
+          {/* Botón volver */}
+          <button
+            onClick={() => navigate(`/${slug}`)}
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-800 mb-6 transition-colors"
+          >
+            <ArrowLeft size={20} />
+            Volver a categorías
+          </button>
 
-            {/* Carousel de destacados */}
-            {platosDestacados.length > 0 && (
-              <>
-                <h2 className="font-display text-3xl md:text-4xl font-bold text-center mb-8 mt-6">
-                  Te recomendamos
-                </h2>
-                <CarouselDestacados platos={platosDestacados} />
-              </>
-            )}
+          {/* Carousel de destacados */}
+          {platosDestacados.length > 0 && (
+            <>
+              <h2 className="font-display text-3xl md:text-4xl font-bold text-center mb-8 mt-6">
+                Te recomendamos
+              </h2>
+              <CarouselDestacados platos={platosDestacados} />
+            </>
+          )}
 
-            {/* Título de categoría */}
-            <h1 className="font-display text-3xl md:text-4xl font-bold text-center mb-8 mt-12">
-              {categoriaNombre}
-            </h1>
+          {/* Título de categoría */}
+          <h1 className="font-display text-3xl md:text-4xl font-bold text-center mb-8 mt-12">
+            {categoriaNombre}
+          </h1>
 
-            {/* Grid de platos */}
-            {platos.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {platos.map((plato) => (
-                  <PlatoCard key={plato._id} plato={plato} />
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <p className="text-xl text-gray-500">
-                  No hay platos disponibles en esta categoría
-                </p>
-              </div>
-            )}
-          </div>
+          {/* Grid de platos */}
+          {platos.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {platos.map((plato) => (
+                <PlatoCard key={plato._id} plato={plato} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-xl text-gray-500">
+                No hay platos disponibles en esta categoría
+              </p>
+            </div>
+          )}
         </div>
-      </ThemeProvider>
-    );
+
+        {/* Footer */}
+        <Footer restaurante={restaurante} />
+      </div>
+    </ThemeProvider>
+  );
 }
