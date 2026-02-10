@@ -55,23 +55,23 @@ export default function InteractiveSection({ restaurante }) {
   const tieneDireccion = restaurante.contacto?.direccion?.calle;
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex items-center justify-center gap-8 md:gap-12 text-gray-500">
+    <div className="container mx-auto px-4 mt-12 mb-4">
+      <div className="flex items-center justify-center gap-6 md:gap-10 text-gray-400 text-sm">
         {/* Compartir */}
         <button
           onClick={handleShare}
-          className="flex items-center gap-2 hover:text-gray-700 transition-colors"
+          className="flex items-center gap-1.5 hover:text-gray-600 transition-colors"
         >
-          <Share2 size={18} />
-          <span className="text-sm">Compartir</span>
+          <Share2 size={16} />
+          <span>Compartir</span>
         </button>
 
-        <span className="text-gray-300">|</span>
+        <span className="text-gray-300">•</span>
 
         {/* Calificar */}
-        <div className="flex items-center gap-2">
-          <span className="text-sm">Calificar</span>
-          <div className="flex gap-0.5">
+        <div className="flex items-center gap-1.5">
+          <span>Calificar</span>
+          <div className="flex">
             {[1, 2, 3, 4, 5].map((star) => (
               <button
                 key={star}
@@ -81,7 +81,7 @@ export default function InteractiveSection({ restaurante }) {
                 className="p-0.5"
               >
                 <Star
-                  size={16}
+                  size={14}
                   className={`transition-colors ${
                     star <= (hoverRating || rating)
                       ? "text-yellow-400 fill-yellow-400"
@@ -95,15 +95,15 @@ export default function InteractiveSection({ restaurante }) {
 
         {tieneDireccion && (
           <>
-            <span className="text-gray-300">|</span>
+            <span className="text-gray-300">•</span>
 
             {/* Ubicación */}
             <button
               onClick={openMaps}
-              className="flex items-center gap-2 hover:text-gray-700 transition-colors"
+              className="flex items-center gap-1.5 hover:text-gray-600 transition-colors"
             >
-              <MapPin size={18} />
-              <span className="text-sm">Ubicación</span>
+              <MapPin size={16} />
+              <span>Ubicación</span>
             </button>
           </>
         )}
