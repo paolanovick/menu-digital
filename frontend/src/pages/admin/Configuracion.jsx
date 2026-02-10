@@ -5,7 +5,7 @@ import { Save, Palette, Globe, Clock, MapPin } from "lucide-react";
 import api from "../../services/api";
 
 export default function Configuracion() {
- const { user: _user } = useAuth();
+  const { user: _user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState("tema");
@@ -42,6 +42,9 @@ export default function Configuracion() {
     viernes: { apertura: "", cierre: "" },
     sabado: { apertura: "", cierre: "" },
     domingo: { apertura: "", cierre: "" },
+
+    // Servicios
+    deliveryActivo: true,
   });
 
   useEffect(() => {
@@ -85,6 +88,9 @@ export default function Configuracion() {
         viernes: rest.horarios?.viernes || { apertura: "", cierre: "" },
         sabado: rest.horarios?.sabado || { apertura: "", cierre: "" },
         domingo: rest.horarios?.domingo || { apertura: "", cierre: "" },
+
+        // Servicios
+        deliveryActivo: rest.deliveryActivo ?? true,
       });
     } catch (error) {
       console.error("Error:", error);
@@ -105,7 +111,6 @@ export default function Configuracion() {
         colorTexto: formData.colorTexto,
       });
 
-      // Actualizar logo si cambió
       if (formData.logo !== restaurante.logo) {
         await api.put(`/restaurantes/${restaurante._id}`, {
           logo: formData.logo,
@@ -140,7 +145,6 @@ export default function Configuracion() {
         },
       });
 
-      // Actualizar redes sociales
       await api.put(`/restaurantes/${restaurante._id}`, {
         redesSociales: {
           instagram: formData.instagram,
@@ -183,6 +187,25 @@ export default function Configuracion() {
     }
   };
 
+  const handleSubmitServicios = async (e) => {
+    e.preventDefault();
+    setSaving(true);
+
+    try {
+      await api.put(`/restaurantes/${restaurante._id}/delivery-config`, {
+        deliveryActivo: formData.deliveryActivo,
+      });
+
+      alert("Configuración de servicios actualizada");
+      fetchRestaurante();
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Error al actualizar servicios");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleHorarioChange = (dia, campo, valor) => {
     setFormData({
       ...formData,
@@ -207,6 +230,7 @@ export default function Configuracion() {
     { id: "tema", name: "Tema y Logo", icon: Palette },
     { id: "contacto", name: "Contacto", icon: Globe },
     { id: "horarios", name: "Horarios", icon: Clock },
+    { id: "servicios", name: "Servicios", icon: MapPin },
   ];
 
   return (
@@ -251,7 +275,6 @@ export default function Configuracion() {
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Logo URL */}
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 URL del Logo
@@ -276,7 +299,6 @@ export default function Configuracion() {
               )}
             </div>
 
-            {/* Color Primario */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Color Primario (Botones, Precios)
@@ -301,7 +323,6 @@ export default function Configuracion() {
               </div>
             </div>
 
-            {/* Color Secundario */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Color Secundario (Textos, Bordes)
@@ -332,7 +353,6 @@ export default function Configuracion() {
               </div>
             </div>
 
-            {/* Color Fondo */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Color de Fondo
@@ -357,7 +377,6 @@ export default function Configuracion() {
               </div>
             </div>
 
-            {/* Color Texto */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Color de Texto Principal
@@ -383,7 +402,6 @@ export default function Configuracion() {
             </div>
           </div>
 
-          {/* Vista previa */}
           <div
             className="mt-8 p-6 rounded-lg"
             style={{ backgroundColor: formData.colorFondo }}
@@ -420,7 +438,6 @@ export default function Configuracion() {
             </div>
           </div>
 
-          {/* Botón guardar */}
           <div className="flex justify-end mt-8 pt-6 border-t">
             <button
               type="submit"
@@ -626,6 +643,48 @@ export default function Configuracion() {
                 </div>
               </div>
             ))}
+          </div>
+
+          <div className="flex justify-end mt-8 pt-6 border-t">
+            <button
+              type="submit"
+              disabled={saving}
+              className="btn-primary inline-flex items-center gap-2 disabled:opacity-50"
+            >
+              <Save size={20} />
+              {saving ? "Guardando..." : "Guardar Cambios"}
+            </button>
+          </div>
+        </form>
+      )}
+
+      {/* Tab: Servicios */}
+      {activeTab === "servicios" && (
+        <form
+          onSubmit={handleSubmitServicios}
+          className="bg-white rounded-xl shadow-md p-8"
+        >
+          <h2 className="text-xl font-bold text-gray-800 mb-6">
+            🚚 Opciones de Servicio
+          </h2>
+
+          <div className="space-y-4">
+            <label className="flex items-center justify-between p-4 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-all">
+              <div>
+                <p className="font-medium text-gray-900">Delivery</p>
+                <p className="text-sm text-gray-500">
+                  Mostrar opción de delivery/envíos en el menú público
+                </p>
+              </div>
+              <input
+                type="checkbox"
+                checked={formData.deliveryActivo}
+                onChange={(e) =>
+                  setFormData({ ...formData, deliveryActivo: e.target.checked })
+                }
+                className="w-6 h-6 text-wine focus:ring-wine border-gray-300 rounded cursor-pointer"
+              />
+            </label>
           </div>
 
           <div className="flex justify-end mt-8 pt-6 border-t">
