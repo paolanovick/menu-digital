@@ -1,12 +1,12 @@
+import { useEffect, useState } from "react";
 // eslint-disable-next-line no-unused-vars
-import { useEffect, useState, useRef } from "react"; // useRef sigue aquí por si acaso, aunque no se use 'isFirstRender'
-// eslint-disable-next-line no-unused-vars
-import { motion, AnimatePresence } from "framer-motion"; // motion y AnimatePresence importados aquí
+import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronRight, Utensils } from "lucide-react";
 import { getCategorias } from "../services/api";
 import { useNavigate, useLocation } from "react-router-dom";
 
 export default function SidebarMenu({ isOpen, onClose, restaurante }) {
+  // Inicializamos siempre como array vacío para evitar el error de .map
   const [categorias, setCategorias] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -17,8 +17,8 @@ export default function SidebarMenu({ isOpen, onClose, restaurante }) {
   useEffect(() => {
     if (!isOpen || !restaurante?._id) {
       if (!isOpen) {
-        setCategorias([]);
-        setLoading(false);
+        // Opcional: limpiar al cerrar para recargar fresco la próxima vez
+        // setCategorias([]);
       }
       return;
     }
@@ -27,9 +27,25 @@ export default function SidebarMenu({ isOpen, onClose, restaurante }) {
       setLoading(true);
       try {
         const res = await getCategorias(restaurante._id);
-        setCategorias(res.data);
+
+        // --- SOLUCIÓN ERROR MAP ---
+        // Verificamos si res.data es un array. Si no, intentamos buscar una propiedad interna
+        // o asignamos un array vacío para que no rompa la página.
+        if (Array.isArray(res.data)) {
+          setCategorias(res.data);
+        } else if (res.data && Array.isArray(res.data.categorias)) {
+          // A veces las APIs devuelven { success: true, categorias: [...] }
+          setCategorias(res.data.categorias);
+        } else if (res.data && Array.isArray(res.data.data)) {
+          // O devuelven { data: [...] }
+          setCategorias(res.data.data);
+        } else {
+          console.error("Formato de categorías inesperado:", res.data);
+          setCategorias([]);
+        }
       } catch (err) {
         console.error("Error cargando categorías:", err);
+        setCategorias([]); // En caso de error, aseguramos array vacío
       } finally {
         setLoading(false);
       }
@@ -40,7 +56,6 @@ export default function SidebarMenu({ isOpen, onClose, restaurante }) {
 
   const handleCategoryClick = (categoriaId) => {
     onClose();
-
     const isRootRoute =
       location.pathname === `/${slug}` || location.pathname === `/${slug}/`;
 
@@ -57,9 +72,11 @@ export default function SidebarMenu({ isOpen, onClose, restaurante }) {
     }
   };
 
+  // --- ANIMACION DERECHA ---
   const sidebarVariants = {
+    // 100% significa que empieza escondido a la derecha
     closed: {
-      x: "-100%",
+      x: "100%",
       transition: { type: "spring", stiffness: 300, damping: 30 },
     },
     open: { x: 0, transition: { type: "spring", stiffness: 300, damping: 30 } },
@@ -74,6 +91,7 @@ export default function SidebarMenu({ isOpen, onClose, restaurante }) {
     <AnimatePresence>
       {isOpen && (
         <>
+          {/* Backdrop */}
           <motion.div
             initial="closed"
             animate="open"
@@ -83,18 +101,20 @@ export default function SidebarMenu({ isOpen, onClose, restaurante }) {
             className="fixed inset-0 bg-black/50 z-[60] backdrop-blur-sm"
           />
 
+          {/* Menú Lateral - AHORA A LA DERECHA (right-0) */}
           <motion.aside
             initial="closed"
             animate="open"
             exit="closed"
             variants={sidebarVariants}
-            className="fixed top-0 left-0 h-full w-[80%] max-w-xs bg-white z-[70] shadow-2xl flex flex-col"
+            className="fixed top-0 right-0 h-full w-[80%] max-w-xs bg-white z-[70] shadow-2xl flex flex-col"
           >
+            {/* Header del Menú - Invertimos orden: Titulo izq, cerrar der */}
             <div className="p-4 border-b flex items-center justify-between bg-gray-50">
               <span className="font-bold text-lg text-gray-800">Menú</span>
               <button
                 onClick={onClose}
-                className="p-2 hover:bg-gray-200 rounded-full transition-colors"
+                className="p-2 hover:bg-gray-200 rounded-full transition-colors text-gray-600"
               >
                 <X size={24} />
               </button>
@@ -126,31 +146,33 @@ export default function SidebarMenu({ isOpen, onClose, restaurante }) {
                     </button>
                   </li>
 
-                  {categorias.map((cat) => (
-                    <li key={cat._id}>
-                      <button
-                        onClick={() => handleCategoryClick(cat._id)}
-                        className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-orange-50 text-gray-700 hover:text-orange-600 transition-all group"
-                      >
-                        <div className="flex items-center gap-3">
-                          {cat.imagen ? (
-                            <img
-                              src={cat.imagen}
-                              alt=""
-                              className="w-5 h-5 object-cover rounded"
-                            />
-                          ) : (
-                            <div className="w-5 h-5 bg-gray-200 rounded-full" />
-                          )}
-                          <span className="font-medium">{cat.nombre}</span>
-                        </div>
-                        <ChevronRight
-                          size={16}
-                          className="text-gray-300 group-hover:text-orange-400"
-                        />
-                      </button>
-                    </li>
-                  ))}
+                  {/* Renderizado defensivo: solo si categorias es array y tiene longitud */}
+                  {Array.isArray(categorias) &&
+                    categorias.map((cat) => (
+                      <li key={cat._id}>
+                        <button
+                          onClick={() => handleCategoryClick(cat._id)}
+                          className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-orange-50 text-gray-700 hover:text-orange-600 transition-all group"
+                        >
+                          <div className="flex items-center gap-3">
+                            {cat.imagen ? (
+                              <img
+                                src={cat.imagen}
+                                alt=""
+                                className="w-5 h-5 object-cover rounded"
+                              />
+                            ) : (
+                              <div className="w-5 h-5 bg-gray-200 rounded-full" />
+                            )}
+                            <span className="font-medium">{cat.nombre}</span>
+                          </div>
+                          <ChevronRight
+                            size={16}
+                            className="text-gray-300 group-hover:text-orange-400"
+                          />
+                        </button>
+                      </li>
+                    ))}
                 </ul>
               )}
             </div>
