@@ -39,6 +39,7 @@ export default function Footer({ restaurante }) {
       <div className="container mx-auto px-4 py-10 md:py-16">
         {/* Layout Responsive */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 md:gap-8">
+          
           {/* Columna 1: Logo y Descripción - Ocupa toda la fila en móvil */}
           <div className="lg:col-span-1">
             <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
@@ -55,13 +56,13 @@ export default function Footer({ restaurante }) {
                 {restaurante.nombre}
               </h3>
             </div>
-
+            
             {restaurante.descripcion && (
               <p className="text-base leading-relaxed text-gray-500 mb-6">
                 {restaurante.descripcion}
               </p>
             )}
-
+            
             {/* Redes Sociales - Móvil: debajo del logo, Desktop: mantiene posición */}
             <div className="flex gap-4 mb-8 lg:mb-0">
               {whatsappLink && (
@@ -132,10 +133,7 @@ export default function Footer({ restaurante }) {
                   className="flex items-center gap-4 group"
                 >
                   <div className="bg-gray-100 p-2 rounded-full group-hover:bg-blue-50 transition-colors">
-                    <Phone
-                      size={18}
-                      className="text-gray-600 group-hover:text-blue-600"
-                    />
+                    <Phone size={18} className="text-gray-600 group-hover:text-blue-600" />
                   </div>
                   <div>
                     <p className="font-medium text-gray-700 group-hover:text-blue-600 transition-colors">
@@ -154,10 +152,7 @@ export default function Footer({ restaurante }) {
                   className="flex items-center gap-4 group"
                 >
                   <div className="bg-gray-100 p-2 rounded-full group-hover:bg-red-50 transition-colors">
-                    <Mail
-                      size={18}
-                      className="text-gray-600 group-hover:text-red-600"
-                    />
+                    <Mail size={18} className="text-gray-600 group-hover:text-red-600" />
                   </div>
                   <div>
                     <p className="font-medium text-gray-700 group-hover:text-red-600 transition-colors">
