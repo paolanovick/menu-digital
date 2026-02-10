@@ -1,5 +1,5 @@
 import { FaWhatsapp, FaInstagram, FaFacebook } from "react-icons/fa";
-import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, QrCode } from "lucide-react";
 
 export default function Footer({ restaurante }) {
   const whatsappLink = restaurante.contacto?.whatsapp
@@ -13,18 +13,17 @@ export default function Footer({ restaurante }) {
   const facebookLink = restaurante.redesSociales?.facebook
     ? `https://facebook.com/${restaurante.redesSociales.facebook}`
     : null;
-  // Días de la semana en orden
+
   const diasSemana = [
-    { key: "lunes", label: "Lunes" },
-    { key: "martes", label: "Martes" },
-    { key: "miercoles", label: "Miércoles" },
-    { key: "jueves", label: "Jueves" },
-    { key: "viernes", label: "Viernes" },
-    { key: "sabado", label: "Sábado" },
-    { key: "domingo", label: "Domingo" },
+    { key: "lunes", label: "Lun" },
+    { key: "martes", label: "Mar" },
+    { key: "miercoles", label: "Mié" },
+    { key: "jueves", label: "Jue" },
+    { key: "viernes", label: "Vie" },
+    { key: "sabado", label: "Sáb" },
+    { key: "domingo", label: "Dom" },
   ];
 
-  // Verificar si hay horarios configurados
   const tieneHorarios =
     restaurante.horarios &&
     Object.keys(restaurante.horarios).some(
@@ -32,51 +31,89 @@ export default function Footer({ restaurante }) {
         restaurante.horarios[dia]?.apertura ||
         restaurante.horarios[dia]?.abierto,
     );
+
+  // Sección QR/Delivery que estaba en Home
+  const tieneDelivery = restaurante.deliveryActivo !== false;
+
   return (
-    <footer
-      className="
-  mt-20
-  border-t
-  border-gray-200
-  bg-cream
-  text-gray-600
-"
-    >
-      <div className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <footer className="bg-white border-t border-gray-200 text-gray-600">
+      <div className="container mx-auto px-4 py-8">
+        {/* Grid principal - 4 columnas en desktop, 2 en tablet, 1 en móvil */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {/* Columna 1: Logo y Descripción */}
-          <div>
-            <div className="flex items-center gap-3 mb-4">
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
               {restaurante.logo ? (
                 <img
                   src={restaurante.logo}
                   alt={restaurante.nombre}
-                  className="h-12 w-auto object-contain"
+                  className="h-10 w-auto object-contain"
                 />
               ) : (
-                <div className="text-4xl">🍽️</div>
+                <div className="text-3xl">🍽️</div>
               )}
-              <h3 className="font-display text-xl font-semibold tracking-tight text-gray-700">
+              <h3 className="text-base font-medium text-gray-800">
                 {restaurante.nombre}
               </h3>
             </div>
+
             {restaurante.descripcion && (
-              <p className="text-sm leading-relaxed text-gray-500">
+              <p className="text-sm text-gray-500 leading-relaxed">
                 {restaurante.descripcion}
               </p>
             )}
+
+            {/* Redes Sociales */}
+            <div className="flex gap-3 pt-2">
+              {whatsappLink && (
+                <a
+                  href={whatsappLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-green-600 transition-colors"
+                  title="WhatsApp"
+                >
+                  <FaWhatsapp size={18} />
+                </a>
+              )}
+              {instagramLink && (
+                <a
+                  href={instagramLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-pink-600 transition-colors"
+                  title="Instagram"
+                >
+                  <FaInstagram size={18} />
+                </a>
+              )}
+              {facebookLink && (
+                <a
+                  href={facebookLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-blue-600 transition-colors"
+                  title="Facebook"
+                >
+                  <FaFacebook size={18} />
+                </a>
+              )}
+            </div>
           </div>
 
           {/* Columna 2: Contacto */}
-          <div>
-            <h4 className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-5">
+          <div className="space-y-4">
+            <h4 className="text-sm font-medium text-gray-800 uppercase tracking-wide">
               Contacto
             </h4>
             <div className="space-y-3">
               {restaurante.contacto?.direccion?.calle && (
-                <div className="flex items-start gap-3 text-sm text-gray-500">
-                  <MapPin size={18} className="mt-1 flex-shrink-0" />
-                  <span className="text-sm">
+                <div className="flex items-start gap-2 text-sm">
+                  <MapPin
+                    size={16}
+                    className="mt-0.5 flex-shrink-0 text-gray-400"
+                  />
+                  <span className="text-gray-600">
                     {restaurante.contacto.direccion.calle}
                     {restaurante.contacto.direccion.ciudad &&
                       `, ${restaurante.contacto.direccion.ciudad}`}
@@ -87,117 +124,100 @@ export default function Footer({ restaurante }) {
               {restaurante.contacto?.telefono && (
                 <a
                   href={`tel:${restaurante.contacto.telefono}`}
-                  className="flex items-center gap-2 text-gray-300 hover:text-black transition-colors"
+                  className="flex items-center gap-2 text-sm text-gray-600 hover:text-black transition-colors"
                 >
-                  <Phone size={18} />
-                  <span className="text-sm">
-                    {restaurante.contacto.telefono}
-                  </span>
+                  <Phone size={16} className="text-gray-400" />
+                  <span>{restaurante.contacto.telefono}</span>
                 </a>
               )}
 
               {restaurante.contacto?.email && (
                 <a
                   href={`mailto:${restaurante.contacto.email}`}
-                  className="flex items-center gap-2 text-gray-300 hover:text-black transition-colors"
+                  className="flex items-center gap-2 text-sm text-gray-600 hover:text-black transition-colors"
                 >
-                  <Mail size={18} />
-                  <span className="text-sm">{restaurante.contacto.email}</span>
+                  <Mail size={16} className="text-gray-400" />
+                  <span>{restaurante.contacto.email}</span>
                 </a>
               )}
             </div>
           </div>
 
-          {/* Columna 3: Redes Sociales y Horarios */}
-          <div>
-            <h4 className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-5">
-              Síguenos
+          {/* Columna 3: Horarios (compacto) */}
+          {tieneHorarios && (
+            <div className="space-y-4">
+              <h4 className="text-sm font-medium text-gray-800 uppercase tracking-wide flex items-center gap-2">
+                <Clock size={16} />
+                Horarios
+              </h4>
+              <div className="space-y-2">
+                {diasSemana.map(({ key, label }) => {
+                  const horario = restaurante.horarios?.[key];
+                  const estaAbierto =
+                    horario?.abierto !== false && horario?.apertura;
+
+                  return (
+                    <div key={key} className="flex justify-between text-sm">
+                      <span className="text-gray-600">{label}</span>
+                      {estaAbierto ? (
+                        <span className="text-gray-800 font-normal">
+                          {horario.apertura} - {horario.cierre}
+                        </span>
+                      ) : (
+                        <span className="text-gray-400">Cerrado</span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Columna 4: QR y Delivery (la que estaba en Home) */}
+          <div className="space-y-4">
+            <h4 className="text-sm font-medium text-gray-800 uppercase tracking-wide flex items-center gap-2">
+              <QrCode size={16} />
+              Menú Digital
             </h4>
-            <div className="flex gap-4 mb-6">
-              {whatsappLink && (
-                <a
-                  href={whatsappLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-green-600 hover:bg-green-700 p-3 rounded-full transition-colors"
-                  title="WhatsApp"
-                >
-                  <FaWhatsapp size={20} />
-                </a>
-              )}
 
-              {instagramLink && (
-                <a
-                  href={instagramLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="
-  p-3
-  rounded-full
-  border
-  border-gray-300
-  text-gray-500
-  hover:text-wine
-  hover:border-wine
-  transition-colors
-"
-                  title="Instagram"
-                >
-                  <FaInstagram size={20} />
-                </a>
-              )}
+            <div className="space-y-4">
+              {/* QR Code */}
+              <div className="flex flex-col items-center space-y-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <div className="bg-white p-3 rounded-lg border border-gray-300">
+                  {/* Aquí iría tu componente QR */}
+                  <div className="w-32 h-32 flex items-center justify-center bg-white text-gray-400 border border-dashed border-gray-300 rounded">
+                    QR Code
+                  </div>
+                </div>
+                <p className="text-xs text-gray-500 text-center">
+                  Escanea para ver el menú en tu celular
+                </p>
+              </div>
 
-              {facebookLink && (
-                <a
-                  href={facebookLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-blue-600 hover:bg-blue-700 p-3 rounded-full transition-colors"
-                  title="Facebook"
-                >
-                  <FaFacebook size={20} />
-                </a>
+              {/* Delivery Status */}
+              {tieneDelivery && (
+                <div className="text-sm text-gray-600">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span>Delivery disponible</span>
+                  </div>
+                </div>
               )}
             </div>
-
-            {/* Horarios día por día */}
-            {tieneHorarios && (
-              <div>
-                <h5 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">
-                  <Clock size={14} />
-                  Horarios
-                </h5>
-                <div className="space-y-1">
-                  {diasSemana.map(({ key, label }) => {
-                    const horario = restaurante.horarios?.[key];
-                    const estaAbierto =
-                      horario?.abierto !== false && horario?.apertura;
-
-                    return (
-                      <div key={key} className="flex justify-between text-xs">
-                        <span className="text-gray-500">{label}</span>
-                        {estaAbierto ? (
-                          <span className="text-gray-700 font-medium">
-                            {horario.apertura} - {horario.cierre}
-                          </span>
-                        ) : (
-                          <span className="text-red-400">Cerrado</span>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
           </div>
         </div>
 
-        {/* Copyright */}
-        <div className="border-t border-gray-200 mt-12 pt-6 text-center">
-          <p className="text-sm text-gray-400">
-            © {new Date().getFullYear()} {restaurante.nombre}. Todos los
-            derechos reservados.
-          </p>
+        {/* Línea divisoria */}
+        <div className="border-t border-gray-200 pt-6">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-xs text-gray-400 text-center md:text-left">
+              © {new Date().getFullYear()} {restaurante.nombre}. Todos los
+              derechos reservados.
+            </p>
+            <p className="text-xs text-gray-400">
+              Powered by <span className="font-medium">Con CodigoART</span>
+            </p>
+          </div>
         </div>
       </div>
     </footer>
