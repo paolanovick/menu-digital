@@ -24,7 +24,7 @@ export default {
       },
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],
-        display: ["Playfair Display", "serif"],
+        display: ["var(--font-display)", "Playfair Display", "serif"],
       },
       boxShadow: {
         card: "0 4px 20px rgba(119, 127, 130, 0.08)",

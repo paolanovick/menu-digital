@@ -1,37 +1,19 @@
-// src/components/PlatoCard.jsx
 import { useState } from "react";
-import { useCart } from "../context/useCart"; 
+import { useCart } from "../context/useCart";
 
 export default function PlatoCard({ plato, showBuyButton }) {
-  // 👈 NUEVO: `showBuyButton`
-  const { addToCart } = useCart(); // Añade esto si aún no lo tienes en este archivo
+  const { addToCart } = useCart();
   const [imageError, setImageError] = useState(false);
 
   return (
-    <div
-      className="
-        bg-white
-        rounded-3xl
-        overflow-hidden
-        shadow-card
-        transition-all
-        hover:shadow-card-hover
-    "
-    >
+    <div className="bg-white rounded-3xl overflow-hidden shadow-card transition-all hover:shadow-card-hover flex flex-col">
       {/* Imagen */}
-      <div
-        className="
-          relative
-          h-48
-          bg-gray-100
-          overflow-hidden
-      "
-      >
+      <div className="relative bg-gray-100 aspect-[4/3]">
         {plato.imagen && !imageError ? (
           <img
             src={plato.imagen}
             alt={plato.nombre}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-contain p-2"
             onError={() => setImageError(true)}
           />
         ) : (
@@ -40,7 +22,7 @@ export default function PlatoCard({ plato, showBuyButton }) {
           </div>
         )}
 
-        {/* Badges y Etiquetas (sin cambios) */}
+        {/* Badges superiores izquierda */}
         <div className="absolute top-2 left-2 flex flex-wrap gap-1">
           {plato.destacado && (
             <span className="bg-wine text-white text-xs px-2 py-1 rounded-full font-medium">
@@ -59,6 +41,7 @@ export default function PlatoCard({ plato, showBuyButton }) {
           )}
         </div>
 
+        {/* Badges superiores derecha */}
         <div className="absolute top-2 right-2 flex flex-col gap-1">
           {plato.etiquetas?.vegetariano && (
             <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
@@ -79,18 +62,8 @@ export default function PlatoCard({ plato, showBuyButton }) {
       </div>
 
       {/* Contenido */}
-      <div className="p-4">
-        <h3
-          className="
-            font-display
-            text-lg
-            md:text-xl
-            font-semibold
-            tracking-tight
-            mb-2
-            line-clamp-1
-        "
-        >
+      <div className="p-4 flex-1 flex flex-col">
+        <h3 className="font-display text-lg md:text-xl font-semibold tracking-tight mb-2 line-clamp-1">
           {plato.nombre}
         </h3>
 
@@ -100,7 +73,6 @@ export default function PlatoCard({ plato, showBuyButton }) {
           </p>
         )}
 
-        {/* Ingredientes, Alérgenos... (sin cambios) */}
         {plato.ingredientes && plato.ingredientes.length > 0 && (
           <div className="mb-3">
             <p className="text-xs text-gray-500 mb-1">Ingredientes:</p>
@@ -126,13 +98,12 @@ export default function PlatoCard({ plato, showBuyButton }) {
           </div>
         )}
 
-        {/* Footer: Precio + Botón comprar (condicional) */}
-        <div className="flex items-center justify-between mt-4 pt-3 border-t">
+        {/* Footer: Precio + Botón */}
+        <div className="flex items-center justify-between mt-auto pt-3 border-t">
           <span className="text-lg font-semibold text-wine">
             ${plato.precio.toLocaleString("es-AR")}
           </span>
 
-          {/* Mostrar botón solo si showBuyButton es true */}
           {showBuyButton && (
             <button
               onClick={() => addToCart(plato)}

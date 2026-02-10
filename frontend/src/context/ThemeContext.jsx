@@ -5,6 +5,18 @@ const ThemeContext = createContext();
 
 export const useTheme = () => useContext(ThemeContext);
 
+// Mapa de fuentes
+const fontMap = {
+  playfair: "'Playfair Display', serif",
+  montserrat: "'Montserrat', sans-serif",
+  lora: "'Lora', serif",
+  poppins: "'Poppins', sans-serif",
+  merriweather: "'Merriweather', serif",
+  roboto: "'Roboto', sans-serif",
+  dancing: "'Dancing Script', cursive",
+  oswald: "'Oswald', sans-serif",
+};
+
 export const ThemeProvider = ({ children, tema }) => {
   useEffect(() => {
     if (tema) {
@@ -21,6 +33,10 @@ export const ThemeProvider = ({ children, tema }) => {
         "--color-text",
         tema.colorTexto,
       );
+
+      // Aplicar fuente
+      const fontFamily = fontMap[tema.fuente] || fontMap.playfair;
+      document.documentElement.style.setProperty("--font-display", fontFamily);
     }
   }, [tema]);
 

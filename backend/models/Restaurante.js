@@ -47,8 +47,21 @@ const restauranteSchema = new mongoose.Schema(
         type: String,
         default: "#333333",
       },
+      fuente: {
+        type: String,
+        enum: [
+          "playfair",
+          "montserrat",
+          "lora",
+          "poppins",
+          "merriweather",
+          "roboto",
+          "dancing",
+          "oswald",
+        ],
+        default: "playfair",
+      },
     },
-
     // CONTACTO
     contacto: {
       email: {
