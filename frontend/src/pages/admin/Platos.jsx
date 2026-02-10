@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import DashboardLayout from "../../components/admin/DashboardLayout";
 import { Plus, Edit, Trash2, Eye, EyeOff, Star, Gift } from "lucide-react";
 import api from "../../services/api";
+import toast from "react-hot-toast";
 
 export default function Platos() {
   const [platos, setPlatos] = useState([]);
@@ -26,19 +27,18 @@ export default function Platos() {
       setPlatos(resPlatos.data.data);
       setCategorias(resCategorias.data.data);
 
-      // Establecer primera categoría como activa
       if (resCategorias.data.data.length > 0 && categoriaActiva === "todas") {
         setCategoriaActiva(resCategorias.data.data[0]._id);
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("Error al cargar platos");
+      toast.error("Error al cargar platos");
     } finally {
       setLoading(false);
     }
   };
 
-   const toggleDestacado = async (platoId, destacado) => {
+  const toggleDestacado = async (platoId, destacado) => {
     try {
       await api.put(`/platos/${platoId}/destacado`);
       setPlatos(
@@ -57,14 +57,13 @@ export default function Platos() {
     try {
       await api.delete(`/platos/${platoId}`);
       setPlatos(platos.filter((p) => p._id !== platoId));
-      alert("Plato eliminado correctamente");
+      toast.success("Plato eliminado correctamente");
     } catch (error) {
       console.error("Error:", error);
-      alert("Error al eliminar plato");
+      toast.error("Error al eliminar plato");
     }
   };
 
-  // Filtrar platos por categoría activa y búsqueda
   const platosFiltrados = platos.filter((plato) => {
     const matchCategoria =
       categoriaActiva === "todas" || plato.categoriaId._id === categoriaActiva;
@@ -74,7 +73,6 @@ export default function Platos() {
     return matchCategoria && matchBusqueda;
   });
 
-  // Contar platos por categoría
   const contarPlatosPorCategoria = (categoriaId) => {
     return platos.filter((p) => p.categoriaId._id === categoriaId).length;
   };
@@ -94,7 +92,6 @@ export default function Platos() {
 
   return (
     <DashboardLayout>
-      {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-3xl font-bold text-gray-800">
@@ -117,7 +114,6 @@ export default function Platos() {
         </Link>
       </div>
 
-      {/* Buscar */}
       <div className="bg-white rounded-xl shadow-md p-4 mb-6">
         <input
           type="text"
@@ -128,7 +124,6 @@ export default function Platos() {
         />
       </div>
 
-      {/* PESTAÑAS - Estilo El Danés */}
       <div className="bg-white rounded-xl shadow-md mb-6 overflow-hidden">
         <div className="flex overflow-x-auto">
           <button
@@ -158,7 +153,6 @@ export default function Platos() {
         </div>
       </div>
 
-      {/* TABLA - Estilo El Danés */}
       <div className="bg-white rounded-xl shadow-md overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -206,7 +200,6 @@ export default function Platos() {
               ) : (
                 platosFiltrados.map((plato) => (
                   <tr key={plato._id} className="hover:bg-gray-50">
-                    {/* Imagen */}
                     <td className="px-4 py-3">
                       <div className="h-12 w-12 rounded-lg overflow-hidden bg-gray-100">
                         {plato.imagen ? (
@@ -223,7 +216,6 @@ export default function Platos() {
                       </div>
                     </td>
 
-                    {/* Nombre */}
                     <td className="px-4 py-3">
                       <div className="font-medium text-gray-900">
                         {plato.nombre}
@@ -235,19 +227,16 @@ export default function Platos() {
                       )}
                     </td>
 
-                    {/* Categoría */}
                     <td className="px-4 py-3">
                       <span className="text-sm">
                         {plato.categoriaId.nombre}
                       </span>
                     </td>
 
-                    {/* Orden */}
                     <td className="px-4 py-3 text-center">
                       <span className="text-sm">{plato.orden || 1}</span>
                     </td>
 
-                    {/* Incentivo */}
                     <td className="px-4 py-3 text-center">
                       <button
                         className={`p-1.5 rounded transition-all ${
@@ -266,14 +255,12 @@ export default function Platos() {
                       </button>
                     </td>
 
-                    {/* Precio */}
                     <td className="px-4 py-3 text-right">
                       <span className="font-semibold text-gray-900">
                         ${plato.precio.toLocaleString("es-AR")}
                       </span>
                     </td>
 
-                    {/* Stock */}
                     <td className="px-4 py-3 text-center">
                       <span
                         className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
@@ -288,7 +275,6 @@ export default function Platos() {
                       </span>
                     </td>
 
-                    {/* Destacado */}
                     <td className="px-4 py-3 text-center">
                       <button
                         onClick={() =>
@@ -310,7 +296,6 @@ export default function Platos() {
                       </button>
                     </td>
 
-                    {/* Acciones */}
                     <td className="px-4 py-3 text-right">
                       <div className="flex items-center justify-end gap-2">
                         <Link

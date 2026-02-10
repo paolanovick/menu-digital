@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import DashboardLayout from '../../components/admin/DashboardLayout';
 import { Plus, Edit, Trash2, Eye, EyeOff } from 'lucide-react';
 import { getSuperadminRestaurantes, eliminarRestaurante } from '../../services/api';
+import toast from "react-hot-toast";
 
 export default function Restaurantes() {
   const [restaurantes, setRestaurantes] = useState([]);
@@ -31,11 +32,11 @@ export default function Restaurantes() {
 
     try {
       await eliminarRestaurante(id);
-      alert('Restaurante eliminado correctamente');
+      toast.success("Restaurante eliminado correctamente");
       fetchRestaurantes();
     } catch (error) {
       console.error('Error:', error);
-      alert('Error al eliminar restaurante');
+     toast.success("Restaurante eliminado correctamente");
     }
   };
 

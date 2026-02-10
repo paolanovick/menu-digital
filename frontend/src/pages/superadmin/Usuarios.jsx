@@ -6,6 +6,7 @@ import {
   getSuperadminUsuarios,
   eliminarUsuarioSuperadmin,
 } from "../../services/api";
+import toast from "react-hot-toast";
 
 export default function Usuarios() {
   const [usuarios, setUsuarios] = useState([]);
@@ -33,11 +34,11 @@ export default function Usuarios() {
 
     try {
       await eliminarUsuarioSuperadmin(id);
-      alert("Usuario eliminado correctamente");
+     toast.success("Usuario eliminado correctamente");
       fetchUsuarios();
     } catch (error) {
       console.error("Error:", error);
-      alert("Error al eliminar usuario");
+  toast.error("Error al eliminar usuario");
     }
   };
 

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import DashboardLayout from "../../components/admin/DashboardLayout";
 import { Plus, Edit, Trash2, Eye, EyeOff } from "lucide-react";
 import api from "../../services/api";
+import toast from "react-hot-toast";
 
 export default function Categorias() {
   const [categorias, setCategorias] = useState([]);
@@ -19,27 +20,27 @@ export default function Categorias() {
     fetchCategorias();
   }, []);
 
- const fetchCategorias = async () => {
-   try {
-     const [resCategorias, resPlatos] = await Promise.all([
-       api.get("/categorias/admin/mis-categorias"),
-       api.get("/platos/admin/mis-platos"),
-     ]);
+  const fetchCategorias = async () => {
+    try {
+      const [resCategorias, resPlatos] = await Promise.all([
+        api.get("/categorias/admin/mis-categorias"),
+        api.get("/platos/admin/mis-platos"),
+      ]);
 
-     const platos = resPlatos.data.data;
-     const categoriasConConteo = resCategorias.data.data.map((categoria) => ({
-       ...categoria,
-       platoCount: platos.filter((p) => p.categoriaId._id === categoria._id)
-         .length,
-     }));
+      const platos = resPlatos.data.data;
+      const categoriasConConteo = resCategorias.data.data.map((categoria) => ({
+        ...categoria,
+        platoCount: platos.filter((p) => p.categoriaId._id === categoria._id)
+          .length,
+      }));
 
-     setCategorias(categoriasConConteo);
-   } catch (error) {
-     console.error("Error:", error);
-   } finally {
-     setLoading(false);
-   }
- };
+      setCategorias(categoriasConConteo);
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,17 +48,19 @@ export default function Categorias() {
     try {
       if (editingCategoria) {
         await api.put(`/categorias/${editingCategoria._id}`, formData);
-        alert("Categoría actualizada");
+        toast.success("Categoría actualizada");
       } else {
         await api.post("/categorias", formData);
-        alert("Categoría creada");
+        toast.success("Categoría creada");
       }
 
       fetchCategorias();
       closeModal();
     } catch (error) {
       console.error("Error:", error);
-      alert(error.response?.data?.message || "Error al guardar categoría");
+      toast.error(
+        error.response?.data?.message || "Error al guardar categoría",
+      );
     }
   };
 
@@ -77,11 +80,13 @@ export default function Categorias() {
 
     try {
       await api.delete(`/categorias/${id}`);
-      alert("Categoría eliminada");
+      toast.success("Categoría eliminada");
       fetchCategorias();
     } catch (error) {
       console.error("Error:", error);
-      alert(error.response?.data?.message || "Error al eliminar categoría");
+      toast.error(
+        error.response?.data?.message || "Error al eliminar categoría",
+      );
     }
   };
 

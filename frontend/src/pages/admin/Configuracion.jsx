@@ -3,6 +3,7 @@ import { useAuth } from "../../context/AuthContext";
 import DashboardLayout from "../../components/admin/DashboardLayout";
 import { Save, Palette, Globe, Clock, MapPin } from "lucide-react";
 import api from "../../services/api";
+import toast from "react-hot-toast";
 
 export default function Configuracion() {
   const { user: _user } = useAuth();
@@ -117,11 +118,11 @@ export default function Configuracion() {
         });
       }
 
-      alert("Tema actualizado correctamente");
+      toast.success("Tema actualizado correctamente");
       fetchRestaurante();
     } catch (error) {
       console.error("Error:", error);
-      alert("Error al actualizar tema");
+      toast.error("Error al actualizar tema");
     } finally {
       setSaving(false);
     }
@@ -152,11 +153,11 @@ export default function Configuracion() {
         },
       });
 
-      alert("Contacto actualizado correctamente");
+      toast.success("Contacto actualizado correctamente");
       fetchRestaurante();
     } catch (error) {
       console.error("Error:", error);
-      alert("Error al actualizar contacto");
+      toast.error("Error al actualizar contacto");
     } finally {
       setSaving(false);
     }
@@ -177,11 +178,11 @@ export default function Configuracion() {
         domingo: formData.domingo,
       });
 
-      alert("Horarios actualizados correctamente");
+      toast.success("Horarios actualizados correctamente");
       fetchRestaurante();
     } catch (error) {
       console.error("Error:", error);
-      alert("Error al actualizar horarios");
+      toast.error("Error al actualizar horarios");
     } finally {
       setSaving(false);
     }
@@ -196,11 +197,11 @@ export default function Configuracion() {
         deliveryActivo: formData.deliveryActivo,
       });
 
-      alert("Configuración de servicios actualizada");
+      toast.success("Configuración de servicios actualizada");
       fetchRestaurante();
     } catch (error) {
       console.error("Error:", error);
-      alert("Error al actualizar servicios");
+      toast.error("Error al actualizar servicios");
     } finally {
       setSaving(false);
     }

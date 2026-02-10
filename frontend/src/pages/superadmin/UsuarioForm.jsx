@@ -8,6 +8,7 @@ import {
   getUsuarioById,
   actualizarUsuarioSuperadmin,
 } from "../../services/api";
+import toast from "react-hot-toast";
 
 export default function UsuarioForm() {
   const navigate = useNavigate();
@@ -47,7 +48,7 @@ export default function UsuarioForm() {
       });
     } catch (error) {
       console.error("Error:", error);
-      alert("Error al cargar usuario");
+      toast.error("Error al cargar usuario");
     }
   };
 
@@ -83,13 +84,13 @@ export default function UsuarioForm() {
         alert("Usuario actualizado correctamente");
       } else {
         await crearUsuarioSuperadmin(data);
-        alert("Usuario creado correctamente");
+        toast.success("Usuario creado correctamente");
       }
 
       navigate("/superadmin/usuarios");
     } catch (error) {
       console.error("Error:", error);
-      alert(error.response?.data?.message || "Error al guardar usuario");
+      toast.error(error.response?.data?.message || "Error al guardar usuario");
     } finally {
       setLoading(false);
     }

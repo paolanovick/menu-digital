@@ -4,13 +4,14 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 import { AuthProvider } from "./context/AuthContext";
 import { CartProvider } from "./context/CartProvider";
 import Home from "./pages/Home";
 import CategoryPage from "./pages/CategoryPage";
 import Envios from "./pages/Envios";
-import Checkout from "./pages/Checkout"; 
+import Checkout from "./pages/Checkout";
 import Login from "./pages/admin/Login";
 import Dashboard from "./pages/admin/Dashboard";
 import Platos from "./pages/admin/Platos";
@@ -18,7 +19,7 @@ import PlatoForm from "./pages/admin/PlatoForm";
 import Categorias from "./pages/admin/Categorias";
 import Importar from "./pages/admin/Importar";
 import Anuncios from "./pages/admin/Anuncios";
-import Configuracion from "./pages/admin/Configuracion"; 
+import Configuracion from "./pages/admin/Configuracion";
 import ProtectedRoute from "./components/admin/ProtectedRoute";
 import SuperadminDashboard from "./pages/superadmin/Dashboard";
 import SuperadminRestaurantes from "./pages/superadmin/Restaurantes";
@@ -32,6 +33,30 @@ function App() {
     <CartProvider>
       <AuthProvider>
         <Router>
+          <Toaster
+            position="top-center"
+            toastOptions={{
+              duration: 3000,
+              style: {
+                background: "#333",
+                color: "#fff",
+                borderRadius: "10px",
+                padding: "12px 20px",
+              },
+              success: {
+                iconTheme: {
+                  primary: "#10B981",
+                  secondary: "#fff",
+                },
+              },
+              error: {
+                iconTheme: {
+                  primary: "#EF4444",
+                  secondary: "#fff",
+                },
+              },
+            }}
+          />
           <Routes>
             {/* Rutas públicas */}
             <Route
@@ -113,7 +138,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            {/* Admin Configuración - VERIFICAR ESTO */}
+            {/* Admin Configuración */}
             <Route
               path="/admin/configuracion"
               element={
@@ -123,7 +148,6 @@ function App() {
               }
             />
             {/* Superadmin Dashboard */}
-
             <Route
               path="/superadmin"
               element={
@@ -166,14 +190,6 @@ function App() {
             />
             {/* Superadmin Usuarios */}
             <Route
-              path="/superadmin/usuarios"
-              element={
-                <ProtectedRoute>
-                  <SuperadminUsuarios />
-                </ProtectedRoute>
-              }
-            />
-            <Route
               path="/superadmin/usuarios/nuevo"
               element={
                 <ProtectedRoute>
@@ -194,7 +210,6 @@ function App() {
       </AuthProvider>
     </CartProvider>
   );
-  
 }
 
 export default App;

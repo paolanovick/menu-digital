@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import DashboardLayout from "../../components/admin/DashboardLayout";
 import { Save, ArrowLeft } from "lucide-react";
 import api from "../../services/api";
+import toast from "react-hot-toast";
 
 export default function RestauranteForm() {
   const navigate = useNavigate();
@@ -51,7 +52,7 @@ export default function RestauranteForm() {
       });
     } catch (error) {
       console.error("Error:", error);
-      alert("Error al cargar restaurante");
+      toast.error("Error al cargar restaurante");
     }
   };
 
@@ -81,16 +82,19 @@ export default function RestauranteForm() {
 
       if (isEditing) {
         await api.put(`/superadmin/restaurantes/${id}`, data);
-        alert("Restaurante actualizado correctamente");
+        // Por:
+        toast.success("Restaurante actualizado correctamente");
       } else {
         await api.post("/superadmin/restaurantes", data);
-        alert("Restaurante creado correctamente");
+        toast.success("Restaurante creado correctamente");
       }
 
       navigate("/superadmin/restaurantes");
     } catch (error) {
       console.error("Error:", error);
-      alert(error.response?.data?.message || "Error al guardar restaurante");
+     toast.error(
+       error.response?.data?.message || "Error al guardar restaurante",
+     );
     } finally {
       setLoading(false);
     }

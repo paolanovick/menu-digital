@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import DashboardLayout from "../../components/admin/DashboardLayout";
 import { Save, ArrowLeft } from "lucide-react";
 import api from "../../services/api";
+import toast from "react-hot-toast";
 
 export default function PlatoForm() {
   const navigate = useNavigate();
@@ -72,7 +73,7 @@ export default function PlatoForm() {
       });
     } catch (error) {
       console.error("Error:", error);
-      alert("Error al cargar plato");
+      toast.error("Error al cargar plato");
     }
   };
 
@@ -110,16 +111,16 @@ export default function PlatoForm() {
 
       if (isEditing) {
         await api.put(`/platos/${id}`, data);
-        alert("Plato actualizado correctamente");
+        toast.success("Plato actualizado correctamente");
       } else {
         await api.post("/platos", data);
-        alert("Plato creado correctamente");
+        toast.success("Plato creado correctamente");
       }
 
       navigate("/admin/platos");
     } catch (error) {
       console.error("Error:", error);
-      alert(error.response?.data?.message || "Error al guardar plato");
+      toast.error(error.response?.data?.message || "Error al guardar plato");
     } finally {
       setLoading(false);
     }
@@ -135,7 +136,6 @@ export default function PlatoForm() {
 
   return (
     <DashboardLayout>
-      {/* Header */}
       <div className="mb-8">
         <button
           onClick={() => navigate("/admin/platos")}
@@ -150,13 +150,11 @@ export default function PlatoForm() {
         </h1>
       </div>
 
-      {/* Formulario - Estilo El Danés */}
       <form
         onSubmit={handleSubmit}
         className="bg-white rounded-xl shadow-md p-8"
       >
         <div className="space-y-6">
-          {/* Nombre */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Nombre *
@@ -172,7 +170,6 @@ export default function PlatoForm() {
             />
           </div>
 
-          {/* Descripción */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Descripción
@@ -187,7 +184,6 @@ export default function PlatoForm() {
             />
           </div>
 
-          {/* Precio y Stock */}
           <div className="grid grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -236,13 +232,11 @@ export default function PlatoForm() {
                 placeholder="1"
               />
               <p className="text-xs text-gray-500 mt-1">
-                (Números del 1 al 10 en visualización primero. Dejar vacío para
-                orden normal)
+                (Números del 1 al 10 en visualización primero)
               </p>
             </div>
           </div>
 
-          {/* Imagen URL */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Imagen (URL)
@@ -257,7 +251,6 @@ export default function PlatoForm() {
             />
           </div>
 
-          {/* Categorías */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Categorías *
@@ -288,7 +281,6 @@ export default function PlatoForm() {
             </div>
           </div>
 
-          {/* Ingredientes */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Ingredientes (separados por comas)
@@ -303,7 +295,6 @@ export default function PlatoForm() {
             />
           </div>
 
-          {/* Alérgenos */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Alérgenos (separados por comas)
@@ -318,9 +309,7 @@ export default function PlatoForm() {
             />
           </div>
 
-          {/* Checkboxes - Estilo El Danés */}
           <div className="grid grid-cols-2 gap-6">
-            {/* Producto destacado */}
             <label className="flex items-center gap-3 p-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-wine transition-all">
               <input
                 type="checkbox"
@@ -337,7 +326,6 @@ export default function PlatoForm() {
               </div>
             </label>
 
-            {/* Sugerir como incentivo */}
             <label className="flex items-center gap-3 p-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-wine transition-all">
               <input
                 type="checkbox"
@@ -355,7 +343,6 @@ export default function PlatoForm() {
             </label>
           </div>
 
-          {/* Etiquetas alimentarias */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-3">
               Etiquetas
@@ -408,7 +395,6 @@ export default function PlatoForm() {
           </div>
         </div>
 
-        {/* Botones */}
         <div className="flex items-center justify-end gap-4 mt-8 pt-6 border-t">
           <button
             type="button"

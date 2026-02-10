@@ -2,6 +2,7 @@ import { useState } from 'react';
 import DashboardLayout from '../../components/admin/DashboardLayout';
 import { Download, Upload, FileSpreadsheet, CheckCircle, AlertCircle } from 'lucide-react';
 import api from '../../services/api';
+import toast from 'react-hot-toast';
 
 export default function Importar() {
   const [file, setFile] = useState(null);
@@ -23,21 +24,20 @@ export default function Importar() {
       link.remove();
     } catch (error) {
       console.error('Error:', error);
-      alert('Error al descargar plantilla');
+      toast.error('Error al descargar plantilla');
     }
   };
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
-      // Validar que sea Excel
       const validTypes = [
         'application/vnd.ms-excel',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
       ];
       
       if (!validTypes.includes(selectedFile.type)) {
-        alert('Por favor selecciona un archivo Excel (.xlsx o .xls)');
+        toast.error('Por favor selecciona un archivo Excel (.xlsx o .xls)');
         return;
       }
 
@@ -48,7 +48,7 @@ export default function Importar() {
 
   const handleImport = async () => {
     if (!file) {
-      alert('Por favor selecciona un archivo');
+      toast.error('Por favor selecciona un archivo');
       return;
     }
 
@@ -67,13 +67,13 @@ export default function Importar() {
 
       setResult(response.data.data);
       setFile(null);
+      toast.success('Menú importado correctamente');
       
-      // Limpiar input
       const fileInput = document.getElementById('file-input');
       if (fileInput) fileInput.value = '';
     } catch (error) {
       console.error('Error:', error);
-      alert(error.response?.data?.message || 'Error al importar menú');
+      toast.error(error.response?.data?.message || 'Error al importar menú');
     } finally {
       setLoading(false);
     }

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import DashboardLayout from "../../components/admin/DashboardLayout";
 import { Plus, Edit, Trash2, Eye, EyeOff } from "lucide-react";
 import api from "../../services/api";
+import toast from "react-hot-toast";
 
 export default function Anuncios() {
   const [anuncios, setAnuncios] = useState([]);
@@ -49,17 +50,17 @@ export default function Anuncios() {
 
       if (editingAnuncio) {
         await api.put(`/anuncios/${editingAnuncio._id}`, data);
-        alert("Anuncio actualizado");
+        toast.success("Anuncio actualizado");
       } else {
         await api.post("/anuncios", data);
-        alert("Anuncio creado");
+        toast.success("Anuncio creado");
       }
 
       fetchData();
       closeModal();
     } catch (error) {
       console.error("Error:", error);
-      alert(error.response?.data?.message || "Error al guardar anuncio");
+      toast.error(error.response?.data?.message || "Error al guardar anuncio");
     }
   };
 
@@ -79,11 +80,11 @@ export default function Anuncios() {
 
     try {
       await api.delete(`/anuncios/${id}`);
-      alert("Anuncio eliminado");
+      toast.success("Anuncio eliminado");
       fetchData();
     } catch (error) {
       console.error("Error:", error);
-      alert("Error al eliminar anuncio");
+      toast.error("Error al eliminar anuncio");
     }
   };
 
