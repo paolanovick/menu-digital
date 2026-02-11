@@ -89,7 +89,7 @@ export default function Home() {
             </div>
           )}
 
-          <h1 className="font-display text-4xl md:text-5xl font-bold mb-2">
+          <h1 className="font-display text-3xl md:text-4xl font-bold mb-6">
             {restaurante.nombre}
           </h1>
 
@@ -139,8 +139,6 @@ export default function Home() {
             )}
           </div>
         </div>
-
-      
       </div>
 
       <Footer restaurante={restaurante} />
