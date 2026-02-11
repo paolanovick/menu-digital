@@ -50,14 +50,14 @@ export default function Footer({ restaurante }) {
                 <img
                   src={restaurante.logo}
                   alt={restaurante.nombre}
-                  className="h-12 w-auto object-contain"
+                  className="h-20 w-auto object-contain"
                 />
               ) : (
                 <div className="text-4xl text-gray-400">🍽️</div>
               )}
             </div>
             <div className="text-xs text-gray-400 font-light italic">
-              Desde 2024
+              "El sabor del mundo en cada bocado"
             </div>
           </div>
 
