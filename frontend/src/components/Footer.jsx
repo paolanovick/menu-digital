@@ -58,11 +58,7 @@ export default function Footer({ restaurante }) {
               </h3>
             </div>
 
-            {restaurante.descripcion && (
-              <p className="text-sm text-gray-500 leading-relaxed">
-                {restaurante.descripcion}
-              </p>
-            )}
+           
 
             {/* Redes Sociales */}
             <div className="flex gap-3 pt-2">
