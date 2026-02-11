@@ -12,7 +12,8 @@ export default function Categorias() {
   const [formData, setFormData] = useState({
     nombre: "",
     descripcion: "",
-    icono: "🍽️",
+    icono: "",
+    imagen: "",
     visible: true,
   });
 
@@ -69,7 +70,8 @@ export default function Categorias() {
     setFormData({
       nombre: categoria.nombre,
       descripcion: categoria.descripcion || "",
-      icono: categoria.icono || "🍽️",
+      icono: categoria.icono || "",
+      imagen: categoria.imagen || "",
       visible: categoria.visible,
     });
     setShowModal(true);
@@ -106,7 +108,8 @@ export default function Categorias() {
     setFormData({
       nombre: "",
       descripcion: "",
-      icono: "🍽️",
+      icono: "",
+      imagen: "",
       visible: true,
     });
     setShowModal(true);
@@ -118,7 +121,8 @@ export default function Categorias() {
     setFormData({
       nombre: "",
       descripcion: "",
-      icono: "🍽️",
+      icono: "",
+      imagen: "",
       visible: true,
     });
   };
@@ -175,7 +179,16 @@ export default function Categorias() {
             {/* Header */}
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center gap-3">
-                <span className="text-4xl">{categoria.icono}</span>
+                {/* Mostrar imagen o icono */}
+                {categoria.imagen ? (
+                  <img
+                    src={categoria.imagen}
+                    alt={categoria.nombre}
+                    className="w-12 h-12 rounded-full object-cover"
+                  />
+                ) : (
+                  <span className="text-4xl">{categoria.icono || "🍽️"}</span>
+                )}
                 <div>
                   <h3 className="font-bold text-lg text-gray-800">
                     {categoria.nombre}
@@ -246,7 +259,7 @@ export default function Categorias() {
       {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
             <h2 className="text-2xl font-bold mb-6">
               {editingCategoria ? "Editar Categoría" : "Nueva Categoría"}
             </h2>
@@ -279,43 +292,64 @@ export default function Categorias() {
                   onChange={(e) =>
                     setFormData({ ...formData, descripcion: e.target.value })
                   }
-                  rows="3"
+                  rows="2"
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine focus:border-transparent"
                   placeholder="Breve descripción..."
                 />
               </div>
 
-              {/* Icono */}
+              {/* Imagen URL */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Icono
+                  URL de Imagen (opcional)
                 </label>
-                <div className="grid grid-cols-6 gap-2 mb-2">
-                  {iconosComunes.map((icono) => (
-                    <button
-                      key={icono}
-                      type="button"
-                      onClick={() => setFormData({ ...formData, icono })}
-                      className={`text-3xl p-2 rounded-lg transition-all ${
-                        formData.icono === icono
-                          ? "bg-wine text-white"
-                          : "hover:bg-gray-100"
-                      }`}
-                    >
-                      {icono}
-                    </button>
-                  ))}
-                </div>
                 <input
-                  type="text"
-                  value={formData.icono}
+                  type="url"
+                  value={formData.imagen}
                   onChange={(e) =>
-                    setFormData({ ...formData, icono: e.target.value })
+                    setFormData({ ...formData, imagen: e.target.value })
                   }
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine focus:border-transparent"
-                  placeholder="O escribe un emoji..."
+                  placeholder="https://i.ibb.co/..."
                 />
+                {formData.imagen && (
+                  <div className="mt-2">
+                    <img
+                      src={formData.imagen}
+                      alt="Preview"
+                      className="w-16 h-16 rounded-full object-cover"
+                    />
+                  </div>
+                )}
+                <p className="text-xs text-gray-500 mt-1">
+                  Si agregás imagen, se usará en lugar del icono
+                </p>
               </div>
+
+              {/* Icono (solo si no hay imagen) */}
+              {!formData.imagen && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Icono (si no usás imagen)
+                  </label>
+                  <div className="grid grid-cols-6 gap-2 mb-2">
+                    {iconosComunes.map((icono) => (
+                      <button
+                        key={icono}
+                        type="button"
+                        onClick={() => setFormData({ ...formData, icono })}
+                        className={`text-2xl p-2 rounded-lg transition-all ${
+                          formData.icono === icono
+                            ? "bg-wine text-white"
+                            : "hover:bg-gray-100"
+                        }`}
+                      >
+                        {icono}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Visible */}
               <div>
