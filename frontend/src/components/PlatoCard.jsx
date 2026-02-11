@@ -7,7 +7,7 @@ export default function PlatoCard({ plato, showBuyButton }) {
 
   return (
     <div className="bg-white rounded-3xl overflow-hidden shadow-card transition-all hover:shadow-card-hover flex flex-col">
-      {/* Imagen */}
+      {/* Imagen - SOLO IMAGEN, SIN BADGES */}
       <div className="relative bg-gray-100 aspect-[4/3]">
         {plato.imagen && !imageError ? (
           <img
@@ -22,7 +22,7 @@ export default function PlatoCard({ plato, showBuyButton }) {
           </div>
         )}
 
-        {/* Badges superiores izquierda */}
+        {/* ÚNICAMENTE badges de destacado, nuevo y agotado */}
         <div className="absolute top-2 left-2 flex flex-wrap gap-1">
           {plato.destacado && (
             <span className="bg-wine text-white text-xs px-2 py-1 rounded-full font-medium">
@@ -40,25 +40,6 @@ export default function PlatoCard({ plato, showBuyButton }) {
             </span>
           )}
         </div>
-
-        {/* Badges superiores derecha */}
-        <div className="absolute top-2 right-2 flex flex-col gap-1">
-          {plato.etiquetas?.vegetariano && (
-            <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
-              🌱 Vegetariano
-            </span>
-          )}
-          {plato.etiquetas?.vegano && (
-            <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
-              🌿 Vegano
-            </span>
-          )}
-          {plato.etiquetas?.sinGluten && (
-            <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
-              🌾 Sin Gluten
-            </span>
-          )}
-        </div>
       </div>
 
       {/* Contenido */}
@@ -67,11 +48,32 @@ export default function PlatoCard({ plato, showBuyButton }) {
           {plato.nombre}
         </h3>
 
-        {plato.descripcion && (
-          <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-            {plato.descripcion}
-          </p>
-        )}
+        {/* DESCRIPCIÓN CON BADGES DE DIETAS */}
+        <div className="mb-3 space-y-2">
+          {/* Badges de dietas (vegetariano, vegano, sin gluten) */}
+          <div className="flex flex-wrap gap-1">
+            {plato.etiquetas?.vegetariano && (
+              <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full inline-flex items-center gap-1">
+                🌱 Vegetariano
+              </span>
+            )}
+            {plato.etiquetas?.vegano && (
+              <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full inline-flex items-center gap-1">
+                🌿 Vegano
+              </span>
+            )}
+            {plato.etiquetas?.sinGluten && (
+              <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full inline-flex items-center gap-1">
+                🌾 Sin Gluten
+              </span>
+            )}
+          </div>
+
+          {/* Descripción del plato */}
+          {plato.descripcion && (
+            <p className="text-sm text-gray-600">{plato.descripcion}</p>
+          )}
+        </div>
 
         {plato.ingredientes && plato.ingredientes.length > 0 && (
           <div className="mb-3">
