@@ -26,7 +26,7 @@ const categoriaSchema = new mongoose.Schema(
     // ÍCONO/EMOJI
     icono: {
       type: String,
-      default: "🍽️",
+      default: "", // ← Cambiar de "🍽️" a ""
       maxlength: [10, "El ícono no puede tener más de 10 caracteres"],
     },
 
