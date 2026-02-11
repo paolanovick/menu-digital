@@ -20,16 +20,14 @@ exports.importarMenu = async (req, res) => {
 
     // Leer archivo Excel
     const workbook = XLSX.readFile(filePath);
-    const sheetName = workbook.SheetNames[0]; // Primera hoja
+    const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
 
     // Convertir a JSON
     const data = XLSX.utils.sheet_to_json(worksheet);
 
     if (!data || data.length === 0) {
-      // Eliminar archivo temporal
       fs.unlinkSync(filePath);
-
       return res.status(400).json({
         success: false,
         message: "El archivo está vacío o no tiene el formato correcto",
@@ -40,10 +38,11 @@ exports.importarMenu = async (req, res) => {
     const resultados = {
       categoriasCreadas: 0,
       platosCreados: 0,
+      platosActualizados: 0,
       errores: [],
     };
 
-    // Crear mapa de categorías (para no duplicar)
+    // Crear mapa de categorías
     const categoriasMap = new Map();
 
     for (let i = 0; i < data.length; i++) {
@@ -53,7 +52,7 @@ exports.importarMenu = async (req, res) => {
         // Validar campos requeridos
         if (!fila.categoria || !fila.nombre || !fila.precio) {
           resultados.errores.push({
-            fila: i + 2, // +2 porque fila 1 son headers y array empieza en 0
+            fila: i + 2,
             error: "Faltan campos obligatorios (categoria, nombre, precio)",
           });
           continue;
@@ -63,13 +62,11 @@ exports.importarMenu = async (req, res) => {
         let categoria = categoriasMap.get(fila.categoria);
 
         if (!categoria) {
-          // Buscar si ya existe en BD
           categoria = await Categoria.findOne({
             restauranteId,
             nombre: fila.categoria,
           });
 
-          // Si no existe, crearla
           if (!categoria) {
             categoria = await Categoria.create({
               restauranteId,
@@ -83,38 +80,53 @@ exports.importarMenu = async (req, res) => {
           categoriasMap.set(fila.categoria, categoria);
         }
 
-        // Crear plato
-       const platoData = {
-         restauranteId,
-         categoriaId: categoria._id,
-         nombre: fila.nombre,
-         descripcion: fila.descripcion || "",
-         precio: parseFloat(fila.precio),
-         ingredientes: fila.ingredientes
-           ? fila.ingredientes.split(",").map((i) => i.trim())
-           : [],
-         alergenos: fila.alergenos
-           ? fila.alergenos.split(",").map((a) => a.trim())
-           : [],
-         imagen: fila.imagen_url || "", // ← AGREGAR ESTA LÍNEA
-         etiquetas: {
-           vegetariano:
-             fila.vegetariano?.toLowerCase() === "si" ||
-             fila.vegetariano === "1",
-           vegano: fila.vegano?.toLowerCase() === "si" || fila.vegano === "1",
-           sinGluten:
-             fila.sin_gluten?.toLowerCase() === "si" || fila.sin_gluten === "1",
-           picante:
-             fila.picante?.toLowerCase() === "si" || fila.picante === "1",
-         },
-         destacado:
-           fila.destacado?.toLowerCase() === "si" || fila.destacado === "1",
-         disponible: true,
-         visible: true,
-       };
+        // Preparar datos del plato
+        const platoData = {
+          restauranteId,
+          categoriaId: categoria._id,
+          nombre: fila.nombre,
+          descripcion: fila.descripcion || "",
+          precio: parseFloat(fila.precio),
+          ingredientes: fila.ingredientes
+            ? fila.ingredientes.split(",").map((i) => i.trim())
+            : [],
+          alergenos: fila.alergenos
+            ? fila.alergenos.split(",").map((a) => a.trim())
+            : [],
+          imagen: fila.imagen_url || "",
+          etiquetas: {
+            vegetariano:
+              fila.vegetariano?.toLowerCase() === "si" ||
+              fila.vegetariano === "1",
+            vegano: fila.vegano?.toLowerCase() === "si" || fila.vegano === "1",
+            sinGluten:
+              fila.sin_gluten?.toLowerCase() === "si" ||
+              fila.sin_gluten === "1",
+            picante:
+              fila.picante?.toLowerCase() === "si" || fila.picante === "1",
+          },
+          destacado:
+            fila.destacado?.toLowerCase() === "si" || fila.destacado === "1",
+          disponible: true,
+          visible: true,
+        };
 
-        await Plato.create(platoData);
-        resultados.platosCreados++;
+        // Buscar si el plato ya existe (por nombre y categoría)
+        const platoExistente = await Plato.findOne({
+          restauranteId,
+          categoriaId: categoria._id,
+          nombre: fila.nombre,
+        });
+
+        if (platoExistente) {
+          // Actualizar plato existente
+          await Plato.findByIdAndUpdate(platoExistente._id, platoData);
+          resultados.platosActualizados++;
+        } else {
+          // Crear plato nuevo
+          await Plato.create(platoData);
+          resultados.platosCreados++;
+        }
       } catch (error) {
         resultados.errores.push({
           fila: i + 2,
@@ -132,7 +144,6 @@ exports.importarMenu = async (req, res) => {
       data: resultados,
     });
   } catch (error) {
-    // Limpiar archivo si existe
     if (req.file && fs.existsSync(req.file.path)) {
       fs.unlinkSync(req.file.path);
     }
@@ -151,47 +162,44 @@ exports.importarMenu = async (req, res) => {
 // @access  Privado
 exports.descargarPlantilla = async (req, res) => {
   try {
-    // Datos de ejemplo para la plantilla
-   const datosEjemplo = [
-     {
-       categoria: "Entradas",
-       nombre: "Empanadas de carne",
-       descripcion: "Empanadas caseras",
-       precio: 1200,
-       ingredientes: "carne,cebolla,aceitunas",
-       alergenos: "gluten",
-       vegetariano: "no",
-       vegano: "no",
-       sin_gluten: "no",
-       picante: "no",
-       destacado: "si",
-       imagen_url:
-         "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=400",
-     },
-     {
-       categoria: "Postres",
-       nombre: "Flan casero",
-       descripcion: "Con dulce de leche",
-       precio: 950,
-       ingredientes: "leche,azucar",
-       alergenos: "lacteos,huevo",
-       vegetariano: "si",
-       vegano: "no",
-       sin_gluten: "si",
-       picante: "no",
-       destacado: "no",
-       imagen_url:
-         "https://images.unsplash.com/photo-1551024601-bec78aea704b?w=400",
-     },
-   ];
+    const datosEjemplo = [
+      {
+        categoria: "Entradas",
+        nombre: "Empanadas de carne",
+        descripcion: "Empanadas caseras",
+        precio: 1200,
+        ingredientes: "carne,cebolla,aceitunas",
+        alergenos: "gluten",
+        vegetariano: "no",
+        vegano: "no",
+        sin_gluten: "no",
+        picante: "no",
+        destacado: "si",
+        imagen_url:
+          "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=400",
+      },
+      {
+        categoria: "Postres",
+        nombre: "Flan casero",
+        descripcion: "Con dulce de leche",
+        precio: 950,
+        ingredientes: "leche,azucar",
+        alergenos: "lacteos,huevo",
+        vegetariano: "si",
+        vegano: "no",
+        sin_gluten: "si",
+        picante: "no",
+        destacado: "no",
+        imagen_url:
+          "https://images.unsplash.com/photo-1551024601-bec78aea704b?w=400",
+      },
+    ];
 
-    // Crear workbook y worksheet
     const workbook = XLSX.utils.book_new();
     const worksheet = XLSX.utils.json_to_sheet(datosEjemplo);
 
     XLSX.utils.book_append_sheet(workbook, worksheet, "Menu");
 
-    // Generar buffer
     const buffer = XLSX.write(workbook, { type: "buffer", bookType: "xlsx" });
 
     res.setHeader(
