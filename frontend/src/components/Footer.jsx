@@ -57,7 +57,7 @@ export default function Footer({ restaurante }) {
               )}
             </div>
             <div className="text-xs text-gray-400 font-light italic">
-              "El sabor del mundo en cada bocado"
+              "Comer es viajar y cada plato... Un destino"
             </div>
           </div>
 

@@ -37,7 +37,7 @@ export default function Header({ restaurante }) {
                 <img
                   src={restaurante.logo}
                   alt={restaurante.nombre}
-                  className="h-10 w-auto object-contain"
+                  className="h-14 w-auto object-contain"
                 />
               ) : (
                 <div className="text-3xl">🍽️</div>

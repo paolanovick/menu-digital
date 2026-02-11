@@ -84,7 +84,7 @@ export default function Home() {
               <img
                 src={restaurante.logo}
                 alt={restaurante.nombre}
-                className="h-32 w-auto mx-auto object-contain"
+                className="h-38 w-auto mx-auto object-contain"
               />
             </div>
           )}
