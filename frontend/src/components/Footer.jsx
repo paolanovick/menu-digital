@@ -1,4 +1,10 @@
-import { FaWhatsapp, FaInstagram, FaFacebook } from "react-icons/fa";
+import {
+  FaWhatsapp,
+  FaInstagram,
+  FaFacebook,
+  FaStar,
+  FaShare,
+} from "react-icons/fa";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 
 export default function Footer({ restaurante }) {
@@ -33,76 +39,41 @@ export default function Footer({ restaurante }) {
     );
 
   return (
-    <footer className="bg-white border-t border-gray-200 text-gray-600">
-      <div className="container mx-auto px-4 py-6">
-        {/* Grid principal - 3 columnas */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          
-          {/* Columna 1: Logo y Redes */}
-          <div className="space-y-3">
+    <footer className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-300 border-t border-gray-700">
+      <div className="container mx-auto px-6 py-10">
+        {/* Grid principal - 4 columnas en md, 1 en mobile */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-8">
+          {/* Columna 1: Logo simplificado */}
+          <div className="space-y-4">
             <div className="flex items-center gap-3">
               {restaurante.logo ? (
                 <img
                   src={restaurante.logo}
                   alt={restaurante.nombre}
-                  className="h-10 w-auto object-contain"
+                  className="h-12 w-auto object-contain brightness-0 invert opacity-90 hover:opacity-100 transition-opacity"
                 />
               ) : (
-                <div className="text-2xl">🍽️</div>
+                <div className="text-4xl text-gray-400">🍽️</div>
               )}
-              <h3 className="text-base font-medium text-gray-800">
-                {restaurante.nombre}
-              </h3>
             </div>
-
-            {/* Redes Sociales */}
-            <div className="flex gap-3">
-              {whatsappLink && (
-                
-                <a  href={whatsappLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-green-600 transition-colors"
-                  title="WhatsApp"
-                >
-                  <FaWhatsapp size={20} />
-                </a>
-              )}
-              {instagramLink && (
-                <a
-                  href={instagramLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-pink-600 transition-colors"
-                  title="Instagram"
-                >
-                  <FaInstagram size={20} />
-                </a>
-              )}
-              {facebookLink && (
-                <a
-                  href={facebookLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-blue-600 transition-colors"
-                  title="Facebook"
-                >
-                  <FaFacebook size={20} />
-                </a>
-              )}
+            <div className="text-xs text-gray-400 font-light italic">
+              Desde 2024
             </div>
           </div>
 
-          {/* Columna 2: Contacto */}
-          <div className="space-y-2">
-            <h4 className="text-xs font-medium text-gray-800 uppercase tracking-wide mb-3">
+          {/* Columna 2: Contacto - Más limpio */}
+          <div className="space-y-3">
+            <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">
               Contacto
             </h4>
-            
+
             {restaurante.contacto?.direccion?.calle && (
-              <div className="flex items-start gap-2 text-sm">
-                <MapPin size={14} className="mt-0.5 flex-shrink-0 text-gray-400" />
-                <span className="text-gray-600">
+              <div className="flex items-start gap-3 text-sm group">
+                <MapPin
+                  size={16}
+                  className="mt-0.5 flex-shrink-0 text-gray-500 group-hover:text-yellow-400 transition-colors"
+                />
+                <span className="text-gray-300 group-hover:text-white transition-colors">
                   {restaurante.contacto.direccion.calle}
                   {restaurante.contacto.direccion.ciudad &&
                     `, ${restaurante.contacto.direccion.ciudad}`}
@@ -111,66 +82,158 @@ export default function Footer({ restaurante }) {
             )}
 
             {restaurante.contacto?.telefono && (
-             <a 
+              <a
                 href={`tel:${restaurante.contacto.telefono}`}
-                className="flex items-center gap-2 text-sm text-gray-600 hover:text-black transition-colors"
+                className="flex items-center gap-3 text-sm text-gray-300 hover:text-white transition-all group"
               >
-                <Phone size={14} className="text-gray-400" />
-                <span>{restaurante.contacto.telefono}</span>
+                <Phone
+                  size={16}
+                  className="text-gray-500 group-hover:text-yellow-400 transition-colors"
+                />
+                <span className="group-hover:translate-x-1 transition-transform inline-block">
+                  {restaurante.contacto.telefono}
+                </span>
               </a>
             )}
 
             {restaurante.contacto?.email && (
-              
-              <a  href={`mailto:${restaurante.contacto.email}`}
-                className="flex items-center gap-2 text-sm text-gray-600 hover:text-black transition-colors"
+              <a
+                href={`mailto:${restaurante.contacto.email}`}
+                className="flex items-center gap-3 text-sm text-gray-300 hover:text-white transition-all group"
               >
-                <Mail size={14} className="text-gray-400" />
-                <span>{restaurante.contacto.email}</span>
+                <Mail
+                  size={16}
+                  className="text-gray-500 group-hover:text-yellow-400 transition-colors"
+                />
+                <span className="group-hover:translate-x-1 transition-transform inline-block">
+                  {restaurante.contacto.email}
+                </span>
               </a>
             )}
           </div>
 
-          {/* Columna 3: Horarios compactos */}
+          {/* Columna 3: Horarios - Compacto y elegante */}
           {tieneHorarios && (
-            <div>
-              <h4 className="text-xs font-medium text-gray-800 uppercase tracking-wide flex items-center gap-1 mb-3">
-                <Clock size={14} />
+            <div className="space-y-3">
+              <h4 className="text-sm font-semibold text-white uppercase tracking-wider flex items-center gap-2 mb-4">
+                <Clock size={16} className="text-yellow-400" />
                 Horarios
               </h4>
-              <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
-                {diasSemana.map(({ key, label }) => {
-                  const horario = restaurante.horarios?.[key];
-                  const estaAbierto =
-                    horario?.abierto !== false && horario?.apertura;
+              <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                <div className="space-y-1.5">
+                  {diasSemana.map(({ key, label }) => {
+                    const horario = restaurante.horarios?.[key];
+                    const estaAbierto =
+                      horario?.abierto !== false && horario?.apertura;
 
-                  return (
-                    <div key={key} className="flex justify-between">
-                      <span className="text-gray-500">{label}</span>
-                      {estaAbierto ? (
-                        <span className="text-gray-700">
-                          {horario.apertura}-{horario.cierre}
+                    return (
+                      <div
+                        key={key}
+                        className="flex justify-between items-center text-xs"
+                      >
+                        <span className="text-gray-400 font-medium">
+                          {label}
                         </span>
-                      ) : (
-                        <span className="text-gray-400">-</span>
-                      )}
-                    </div>
-                  );
-                })}
+                        {estaAbierto ? (
+                          <span className="text-gray-200 bg-gray-700/50 px-2 py-0.5 rounded-full">
+                            {horario.apertura}-{horario.cierre}
+                          </span>
+                        ) : (
+                          <span className="text-gray-500 italic text-[11px]">
+                            Cerrado
+                          </span>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           )}
+
+          {/* Columna 4: Compartir y Calificación - Más vistoso */}
+          <div className="space-y-6">
+            {/* Redes Sociales con estilo */}
+            <div>
+              <h4 className="text-sm font-semibold text-white uppercase tracking-wider flex items-center gap-2 mb-4">
+                <FaShare size={14} className="text-yellow-400" />
+                Compartir
+              </h4>
+              <div className="flex gap-3">
+                {whatsappLink && (
+                  <a
+                    href={whatsappLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-gray-800 p-3 rounded-lg text-gray-400 hover:bg-green-600 hover:text-white transition-all transform hover:scale-110 hover:shadow-lg"
+                    title="WhatsApp"
+                  >
+                    <FaWhatsapp size={20} />
+                  </a>
+                )}
+                {instagramLink && (
+                  <a
+                    href={instagramLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-gray-800 p-3 rounded-lg text-gray-400 hover:bg-gradient-to-br from-pink-500 via-purple-500 to-orange-500 hover:text-white transition-all transform hover:scale-110 hover:shadow-lg"
+                    title="Instagram"
+                  >
+                    <FaInstagram size={20} />
+                  </a>
+                )}
+                {facebookLink && (
+                  <a
+                    href={facebookLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-gray-800 p-3 rounded-lg text-gray-400 hover:bg-blue-600 hover:text-white transition-all transform hover:scale-110 hover:shadow-lg"
+                    title="Facebook"
+                  >
+                    <FaFacebook size={20} />
+                  </a>
+                )}
+              </div>
+            </div>
+
+            {/* Calificación con estilo */}
+            <div className="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 p-4 rounded-lg border border-yellow-500/20">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="flex">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <FaStar key={star} className="text-yellow-400 text-sm" />
+                  ))}
+                </div>
+                <span className="text-white text-sm font-semibold">4.8</span>
+              </div>
+              <p className="text-xs text-gray-400">
+                Calificación excelente basada en +500 reseñas
+              </p>
+              <button className="mt-3 text-xs bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-full transition-all flex items-center gap-2">
+                <span>Deja tu reseña</span>
+                <span className="text-yellow-400">→</span>
+              </button>
+            </div>
+          </div>
         </div>
 
-        {/* Línea divisoria */}
-        <div className="border-t border-gray-200 pt-4">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-2">
-            <p className="text-xs text-gray-400">
-              © {new Date().getFullYear()} {restaurante.nombre}
+        {/* Línea divisoria con gradiente */}
+        <div className="relative py-4">
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent"></div>
+
+          {/* Copyright */}
+          <div className="flex flex-col md:flex-row justify-between items-center gap-2 pt-4">
+            <p className="text-xs text-gray-500">
+              © {new Date().getFullYear()} {restaurante.nombre}. Todos los
+              derechos reservados.
             </p>
-            <p className="text-xs text-gray-400">
-              Powered by <span className="font-medium">ConCodigoART</span>
-            </p>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-600">Powered by</span>
+              <span className="text-sm font-semibold bg-gradient-to-r from-yellow-400 to-orange-400 text-transparent bg-clip-text">
+                ConCodigoART
+              </span>
+              <span className="text-gray-600">✨</span>
+            </div>
           </div>
         </div>
       </div>
