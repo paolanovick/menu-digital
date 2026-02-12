@@ -1,3 +1,4 @@
+// components/AnunciosTicker.jsx
 import { useEffect, useState } from "react";
 import { getAnunciosPublicos } from "../services/api";
 
@@ -29,18 +30,18 @@ export default function AnunciosTicker({ restauranteId, categoriaId = null }) {
   // Si ticker está desactivado o no hay anuncios, no mostrar nada
   if (!tickerActivo || anuncios.length === 0) return null;
 
-  // Crear el contenido del anuncio DUPLICADO 3 VECES para que sea continuo
+  // Crear el contenido - MÁS SEPARACIÓN ENTRE ANUNCIOS
   const contenidoAnuncios = anuncios
     .map((anuncio) => `${anuncio.icono} ${anuncio.texto}`)
-    .join("   •   ");
+    .join("   •   •   •   "); // Más puntos y espacios
 
-  // Duplicamos el contenido 3 veces para que se vea continuo
-  const contenidoDuplicado = `${contenidoAnuncios}   •   ${contenidoAnuncios}   •   ${contenidoAnuncios}   •   ${contenidoAnuncios}`;
+  // DUPLICAMOS MUCHAS VECES para que sea infinito y sin espacios vacíos
+  const contenidoDuplicado = `${contenidoAnuncios}   •   •   •   ${contenidoAnuncios}   •   •   •   ${contenidoAnuncios}   •   •   •   ${contenidoAnuncios}   •   •   •   ${contenidoAnuncios}`;
 
   return (
-    <div className="bg-cream border-y border-gray-100 py-3 relative overflow-hidden group">
-      <div className="whitespace-nowrap animate-marquee group-hover:animation-pause inline-block">
-        <span className="text-xs md:text-sm text-gray-400 font-medium tracking-widest uppercase px-4">
+    <div className="bg-cream border-y border-gray-100 py-2 relative overflow-hidden group">
+      <div className="whitespace-nowrap animate-marquee inline-block">
+        <span className="text-xs md:text-sm text-gray-500 font-medium tracking-wide px-2">
           {contenidoDuplicado}
         </span>
       </div>
@@ -55,7 +56,7 @@ export default function AnunciosTicker({ restauranteId, categoriaId = null }) {
           }
         }
         .animate-marquee {
-          animation: marquee 30s linear infinite;
+          animation: marquee 40s linear infinite;
         }
         .group:hover .animate-marquee {
           animation-play-state: paused;

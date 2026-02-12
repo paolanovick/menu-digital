@@ -37,10 +37,10 @@ export default function Header({ restaurante }) {
                 <img
                   src={restaurante.logo}
                   alt={restaurante.nombre}
-                  className="h-14 w-auto object-contain"
+                  className="h-16 w-auto object-contain" // Antes h-14, ahora h-16
                 />
               ) : (
-                <div className="text-3xl">🍽️</div>
+                <div className="text-4xl">🍽️</div> // Antes text-3xl, ahora text-4xl
               )}
             </div>
 
