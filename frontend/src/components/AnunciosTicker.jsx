@@ -5,7 +5,6 @@ import { getAnunciosPublicos } from "../services/api";
 export default function AnunciosTicker({ restauranteId, categoriaId = null }) {
   const [anuncios, setAnuncios] = useState([]);
 
-  // Inicializar desde localStorage
   const [tickerActivo] = useState(() => {
     const restauranteData = JSON.parse(
       localStorage.getItem("restauranteData") || "{}",
@@ -13,7 +12,6 @@ export default function AnunciosTicker({ restauranteId, categoriaId = null }) {
     return restauranteData.tickerActivo ?? true;
   });
 
-  // Cargar anuncios
   useEffect(() => {
     const fetchAnuncios = async () => {
       try {
@@ -27,26 +25,27 @@ export default function AnunciosTicker({ restauranteId, categoriaId = null }) {
     fetchAnuncios();
   }, [restauranteId, categoriaId]);
 
-  // Si ticker está desactivado o no hay anuncios, no mostrar nada
   if (!tickerActivo || anuncios.length === 0) return null;
 
-  // Crear el contenido - MÁS SEPARACIÓN ENTRE ANUNCIOS
-  const contenidoAnuncios = anuncios
+  // Crear el contenido con MÁS ESPACIOS Y SEPARADORES MÁS GRANDES
+  const contenidoBase = anuncios
     .map((anuncio) => `${anuncio.icono} ${anuncio.texto}`)
-    .join("   •   •   •   "); // Más puntos y espacios
+    .join("       •       •       •       "); // Muchos espacios entre los puntos
 
-  // DUPLICAMOS MUCHAS VECES para que sea infinito y sin espacios vacíos
-  const contenidoDuplicado = `${contenidoAnuncios}   •   •   •   ${contenidoAnuncios}   •   •   •   ${contenidoAnuncios}   •   •   •   ${contenidoAnuncios}   •   •   •   ${contenidoAnuncios}`;
+  // REPETIR 40 VECES
+  const contenidoMasivo = Array(40)
+    .fill(contenidoBase)
+    .join("       •       •       •       ");
 
   return (
-    <div className="bg-cream border-y border-gray-100 py-2 relative overflow-hidden group">
-      <div className="whitespace-nowrap animate-marquee inline-block">
-        <span className="text-xs md:text-sm text-gray-500 font-medium tracking-wide px-2">
-          {contenidoDuplicado}
+    <div className="bg-cream border-y border-gray-100/50 py-2 relative overflow-hidden w-full">
+      <div className="inline-flex whitespace-nowrap animate-marquee">
+        <span className="text-xs md:text-sm text-gray-400/80 font-light tracking-wide px-2">
+          {contenidoMasivo}
         </span>
       </div>
 
-      <style jsx>{`
+      <style>{`
         @keyframes marquee {
           0% {
             transform: translateX(0);
@@ -56,10 +55,7 @@ export default function AnunciosTicker({ restauranteId, categoriaId = null }) {
           }
         }
         .animate-marquee {
-          animation: marquee 40s linear infinite;
-        }
-        .group:hover .animate-marquee {
-          animation-play-state: paused;
+          animation: marquee 180s linear infinite;
         }
       `}</style>
     </div>
