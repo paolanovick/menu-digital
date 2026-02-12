@@ -84,20 +84,20 @@ export default function Home() {
               <img
                 src={restaurante.logo}
                 alt={restaurante.nombre}
-                className="h-38 w-auto mx-auto object-contain"
+                className="h-32 w-auto mx-auto object-contain"
               />
             </div>
           )}
 
-          <h1 className="font-display text-3xl md:text-4xl font-bold mb-6">
-            {restaurante.nombre}
-          </h1>
+         <h1 className="font-display text-3xl md:text-4xl font-bold mb-6">
+  {restaurante.nombre}
+</h1>
 
-          {restaurante.descripcion && (
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              {restaurante.descripcion}
-            </p>
-          )}
+{restaurante.descripcion && (
+  <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+    {restaurante.descripcion}
+  </p>
+)}
         </div>
 
         {/* Categorías */}
@@ -139,6 +139,8 @@ export default function Home() {
             )}
           </div>
         </div>
+
+      
       </div>
 
       <Footer restaurante={restaurante} />
