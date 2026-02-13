@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
      }
 
      try {
-       const res = await api.get("/auth/me");
+       const res = await api.get("api/auth/me");
        console.log("🔧 AuthContext - Usuario cargado:", res.data.data); // DEBUG
        setUser(res.data.data);
      } catch (error) {
@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
   }, [token]);
 
   const login = async (email, password) => {
-    const res = await api.post("/auth/login", { email, password });
+    const res = await api.post("api/auth/login", { email, password });
     const { token, usuario } = res.data.data;
 
     localStorage.setItem("token", token);
