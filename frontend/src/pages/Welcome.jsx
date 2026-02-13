@@ -33,7 +33,7 @@ export default function Welcome() {
 
       {/* Hero section with background image */}
       <section className="relative flex flex-col items-center justify-center min-h-[65vh] px-4 overflow-hidden">
-        {/* Background image */}
+        {/* Background image - AHORA MÁS VISIBLE */}
         <div className="absolute inset-0">
           <img
             src="./hero.jpg"
@@ -41,7 +41,8 @@ export default function Welcome() {
             className="h-full w-full object-cover"
             crossOrigin="anonymous"
           />
-          <div className="absolute inset-0 bg-black/75" />
+          {/* Cambié de bg-black/75 a bg-black/60 para que se vea más la imagen */}
+          <div className="absolute inset-0 bg-black/60" />
           <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-transparent to-gray-900" />
         </div>
 
@@ -54,9 +55,9 @@ export default function Welcome() {
             </div>
           </div>
 
-          {/* Title */}
-          <h1 className="font-display text-5xl md:text-7xl lg:text-8xl tracking-tight text-white mb-4">
-            El Menu
+          {/* Title - NUEVA TIPOGRAFÍA MÁS ELEGANTE */}
+          <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl font-light tracking-[0.15em] uppercase text-white mb-4">
+            El Menú
           </h1>
 
           {/* Divider */}
@@ -86,7 +87,7 @@ export default function Welcome() {
                   <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-gray-700/60 mb-4 group-hover:bg-wine/15 transition-colors duration-300">
                     <Icon className="w-5 h-5 text-wine-light" />
                   </div>
-                  <h3 className="font-display text-lg font-semibold text-wine-light mb-2">
+                  <h3 className="font-serif text-lg font-light tracking-wide text-wine-light mb-2">
                     {benefit.title}
                   </h3>
                   <p className="text-sm text-gray-400 leading-relaxed">
