@@ -30,6 +30,15 @@ export default {
         card: "0 4px 20px rgba(119, 127, 130, 0.08)",
         "card-hover": "0 8px 30px rgba(119, 127, 130, 0.12)",
       },
+      animation: {
+        "bounce-slow": "bounce-slow 3s infinite",
+      },
+      keyframes: {
+        "bounce-slow": {
+          "0%, 100%": { transform: "translateY(-5%)" },
+          "50%": { transform: "translateY(5%)" },
+        },
+      },
     },
   },
   plugins: [],
