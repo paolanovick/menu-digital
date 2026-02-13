@@ -24,7 +24,7 @@ export default function QRScanner({ onClose, onScan }) {
     if (onClose) onClose();
   }, [stream, onClose]);
 
-  // Función para escanear QR del video - envuelta en useCallback
+  // Función para escanear QR del video
   const scanQRCode = useCallback(() => {
     if (!videoRef.current || !canvasRef.current || !scanning) return;
 
@@ -44,15 +44,12 @@ export default function QRScanner({ onClose, onScan }) {
 
       if (code) {
         setScanning(false);
-        // Vibrar si el dispositivo lo soporta
         if (navigator.vibrate) navigator.vibrate(200);
 
-        // Llamar al callback con el dato escaneado
         if (onScan) {
           onScan(code.data);
         }
 
-        // Cerrar después de escanear
         setTimeout(() => {
           stopCamera();
         }, 500);
@@ -61,13 +58,12 @@ export default function QRScanner({ onClose, onScan }) {
       }
     }
 
-    // Continuar escaneando si todavía está activo
     if (scanning) {
       animationRef.current = requestAnimationFrame(scanQRCode);
     }
   }, [scanning, onScan, stopCamera]);
 
-  // useEffect para la cámara
+  // useEffect para la cámara - AHORA CON TODAS LAS DEPENDENCIAS
   useEffect(() => {
     let isMounted = true;
     let currentStream = null;
@@ -96,7 +92,6 @@ export default function QRScanner({ onClose, onScan }) {
           if (videoRef.current) {
             videoRef.current.srcObject = mediaStream;
 
-            // Iniciar escaneo cuando el video esté listo
             videoRef.current.onloadeddata = () => {
               if (scanning) {
                 animationRef.current = requestAnimationFrame(scanQRCode);
@@ -124,7 +119,6 @@ export default function QRScanner({ onClose, onScan }) {
 
     initCamera();
 
-    // Cleanup function
     return () => {
       isMounted = false;
       setScanning(false);
@@ -135,14 +129,12 @@ export default function QRScanner({ onClose, onScan }) {
         currentStream.getTracks().forEach((track) => track.stop());
       }
     };
-  }, [scanQRCode]); // ✅ Ahora incluimos scanQRCode como dependencia
+  }, [scanQRCode, scanning]); // ✅ Agregamos 'scanning' a las dependencias
 
   return (
     <div className="fixed inset-0 z-[9999] bg-black flex flex-col">
-      {/* Canvas oculto para procesamiento */}
       <canvas ref={canvasRef} className="hidden" />
 
-      {/* Video */}
       <div className="relative flex-1 flex items-center justify-center overflow-hidden">
         {permission === "requesting" && (
           <div className="text-white text-center">
