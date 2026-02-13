@@ -8,6 +8,7 @@ import { Toaster } from "react-hot-toast";
 
 import { AuthProvider } from "./context/AuthContext";
 import { CartProvider } from "./context/CartProvider";
+import Welcome from "./pages/Welcome";
 import Home from "./pages/Home";
 import CategoryPage from "./pages/CategoryPage";
 import Envios from "./pages/Envios";
@@ -59,10 +60,7 @@ function App() {
           />
           <Routes>
             {/* Rutas públicas */}
-            <Route
-              path="/"
-              element={<Navigate to="/restaurante-de-paola" replace />}
-            />
+            <Route path="/" element={<Welcome />} />
             <Route path="/:slug" element={<Home />} />
             <Route
               path="/:slug/categoria/:categoriaSlug"
