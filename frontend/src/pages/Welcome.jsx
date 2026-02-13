@@ -6,7 +6,7 @@ import {
   Sparkles,
   ScanLine,
 } from "lucide-react";
-import QRScanner from "./components/QRScanner"; // Ajustá la ruta según tu estructura
+import QRScanner from "./components/QRScanner";
 
 const benefits = [
   {
@@ -30,25 +30,15 @@ const benefits = [
 export default function Welcome() {
   const [showScanner, setShowScanner] = useState(false);
 
- const handleScan = (qrData) => {
-   console.log("✅ QR detectado:", qrData);
+  const handleScan = (qrData) => {
+    console.log("✅ QR detectado:", qrData);
 
-   // Si el QR contiene una URL, redirigir
-   if (qrData.startsWith("http")) {
-     window.location.href = qrData;
-   } else {
-     // Si es solo texto, podrías buscar un restaurante por slug
-     // Ejemplo: window.location.href = `https://elmenu.ar/${qrData}`;
-     alert(`QR detectado: ${qrData}`);
-   }
- };
-
- // En el componente:
- {
-   showScanner && (
-     <QRScanner onClose={() => setShowScanner(false)} onScan={handleScan} />
-   );
- }
+    if (qrData.startsWith("http")) {
+      window.location.href = qrData;
+    } else {
+      alert(`QR detectado: ${qrData}`);
+    }
+  };
 
   return (
     <>
@@ -109,7 +99,10 @@ export default function Welcome() {
                     key={benefit.title}
                     onClick={
                       benefit.action === "camera"
-                        ? () => setShowScanner(true)
+                        ? () => {
+                            console.log("🔵 Abriendo scanner...");
+                            setShowScanner(true);
+                          }
                         : undefined
                     }
                     className={`group relative flex flex-col items-center text-center p-6 rounded-xl border border-wine/15 bg-gray-800/60 backdrop-blur-sm hover:border-wine/40 hover:bg-gray-800/80 hover:shadow-[0_8px_30px_rgba(168,49,50,0.15)] transform hover:scale-[1.03] transition-all duration-300 ${
@@ -140,19 +133,22 @@ export default function Welcome() {
         {/* QR indicator */}
         <section className="px-4 pb-12 relative z-10">
           <div className="max-w-3xl mx-auto flex flex-col items-center">
-            <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full border border-wine/20 bg-gray-800/80 backdrop-blur-sm shadow-[0_4px_15px_rgba(168,49,50,0.1)]">
+            <button
+              onClick={() => {
+                console.log("🔵 Abriendo scanner desde footer...");
+                setShowScanner(true);
+              }}
+              className="inline-flex items-center gap-3 px-6 py-3 rounded-full border border-wine/20 bg-gray-800/80 backdrop-blur-sm shadow-[0_4px_15px_rgba(168,49,50,0.1)] hover:bg-wine/20 transition-colors"
+            >
               <span className="relative flex h-2.5 w-2.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-wine-light opacity-40" />
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-wine-light" />
               </span>
               <ScanLine className="w-4 h-4 text-wine-light" />
-              <button
-                onClick={() => setShowScanner(true)}
-                className="text-sm font-medium text-wine-light drop-shadow-[0_0_5px_rgba(199,72,73,0.4)] hover:text-wine transition-colors"
-              >
+              <p className="text-sm font-medium text-wine-light drop-shadow-[0_0_5px_rgba(199,72,73,0.4)]">
                 Busca el código QR en tu mesa
-              </button>
-            </div>
+              </p>
+            </button>
           </div>
         </section>
 
@@ -166,9 +162,15 @@ export default function Welcome() {
         </footer>
       </div>
 
-      {/* QR Scanner Modal */}
+      {/* QR Scanner Modal - AHORA SÍ DENTRO DEL RETURN */}
       {showScanner && (
-        <QRScanner onClose={() => setShowScanner(false)} onScan={handleScan} />
+        <QRScanner
+          onClose={() => {
+            console.log("🔴 Cerrando scanner");
+            setShowScanner(false);
+          }}
+          onScan={handleScan}
+        />
       )}
     </>
   );
