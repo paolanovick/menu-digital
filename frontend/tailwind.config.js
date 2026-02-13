@@ -32,11 +32,17 @@ export default {
       },
       animation: {
         "bounce-slow": "bounce-slow 3s infinite",
+        scan: "scan 2s ease-in-out infinite", // 👈 Agregamos esta línea
       },
       keyframes: {
         "bounce-slow": {
           "0%, 100%": { transform: "translateY(-5%)" },
           "50%": { transform: "translateY(5%)" },
+        },
+        scan: {
+          // 👈 Agregamos este keyframe
+          "0%, 100%": { transform: "translate(-50%, -50%) translateY(-30px)" },
+          "50%": { transform: "translate(-50%, -50%) translateY(30px)" },
         },
       },
     },

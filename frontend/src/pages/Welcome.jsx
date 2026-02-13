@@ -30,12 +30,25 @@ const benefits = [
 export default function Welcome() {
   const [showScanner, setShowScanner] = useState(false);
 
-  const handleScan = (qrData) => {
-    // Acá procesamos el QR escaneado
-    console.log("QR escaneado:", qrData);
-    // Por ejemplo, redirigir a la URL del restaurante
-    // window.location.href = qrData;
-  };
+ const handleScan = (qrData) => {
+   console.log("✅ QR detectado:", qrData);
+
+   // Si el QR contiene una URL, redirigir
+   if (qrData.startsWith("http")) {
+     window.location.href = qrData;
+   } else {
+     // Si es solo texto, podrías buscar un restaurante por slug
+     // Ejemplo: window.location.href = `https://elmenu.ar/${qrData}`;
+     alert(`QR detectado: ${qrData}`);
+   }
+ };
+
+ // En el componente:
+ {
+   showScanner && (
+     <QRScanner onClose={() => setShowScanner(false)} onScan={handleScan} />
+   );
+ }
 
   return (
     <>

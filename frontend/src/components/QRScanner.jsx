@@ -1,24 +1,73 @@
 // components/QRScanner.jsx
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { X, Camera, QrCode } from "lucide-react";
+import jsQR from "jsqr";
 
-export default function QRScanner({ onClose }) {
+export default function QRScanner({ onClose, onScan }) {
   const videoRef = useRef(null);
+  const canvasRef = useRef(null);
   const [error, setError] = useState("");
   const [permission, setPermission] = useState(null);
   const [stream, setStream] = useState(null);
+  const [scanning, setScanning] = useState(true);
+  const animationRef = useRef();
 
-  // Eliminamos startCamera porque ahora está dentro del useEffect
-
-  const stopCamera = () => {
+  const stopCamera = useCallback(() => {
+    setScanning(false);
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+    }
     if (stream) {
       stream.getTracks().forEach((track) => track.stop());
       setStream(null);
     }
     if (onClose) onClose();
-  };
+  }, [stream, onClose]);
 
-  // useEffect con toda la lógica de inicio de cámara
+  // Función para escanear QR del video - envuelta en useCallback
+  const scanQRCode = useCallback(() => {
+    if (!videoRef.current || !canvasRef.current || !scanning) return;
+
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+
+    if (video.readyState === video.HAVE_ENOUGH_DATA) {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+      const code = jsQR(imageData.data, canvas.width, canvas.height, {
+        inversionAttempts: "dontInvert",
+      });
+
+      if (code) {
+        setScanning(false);
+        // Vibrar si el dispositivo lo soporta
+        if (navigator.vibrate) navigator.vibrate(200);
+
+        // Llamar al callback con el dato escaneado
+        if (onScan) {
+          onScan(code.data);
+        }
+
+        // Cerrar después de escanear
+        setTimeout(() => {
+          stopCamera();
+        }, 500);
+
+        return;
+      }
+    }
+
+    // Continuar escaneando si todavía está activo
+    if (scanning) {
+      animationRef.current = requestAnimationFrame(scanQRCode);
+    }
+  }, [scanning, onScan, stopCamera]);
+
+  // useEffect para la cámara
   useEffect(() => {
     let isMounted = true;
     let currentStream = null;
@@ -46,6 +95,13 @@ export default function QRScanner({ onClose }) {
 
           if (videoRef.current) {
             videoRef.current.srcObject = mediaStream;
+
+            // Iniciar escaneo cuando el video esté listo
+            videoRef.current.onloadeddata = () => {
+              if (scanning) {
+                animationRef.current = requestAnimationFrame(scanQRCode);
+              }
+            };
           }
         }
       } catch (err) {
@@ -71,14 +127,21 @@ export default function QRScanner({ onClose }) {
     // Cleanup function
     return () => {
       isMounted = false;
+      setScanning(false);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
       if (currentStream) {
         currentStream.getTracks().forEach((track) => track.stop());
       }
     };
-  }, []); // ✅ Array vacío - correcto
+  }, [scanQRCode]); // ✅ Ahora incluimos scanQRCode como dependencia
 
   return (
     <div className="fixed inset-0 z-[9999] bg-black flex flex-col">
+      {/* Canvas oculto para procesamiento */}
+      <canvas ref={canvasRef} className="hidden" />
+
       {/* Video */}
       <div className="relative flex-1 flex items-center justify-center overflow-hidden">
         {permission === "requesting" && (
@@ -110,6 +173,7 @@ export default function QRScanner({ onClose }) {
               ref={videoRef}
               autoPlay
               playsInline
+              muted
               className="absolute inset-0 w-full h-full object-cover"
             />
 
@@ -125,6 +189,9 @@ export default function QRScanner({ onClose }) {
                 <div className="absolute -bottom-2 -right-2 w-8 h-8 border-b-4 border-r-4 border-wine-light rounded-br-2xl"></div>
               </div>
             </div>
+
+            {/* Efecto de escaneo */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-0.5 bg-wine-light/50 animate-scan"></div>
 
             {/* Texto instructivo */}
             <div className="absolute bottom-24 left-0 right-0 text-center">
