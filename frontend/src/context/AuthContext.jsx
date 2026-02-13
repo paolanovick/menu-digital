@@ -12,25 +12,26 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token"));
 
   useEffect(() => {
-   const loadUser = async () => {
-     const token = localStorage.getItem("token");
+    const loadUser = async () => {
+      const token = localStorage.getItem("token");
 
-     if (!token) {
-       setLoading(false);
-       return;
-     }
+      if (!token) {
+        setLoading(false);
+        return;
+      }
 
-     try {
-       const res = await api.get("api/auth/me");
-       console.log("🔧 AuthContext - Usuario cargado:", res.data.data); // DEBUG
-       setUser(res.data.data);
-     } catch (error) {
-       console.error("Error loading user:", error);
-       localStorage.removeItem("token");
-     } finally {
-       setLoading(false);
-     }
-   };
+      try {
+        // CAMBIADO: de "api/auth/me" a "/auth/me"
+        const res = await api.get("/auth/me");
+        console.log("🔧 AuthContext - Usuario cargado:", res.data.data);
+        setUser(res.data.data);
+      } catch (error) {
+        console.error("Error loading user:", error);
+        localStorage.removeItem("token");
+      } finally {
+        setLoading(false);
+      }
+    };
 
     if (token) {
       api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -41,7 +42,8 @@ export const AuthProvider = ({ children }) => {
   }, [token]);
 
   const login = async (email, password) => {
-    const res = await api.post("api/auth/login", { email, password });
+    // CAMBIADO: de "api/auth/login" a "/auth/login"
+    const res = await api.post("/auth/login", { email, password });
     const { token, usuario } = res.data.data;
 
     localStorage.setItem("token", token);
