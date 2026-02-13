@@ -121,7 +121,7 @@ export default function Welcome() {
 
       {/* Footer */}
       <footer className="px-4 pb-8 pt-4 relative z-10">
-        <p className="text-center text-xs text-gray-600">
+        <p className="text-center text-xs text-gray-300">
           {
             "2026 elmenu.ar \u2014 Experiencia digital para restaurantes \u2014 Powered by conCodigoART"
           }
