@@ -6,7 +6,7 @@ import {
   Sparkles,
   ScanLine,
 } from "lucide-react";
-import QRScanner from "./components/QRScanner";
+import QRScanner from "../components/QRScanner";
 
 const benefits = [
   {
