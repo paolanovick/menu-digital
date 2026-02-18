@@ -79,18 +79,20 @@ export default function QRScanner({ onClose, onScan }) {
           setPermission("granted");
 
           if (videoRef.current) {
+            videoRef.current.setAttribute("playsinline", "true");
+            videoRef.current.setAttribute("muted", "true");
             videoRef.current.srcObject = mediaStream;
-           videoRef.current.onloadedmetadata = () => {
-             videoRef.current
-               .play()
-               .then(() => {
-                 animationRef.current = requestAnimationFrame(scanQRCode);
-               })
-               .catch((e) => {
-                 console.error("Error al reproducir video:", e);
-                 animationRef.current = requestAnimationFrame(scanQRCode);
-               });
-           };
+            videoRef.current.oncanplay = () => {
+              videoRef.current
+                .play()
+                .then(() => {
+                  animationRef.current = requestAnimationFrame(scanQRCode);
+                })
+                .catch((e) => {
+                  console.error("Error al reproducir video:", e);
+                  animationRef.current = requestAnimationFrame(scanQRCode);
+                });
+            };
           }
         }
       } catch (err) {
