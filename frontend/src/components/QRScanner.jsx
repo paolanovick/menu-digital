@@ -61,10 +61,11 @@ export default function QRScanner({ onClose, onScan, stream }) {
     const initCamera = async () => {
       try {
         setPermission("requesting");
-
+ console.log("📷 stream recibido como prop:", stream);
         let mediaStream = stream; // ✅ usa el stream recibido
 
         if (!mediaStream) {
+            console.log("⚠️ No hay stream, pidiendo cámara...");
           // Fallback si no llegó stream
           if (!navigator.mediaDevices?.getUserMedia) {
             throw new Error("Tu navegador no soporta el acceso a la cámara");
