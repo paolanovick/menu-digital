@@ -80,10 +80,17 @@ export default function QRScanner({ onClose, onScan }) {
 
           if (videoRef.current) {
             videoRef.current.srcObject = mediaStream;
-            videoRef.current.onloadedmetadata = () => {
-              videoRef.current.play();
-              animationRef.current = requestAnimationFrame(scanQRCode);
-            };
+           videoRef.current.onloadedmetadata = () => {
+             videoRef.current
+               .play()
+               .then(() => {
+                 animationRef.current = requestAnimationFrame(scanQRCode);
+               })
+               .catch((e) => {
+                 console.error("Error al reproducir video:", e);
+                 animationRef.current = requestAnimationFrame(scanQRCode);
+               });
+           };
           }
         }
       } catch (err) {
