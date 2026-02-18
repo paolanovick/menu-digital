@@ -12,49 +12,49 @@ export default function QRScanner({ onClose, onScan }) {
   const scanningRef = useRef(true);
   const animationRef = useRef();
 
+  // ✅ Guardar callbacks en refs para evitar re-renders
+  const onCloseRef = useRef(onClose);
+  const onScanRef = useRef(onScan);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+    onScanRef.current = onScan;
+  }, [onClose, onScan]);
+
   const stopCamera = useCallback(() => {
     scanningRef.current = false;
-    if (animationRef.current) {
-      cancelAnimationFrame(animationRef.current);
-    }
+    if (animationRef.current) cancelAnimationFrame(animationRef.current);
     if (streamRef.current) {
       streamRef.current.getTracks().forEach((track) => track.stop());
       streamRef.current = null;
     }
-    if (onClose) onClose();
-  }, [onClose]);
+    if (onCloseRef.current) onCloseRef.current();
+  }, []); // ✅ Sin dependencias
 
   const scanQRCode = useCallback(() => {
     if (!videoRef.current || !canvasRef.current || !scanningRef.current) return;
-
     const video = videoRef.current;
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
-
     if (video.readyState === video.HAVE_ENOUGH_DATA) {
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
       const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
       const code = jsQR(imageData.data, canvas.width, canvas.height, {
         inversionAttempts: "dontInvert",
       });
-
       if (code) {
         scanningRef.current = false;
         if (navigator.vibrate) navigator.vibrate(200);
-        if (onScan) onScan(code.data);
+        if (onScanRef.current) onScanRef.current(code.data);
         setTimeout(() => stopCamera(), 500);
         return;
       }
     }
-
     if (scanningRef.current) {
       animationRef.current = requestAnimationFrame(scanQRCode);
     }
-  }, [onScan, stopCamera]);
-
+  }, [stopCamera]); // ✅ stopCamera ya no cambia
   useEffect(() => {
     let isMounted = true;
 
