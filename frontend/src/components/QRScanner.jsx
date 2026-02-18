@@ -8,25 +8,24 @@ export default function QRScanner({ onClose, onScan }) {
   const canvasRef = useRef(null);
   const [error, setError] = useState("");
   const [permission, setPermission] = useState(null);
-  const [stream, setStream] = useState(null);
-  const [scanning, setScanning] = useState(true);
+  const streamRef = useRef(null);
+  const scanningRef = useRef(true);
   const animationRef = useRef();
 
   const stopCamera = useCallback(() => {
-    setScanning(false);
+    scanningRef.current = false;
     if (animationRef.current) {
       cancelAnimationFrame(animationRef.current);
     }
-    if (stream) {
-      stream.getTracks().forEach((track) => track.stop());
-      setStream(null);
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => track.stop());
+      streamRef.current = null;
     }
     if (onClose) onClose();
-  }, [stream, onClose]);
+  }, [onClose]);
 
-  // Función para escanear QR del video
   const scanQRCode = useCallback(() => {
-    if (!videoRef.current || !canvasRef.current || !scanning) return;
+    if (!videoRef.current || !canvasRef.current || !scanningRef.current) return;
 
     const video = videoRef.current;
     const canvas = canvasRef.current;
@@ -43,89 +42,79 @@ export default function QRScanner({ onClose, onScan }) {
       });
 
       if (code) {
-        setScanning(false);
+        scanningRef.current = false;
         if (navigator.vibrate) navigator.vibrate(200);
-
-        if (onScan) {
-          onScan(code.data);
-        }
-
-        setTimeout(() => {
-          stopCamera();
-        }, 500);
-
+        if (onScan) onScan(code.data);
+        setTimeout(() => stopCamera(), 500);
         return;
       }
     }
 
-    if (scanning) {
+    if (scanningRef.current) {
       animationRef.current = requestAnimationFrame(scanQRCode);
     }
-  }, [scanning, onScan, stopCamera]);
+  }, [onScan, stopCamera]);
 
-  // useEffect para la cámara - AHORA CON TODAS LAS DEPENDENCIAS
- useEffect(() => {
-   let isMounted = true;
-   let currentStream = null;
+  useEffect(() => {
+    let isMounted = true;
 
-   const initCamera = async () => {
-     try {
-       setPermission("requesting");
+    const initCamera = async () => {
+      try {
+        setPermission("requesting");
 
-       if (!navigator.mediaDevices?.getUserMedia) {
-         throw new Error("Tu navegador no soporta el acceso a la cámara");
-       }
+        if (!navigator.mediaDevices?.getUserMedia) {
+          throw new Error("Tu navegador no soporta el acceso a la cámara");
+        }
 
-       const mediaStream = await navigator.mediaDevices.getUserMedia({
-         video: {
-           facingMode: "environment",
-           width: { ideal: 1920 },
-           height: { ideal: 1080 },
-         },
-       });
+        const mediaStream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: "environment",
+            width: { ideal: 1920 },
+            height: { ideal: 1080 },
+          },
+        });
 
-       if (isMounted) {
-         currentStream = mediaStream;
-         setStream(mediaStream);
-         setPermission("granted");
+        if (isMounted) {
+          streamRef.current = mediaStream;
+          setPermission("granted");
 
-         if (videoRef.current) {
-           videoRef.current.srcObject = mediaStream;
-           videoRef.current.onloadeddata = () => {
-             animationRef.current = requestAnimationFrame(scanQRCode);
-           };
-         }
-       }
-     } catch (err) {
-       console.error("Error de cámara:", err);
-       if (isMounted) {
-         setPermission("denied");
-         if (err.name === "NotAllowedError") {
-           setError(
-             "Permiso denegado. Hacé click en el candado 🔒 y permití el acceso a la cámara.",
-           );
-         } else if (err.name === "NotFoundError") {
-           setError("No se encontró ninguna cámara en tu dispositivo.");
-         } else {
-           setError("No se pudo acceder a la cámara.");
-         }
-       }
-     }
-   };
+          if (videoRef.current) {
+            videoRef.current.srcObject = mediaStream;
+            videoRef.current.onloadedmetadata = () => {
+              videoRef.current.play();
+              animationRef.current = requestAnimationFrame(scanQRCode);
+            };
+          }
+        }
+      } catch (err) {
+        console.error("Error de cámara:", err);
+        if (isMounted) {
+          setPermission("denied");
+          if (err.name === "NotAllowedError") {
+            setError(
+              "Permiso denegado. Hacé click en el candado 🔒 y permití el acceso a la cámara.",
+            );
+          } else if (err.name === "NotFoundError") {
+            setError("No se encontró ninguna cámara en tu dispositivo.");
+          } else {
+            setError("No se pudo acceder a la cámara.");
+          }
+        }
+      }
+    };
 
-   initCamera();
+    initCamera();
 
-   return () => {
-     isMounted = false;
-     if (animationRef.current) {
-       cancelAnimationFrame(animationRef.current);
-     }
-     if (currentStream) {
-       currentStream.getTracks().forEach((track) => track.stop());
-     }
-   };
-   // eslint-disable-next-line react-hooks/exhaustive-deps
- }, []);
+    return () => {
+      isMounted = false;
+      scanningRef.current = false;
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach((track) => track.stop());
+      }
+    };
+  }, [scanQRCode]);
+
   return (
     <div className="fixed inset-0 z-[9999] bg-black flex flex-col">
       <canvas ref={canvasRef} className="hidden" />
@@ -164,12 +153,9 @@ export default function QRScanner({ onClose, onScan }) {
               className="absolute inset-0 w-full h-full object-cover"
             />
 
-            {/* Frame guía para QR */}
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="relative">
                 <div className="w-64 h-64 border-2 border-wine/80 rounded-2xl shadow-[0_0_0_9999px_rgba(0,0,0,0.5)]"></div>
-
-                {/* Esquinas decorativas */}
                 <div className="absolute -top-2 -left-2 w-8 h-8 border-t-4 border-l-4 border-wine-light rounded-tl-2xl"></div>
                 <div className="absolute -top-2 -right-2 w-8 h-8 border-t-4 border-r-4 border-wine-light rounded-tr-2xl"></div>
                 <div className="absolute -bottom-2 -left-2 w-8 h-8 border-b-4 border-l-4 border-wine-light rounded-bl-2xl"></div>
@@ -177,10 +163,8 @@ export default function QRScanner({ onClose, onScan }) {
               </div>
             </div>
 
-            {/* Efecto de escaneo */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-0.5 bg-wine-light/50 animate-scan"></div>
 
-            {/* Texto instructivo */}
             <div className="absolute bottom-24 left-0 right-0 text-center">
               <div className="inline-flex items-center gap-2 bg-black/50 backdrop-blur-sm px-6 py-3 rounded-full border border-white/20">
                 <QrCode className="w-5 h-5 text-wine-light" />
@@ -190,7 +174,6 @@ export default function QRScanner({ onClose, onScan }) {
               </div>
             </div>
 
-            {/* Botón de cerrar */}
             <button
               onClick={stopCamera}
               className="absolute top-4 right-4 w-12 h-12 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/20 hover:bg-wine/80 transition-colors group"
