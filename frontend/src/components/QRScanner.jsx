@@ -88,9 +88,10 @@ export default function QRScanner({ onClose, onScan, stream }) {
             videoRef.current.srcObject = mediaStream;
             videoRef.current.setAttribute("playsinline", "true");
             videoRef.current.setAttribute("muted", "true");
-            videoRef.current.onloadedmetadata = () => {
+
+            const startPlaying = () => {
               videoRef.current
-                .play()
+                ?.play()
                 .then(() => {
                   animationRef.current = requestAnimationFrame(scanQRCode);
                 })
@@ -99,6 +100,12 @@ export default function QRScanner({ onClose, onScan, stream }) {
                   animationRef.current = requestAnimationFrame(scanQRCode);
                 });
             };
+
+            if (videoRef.current.readyState >= 2) {
+              startPlaying(); // ✅ stream ya activo, arranca directo
+            } else {
+              videoRef.current.onloadedmetadata = startPlaying;
+            }
           }
         }
       } catch (err) {
