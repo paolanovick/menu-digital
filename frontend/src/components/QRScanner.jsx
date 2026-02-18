@@ -66,23 +66,29 @@ export default function QRScanner({ onClose, onScan }) {
           throw new Error("Tu navegador no soporta el acceso a la cámara");
         }
 
-        const mediaStream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            facingMode: "environment",
-            width: { ideal: 1920 },
-            height: { ideal: 1080 },
-          },
-        });
+        let mediaStream;
+
+        // Primero intenta con cámara trasera
+        try {
+          mediaStream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: "environment" },
+          });
+        } catch {
+          // Si falla, intenta con cualquier cámara
+          mediaStream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+          });
+        }
 
         if (isMounted) {
           streamRef.current = mediaStream;
           setPermission("granted");
 
           if (videoRef.current) {
+            videoRef.current.srcObject = mediaStream;
             videoRef.current.setAttribute("playsinline", "true");
             videoRef.current.setAttribute("muted", "true");
-            videoRef.current.srcObject = mediaStream;
-            videoRef.current.oncanplay = () => {
+            videoRef.current.onloadedmetadata = () => {
               videoRef.current
                 .play()
                 .then(() => {
