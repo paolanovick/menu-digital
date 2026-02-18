@@ -64,74 +64,68 @@ export default function QRScanner({ onClose, onScan }) {
   }, [scanning, onScan, stopCamera]);
 
   // useEffect para la cámara - AHORA CON TODAS LAS DEPENDENCIAS
-  useEffect(() => {
-    let isMounted = true;
-    let currentStream = null;
+ useEffect(() => {
+   let isMounted = true;
+   let currentStream = null;
 
-    const initCamera = async () => {
-      try {
-        setPermission("requesting");
+   const initCamera = async () => {
+     try {
+       setPermission("requesting");
 
-        if (!navigator.mediaDevices?.getUserMedia) {
-          throw new Error("Tu navegador no soporta el acceso a la cámara");
-        }
+       if (!navigator.mediaDevices?.getUserMedia) {
+         throw new Error("Tu navegador no soporta el acceso a la cámara");
+       }
 
-        const mediaStream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            facingMode: "environment",
-            width: { ideal: 1920 },
-            height: { ideal: 1080 },
-          },
-        });
+       const mediaStream = await navigator.mediaDevices.getUserMedia({
+         video: {
+           facingMode: "environment",
+           width: { ideal: 1920 },
+           height: { ideal: 1080 },
+         },
+       });
 
-        if (isMounted) {
-          currentStream = mediaStream;
-          setStream(mediaStream);
-          setPermission("granted");
+       if (isMounted) {
+         currentStream = mediaStream;
+         setStream(mediaStream);
+         setPermission("granted");
 
-          if (videoRef.current) {
-            videoRef.current.srcObject = mediaStream;
+         if (videoRef.current) {
+           videoRef.current.srcObject = mediaStream;
+           videoRef.current.onloadeddata = () => {
+             animationRef.current = requestAnimationFrame(scanQRCode);
+           };
+         }
+       }
+     } catch (err) {
+       console.error("Error de cámara:", err);
+       if (isMounted) {
+         setPermission("denied");
+         if (err.name === "NotAllowedError") {
+           setError(
+             "Permiso denegado. Hacé click en el candado 🔒 y permití el acceso a la cámara.",
+           );
+         } else if (err.name === "NotFoundError") {
+           setError("No se encontró ninguna cámara en tu dispositivo.");
+         } else {
+           setError("No se pudo acceder a la cámara.");
+         }
+       }
+     }
+   };
 
-            videoRef.current.onloadeddata = () => {
-              if (scanning) {
-                animationRef.current = requestAnimationFrame(scanQRCode);
-              }
-            };
-          }
-        }
-      } catch (err) {
-        console.error("Error de cámara:", err);
-        if (isMounted) {
-          setPermission("denied");
+   initCamera();
 
-          if (err.name === "NotAllowedError") {
-            setError(
-              "Permiso denegado. Hacé click en el candado 🔒 en la barra del navegador y permití el acceso a la cámara.",
-            );
-          } else if (err.name === "NotFoundError") {
-            setError("No se encontró ninguna cámara en tu dispositivo.");
-          } else {
-            setError("No se pudo acceder a la cámara.");
-          }
-        }
-      }
-    };
-
-    initCamera();
-
-    return () => {
-      isMounted = false;
-      setScanning(false);
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-      if (currentStream) {
-        currentStream.getTracks().forEach((track) => track.stop());
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scanQRCode]); // ✅ Agregamos 'scanning' a las dependencias
-
+   return () => {
+     isMounted = false;
+     if (animationRef.current) {
+       cancelAnimationFrame(animationRef.current);
+     }
+     if (currentStream) {
+       currentStream.getTracks().forEach((track) => track.stop());
+     }
+   };
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+ }, []);
   return (
     <div className="fixed inset-0 z-[9999] bg-black flex flex-col">
       <canvas ref={canvasRef} className="hidden" />
