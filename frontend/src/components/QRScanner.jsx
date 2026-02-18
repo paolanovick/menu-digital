@@ -129,7 +129,8 @@ export default function QRScanner({ onClose, onScan }) {
         currentStream.getTracks().forEach((track) => track.stop());
       }
     };
-  }, [scanQRCode, scanning]); // ✅ Agregamos 'scanning' a las dependencias
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scanQRCode]); // ✅ Agregamos 'scanning' a las dependencias
 
   return (
     <div className="fixed inset-0 z-[9999] bg-black flex flex-col">
