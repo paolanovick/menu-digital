@@ -29,10 +29,29 @@ const benefits = [
 
 export default function Welcome() {
   const [showScanner, setShowScanner] = useState(false);
+  const [mediaStream, setMediaStream] = useState(null);
+
+  const handleOpenScanner = async () => {
+    console.log("🔵 Abriendo scanner...");
+    try {
+      let stream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "environment" },
+        });
+      } catch {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      }
+      setMediaStream(stream);
+      setShowScanner(true);
+    } catch (err) {
+      console.error("Error de cámara:", err);
+      setShowScanner(true);
+    }
+  };
 
   const handleScan = (qrData) => {
     console.log("✅ QR detectado:", qrData);
-
     if (qrData.startsWith("http")) {
       window.location.href = qrData;
     } else {
@@ -49,7 +68,6 @@ export default function Welcome() {
 
         {/* Hero section with background image */}
         <section className="relative flex flex-col items-center justify-center min-h-[65vh] px-4 overflow-hidden">
-          {/* Background image */}
           <div className="absolute inset-0">
             <img
               src="./hero.jpg"
@@ -61,24 +79,19 @@ export default function Welcome() {
             <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-transparent to-gray-900" />
           </div>
 
-          {/* Content */}
           <div className="relative z-10 flex flex-col items-center text-center max-w-2xl mx-auto">
-            {/* Floating icon */}
             <div className="mb-8 animate-bounce-slow">
               <div className="flex items-center justify-center w-20 h-20 rounded-full border border-wine/30 bg-wine/10 backdrop-blur-sm">
                 <UtensilsCrossed className="w-9 h-9 text-wine-light" />
               </div>
             </div>
 
-            {/* Title */}
             <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl font-light tracking-[0.15em] uppercase text-white mb-4">
               El Menú
             </h1>
 
-            {/* Divider */}
             <div className="w-16 h-px bg-gradient-to-r from-wine/0 via-wine to-wine/0 mb-6" />
 
-            {/* Subtitle */}
             <p className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-md">
               Escanea el código QR desde tu mesa
             </p>
@@ -99,10 +112,7 @@ export default function Welcome() {
                     key={benefit.title}
                     onClick={
                       benefit.action === "camera"
-                        ? () => {
-                            console.log("🔵 Abriendo scanner...");
-                            setShowScanner(true);
-                          }
+                        ? handleOpenScanner // ✅ conectado
                         : undefined
                     }
                     className={`group relative flex flex-col items-center text-center p-6 rounded-xl border border-wine/15 bg-gray-800/60 backdrop-blur-sm hover:border-wine/40 hover:bg-gray-800/80 hover:shadow-[0_8px_30px_rgba(168,49,50,0.15)] transform hover:scale-[1.03] transition-all duration-300 ${
@@ -134,10 +144,7 @@ export default function Welcome() {
         <section className="px-4 pb-12 relative z-10">
           <div className="max-w-3xl mx-auto flex flex-col items-center">
             <button
-              onClick={() => {
-                console.log("🔵 Abriendo scanner desde footer...");
-                setShowScanner(true);
-              }}
+              onClick={handleOpenScanner} // ✅ conectado
               className="inline-flex items-center gap-3 px-6 py-3 rounded-full border border-wine/20 bg-gray-800/80 backdrop-blur-sm shadow-[0_4px_15px_rgba(168,49,50,0.1)] hover:bg-wine/20 transition-colors"
             >
               <span className="relative flex h-2.5 w-2.5">
@@ -162,12 +169,12 @@ export default function Welcome() {
         </footer>
       </div>
 
-      {/* QR Scanner Modal - AHORA SÍ DENTRO DEL RETURN */}
       {showScanner && (
         <QRScanner
+          stream={mediaStream}
           onClose={() => {
-            console.log("🔴 Cerrando scanner");
             setShowScanner(false);
+            setMediaStream(null);
           }}
           onScan={handleScan}
         />
