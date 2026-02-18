@@ -29,114 +29,115 @@ export default function QRScanner({ onClose, onScan, stream }) {
     if (onCloseRef.current) onCloseRef.current();
   }, []);
 
-  const scanQRCode = useCallback(() => {
-    if (!videoRef.current || !canvasRef.current || !scanningRef.current) return;
-    const video = videoRef.current;
-    const canvas = canvasRef.current;
-    const context = canvas.getContext("2d");
-    if (video.readyState === video.HAVE_ENOUGH_DATA) {
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      context.drawImage(video, 0, 0, canvas.width, canvas.height);
-      const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-      const code = jsQR(imageData.data, canvas.width, canvas.height, {
-        inversionAttempts: "dontInvert",
-      });
-      if (code) {
-        scanningRef.current = false;
-        if (navigator.vibrate) navigator.vibrate(200);
-        if (onScanRef.current) onScanRef.current(code.data);
-        setTimeout(() => stopCamera(), 500);
-        return;
-      }
-    }
-    if (scanningRef.current) {
-      animationRef.current = requestAnimationFrame(scanQRCode);
-    }
-  }, [stopCamera]);
+ const scanQRCode = useCallback(() => {
+   if (!videoRef.current || !canvasRef.current || !scanningRef.current) return;
+   const video = videoRef.current;
+   const canvas = canvasRef.current;
+   const context = canvas.getContext("2d");
+   if (video.readyState === video.HAVE_ENOUGH_DATA) {
+     canvas.width = video.videoWidth;
+     canvas.height = video.videoHeight;
+     context.drawImage(video, 0, 0, canvas.width, canvas.height);
+     const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+     const code = jsQR(imageData.data, canvas.width, canvas.height, {
+       inversionAttempts: "dontInvert",
+     });
+     if (code) {
+       scanningRef.current = false;
+       if (navigator.vibrate) navigator.vibrate(200);
+       if (onScanRef.current) onScanRef.current(code.data);
+       setTimeout(() => stopCamera(), 500);
+       return;
+     }
+   }
+   if (scanningRef.current) {
+     animationRef.current = requestAnimationFrame(scanQRCode);
+   }
+ }, [stopCamera]);
 
-  useEffect(() => {
-    let isMounted = true;
+ // ✅ useEffect separado para iniciar el video DESPUÉS del re-render
+ useEffect(() => {
+   if (permission !== "granted" || !videoRef.current || !streamRef.current)
+     return;
 
-    const initCamera = async () => {
-      try {
-        setPermission("requesting");
- console.log("📷 stream recibido como prop:", stream);
-        let mediaStream = stream; // ✅ usa el stream recibido
+   const video = videoRef.current;
+   video.srcObject = streamRef.current;
 
-        if (!mediaStream) {
-            console.log("⚠️ No hay stream, pidiendo cámara...");
-          // Fallback si no llegó stream
-          if (!navigator.mediaDevices?.getUserMedia) {
-            throw new Error("Tu navegador no soporta el acceso a la cámara");
-          }
-          try {
-            mediaStream = await navigator.mediaDevices.getUserMedia({
-              video: { facingMode: "environment" },
-            });
-          } catch {
-            mediaStream = await navigator.mediaDevices.getUserMedia({
-              video: true,
-            });
-          }
-        }
+   const startPlaying = () => {
+     video
+       .play()
+       .then(() => {
+         animationRef.current = requestAnimationFrame(scanQRCode);
+       })
+       .catch((e) => {
+         console.error("Error al reproducir video:", e);
+         animationRef.current = requestAnimationFrame(scanQRCode);
+       });
+   };
 
-        if (isMounted) {
-          streamRef.current = mediaStream;
-          setPermission("granted");
+   if (video.readyState >= 2) {
+     startPlaying();
+   } else {
+     video.onloadedmetadata = startPlaying;
+   }
+ }, [permission, scanQRCode]);
 
-          if (videoRef.current) {
-            videoRef.current.srcObject = mediaStream;
-            videoRef.current.setAttribute("playsinline", "true");
-            videoRef.current.setAttribute("muted", "true");
+ useEffect(() => {
+   let isMounted = true;
 
-            const startPlaying = () => {
-              videoRef.current
-                ?.play()
-                .then(() => {
-                  animationRef.current = requestAnimationFrame(scanQRCode);
-                })
-                .catch((e) => {
-                  console.error("Error al reproducir video:", e);
-                  animationRef.current = requestAnimationFrame(scanQRCode);
-                });
-            };
+   const initCamera = async () => {
+     try {
+       setPermission("requesting");
+       console.log("📷 stream recibido como prop:", stream);
+       let mediaStream = stream;
 
-            if (videoRef.current.readyState >= 2) {
-              startPlaying(); // ✅ stream ya activo, arranca directo
-            } else {
-              videoRef.current.onloadedmetadata = startPlaying;
-            }
-          }
-        }
-      } catch (err) {
-        console.error("Error de cámara:", err);
-        if (isMounted) {
-          setPermission("denied");
-          if (err.name === "NotAllowedError") {
-            setError(
-              "Permiso denegado. Hacé click en el candado 🔒 y permití el acceso a la cámara.",
-            );
-          } else if (err.name === "NotFoundError") {
-            setError("No se encontró ninguna cámara en tu dispositivo.");
-          } else {
-            setError("No se pudo acceder a la cámara.");
-          }
-        }
-      }
-    };
+       if (!mediaStream) {
+         console.log("⚠️ No hay stream, pidiendo cámara...");
+         if (!navigator.mediaDevices?.getUserMedia) {
+           throw new Error("Tu navegador no soporta el acceso a la cámara");
+         }
+         try {
+           mediaStream = await navigator.mediaDevices.getUserMedia({
+             video: { facingMode: "environment" },
+           });
+         } catch {
+           mediaStream = await navigator.mediaDevices.getUserMedia({
+             video: true,
+           });
+         }
+       }
 
-    initCamera();
+       if (isMounted) {
+         streamRef.current = mediaStream;
+         setPermission("granted"); // ✅ el useEffect de arriba se encarga del video
+       }
+     } catch (err) {
+       console.error("Error de cámara:", err);
+       if (isMounted) {
+         setPermission("denied");
+         if (err.name === "NotAllowedError") {
+           setError(
+             "Permiso denegado. Hacé click en el candado 🔒 y permití el acceso a la cámara.",
+           );
+         } else if (err.name === "NotFoundError") {
+           setError("No se encontró ninguna cámara en tu dispositivo.");
+         } else {
+           setError("No se pudo acceder a la cámara.");
+         }
+       }
+     }
+   };
 
-    return () => {
-      isMounted = false;
-      scanningRef.current = false;
-      if (animationRef.current) cancelAnimationFrame(animationRef.current);
-      if (streamRef.current) {
-        streamRef.current.getTracks().forEach((track) => track.stop());
-      }
-    };
-  }, [scanQRCode, stream]); // ✅ stream en deps
+   initCamera();
+   return () => {
+     isMounted = false;
+     scanningRef.current = false;
+     if (animationRef.current) cancelAnimationFrame(animationRef.current);
+     if (streamRef.current) {
+       streamRef.current.getTracks().forEach((track) => track.stop());
+     }
+   };
+ }, [scanQRCode, stream]); // ✅ stream en deps
 
   // JSX igual que antes...
   return (
