@@ -1,9 +1,9 @@
-// components/QRScanner.jsx
 import { useEffect, useRef, useState, useCallback } from "react";
 import { X, Camera, QrCode } from "lucide-react";
 import jsQR from "jsqr";
 
-export default function QRScanner({ onClose, onScan }) {
+export default function QRScanner({ onClose, onScan, stream }) {
+  // ✅ recibe stream
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [error, setError] = useState("");
@@ -12,7 +12,6 @@ export default function QRScanner({ onClose, onScan }) {
   const scanningRef = useRef(true);
   const animationRef = useRef();
 
-  // ✅ Guardar callbacks en refs para evitar re-renders
   const onCloseRef = useRef(onClose);
   const onScanRef = useRef(onScan);
   useEffect(() => {
@@ -28,7 +27,7 @@ export default function QRScanner({ onClose, onScan }) {
       streamRef.current = null;
     }
     if (onCloseRef.current) onCloseRef.current();
-  }, []); // ✅ Sin dependencias
+  }, []);
 
   const scanQRCode = useCallback(() => {
     if (!videoRef.current || !canvasRef.current || !scanningRef.current) return;
@@ -54,7 +53,8 @@ export default function QRScanner({ onClose, onScan }) {
     if (scanningRef.current) {
       animationRef.current = requestAnimationFrame(scanQRCode);
     }
-  }, [stopCamera]); // ✅ stopCamera ya no cambia
+  }, [stopCamera]);
+
   useEffect(() => {
     let isMounted = true;
 
@@ -62,22 +62,22 @@ export default function QRScanner({ onClose, onScan }) {
       try {
         setPermission("requesting");
 
-        if (!navigator.mediaDevices?.getUserMedia) {
-          throw new Error("Tu navegador no soporta el acceso a la cámara");
-        }
+        let mediaStream = stream; // ✅ usa el stream recibido
 
-        let mediaStream;
-
-        // Primero intenta con cámara trasera
-        try {
-          mediaStream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: "environment" },
-          });
-        } catch {
-          // Si falla, intenta con cualquier cámara
-          mediaStream = await navigator.mediaDevices.getUserMedia({
-            video: true,
-          });
+        if (!mediaStream) {
+          // Fallback si no llegó stream
+          if (!navigator.mediaDevices?.getUserMedia) {
+            throw new Error("Tu navegador no soporta el acceso a la cámara");
+          }
+          try {
+            mediaStream = await navigator.mediaDevices.getUserMedia({
+              video: { facingMode: "environment" },
+            });
+          } catch {
+            mediaStream = await navigator.mediaDevices.getUserMedia({
+              video: true,
+            });
+          }
         }
 
         if (isMounted) {
@@ -128,8 +128,9 @@ export default function QRScanner({ onClose, onScan }) {
         streamRef.current.getTracks().forEach((track) => track.stop());
       }
     };
-  }, [scanQRCode]);
+  }, [scanQRCode, stream]); // ✅ stream en deps
 
+  // JSX igual que antes...
   return (
     <div className="fixed inset-0 z-[9999] bg-black flex flex-col">
       <canvas ref={canvasRef} className="hidden" />
