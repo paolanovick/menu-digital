@@ -46,7 +46,15 @@ export default function Home() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-2xl animate-pulse">Cargando...</div>
+        <div className="loader">
+          <div className="cup">
+            <div className="cup-handle"></div>
+            <div className="smoke one"></div>
+            <div className="smoke two"></div>
+            <div className="smoke three"></div>
+          </div>
+          <div className="load">Cargando...</div>
+        </div>
       </div>
     );
   }
