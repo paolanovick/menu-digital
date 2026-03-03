@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import api from "../services/api";
+import api, { getMiRestaurante } from "../services/api";
 
 const AuthContext = createContext();
 
@@ -8,6 +8,7 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [restaurante, setRestaurante] = useState(null);
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(localStorage.getItem("token"));
 
@@ -24,7 +25,16 @@ export const AuthProvider = ({ children }) => {
         // CAMBIADO: de "api/auth/me" a "/auth/me"
         const res = await api.get("/auth/me");
         console.log("🔧 AuthContext - Usuario cargado:", res.data.data);
-        setUser(res.data.data);
+        const userData = res.data.data;
+        setUser(userData);
+        if (userData.rol === "admin") {
+          try {
+            const resRest = await getMiRestaurante();
+            setRestaurante(resRest.data.data);
+          } catch {
+            // sin restaurante asignado
+          }
+        }
       } catch (error) {
         console.error("Error loading user:", error);
         localStorage.removeItem("token");
@@ -52,6 +62,15 @@ export const AuthProvider = ({ children }) => {
     setToken(token);
     setUser(usuario);
 
+    if (usuario.rol === "admin") {
+      try {
+        const resRest = await getMiRestaurante();
+        setRestaurante(resRest.data.data);
+      } catch {
+        // sin restaurante
+      }
+    }
+
     return usuario;
   };
 
@@ -60,10 +79,11 @@ export const AuthProvider = ({ children }) => {
     delete api.defaults.headers.common["Authorization"];
     setToken(null);
     setUser(null);
+    setRestaurante(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, restaurante, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

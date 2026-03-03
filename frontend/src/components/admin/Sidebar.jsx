@@ -18,7 +18,9 @@ import {
 
 export default function Sidebar({ isOpen, onClose }) {
   const location = useLocation();
-  const { user, logout } = useAuth();
+  const { user, restaurante, logout } = useAuth();
+
+  const mozosActivo = restaurante?.sistemaMozosActivo === true;
 
   const adminNavItems = [
     { name: "Dashboard", path: "/admin", icon: LayoutDashboard },
@@ -26,8 +28,10 @@ export default function Sidebar({ isOpen, onClose }) {
     { name: "Categorías", path: "/admin/categorias", icon: FolderTree },
     { name: "Anuncios", path: "/admin/anuncios", icon: Megaphone },
     { name: "Pedidos", path: "/admin/pedidos", icon: ClipboardList },
-    { name: "Mesas", path: "/admin/mesas", icon: Armchair },
-    { name: "Mozos", path: "/admin/mozos", icon: UserCheck },
+    ...(mozosActivo ? [
+      { name: "Mesas", path: "/admin/mesas", icon: Armchair },
+      { name: "Mozos", path: "/admin/mozos", icon: UserCheck },
+    ] : []),
     { name: "Importar", path: "/admin/importar", icon: Upload },
     { name: "Configuración", path: "/admin/configuracion", icon: Settings },
   ];
