@@ -62,6 +62,9 @@ export const actualizarContacto = (id, contacto) =>
 export const actualizarDeliveryConfig = (id, config) =>
   api.put(`/restaurantes/${id}/delivery-config`, config);
 
+export const actualizarPedidosConfig = (id, config) =>
+  api.put(`/restaurantes/${id}/pedidos-config`, config);
+
 // ============================================
 // ADMIN - CATEGORÍAS
 // ============================================
@@ -109,6 +112,36 @@ export const importarMenu = (formData) =>
   api.post("/import/menu", formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
+
+// ============================================
+// MESAS
+// ============================================
+export const getMesas = () => api.get("/mesas");
+export const getMesasPublico = (restauranteId) => api.get(`/mesas/publico/${restauranteId}`);
+export const crearMesa = (data) => api.post("/mesas", data);
+export const actualizarMesa = (id, data) => api.put(`/mesas/${id}`, data);
+export const actualizarEstadoMesa = (id, estado) => api.put(`/mesas/${id}/estado`, { estado });
+export const eliminarMesa = (id) => api.delete(`/mesas/${id}`);
+
+// ============================================
+// PEDIDOS
+// ============================================
+export const getPedidos = (params = {}) => {
+  const query = new URLSearchParams(params).toString();
+  return api.get(`/pedidos${query ? `?${query}` : ""}`);
+};
+export const crearPedido = (data) => api.post("/pedidos", data);
+export const actualizarEstadoPedido = (id, estado) => api.put(`/pedidos/${id}/estado`, { estado });
+export const getNuevosPedidosCount = () => api.get("/pedidos/nuevos-count");
+
+// ============================================
+// MOZOS (gestionados por admin)
+// ============================================
+export const getMisMozos = () => api.get("/mozos");
+export const crearMozo = (data) => api.post("/mozos", data);
+export const getMozoById = (id) => api.get(`/mozos/${id}`);
+export const actualizarMozo = (id, data) => api.put(`/mozos/${id}`, data);
+export const eliminarMozo = (id) => api.delete(`/mozos/${id}`);
 
 // ============================================
 // SUPERADMIN

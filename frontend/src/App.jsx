@@ -21,6 +21,13 @@ import Categorias from "./pages/admin/Categorias";
 import Importar from "./pages/admin/Importar";
 import Anuncios from "./pages/admin/Anuncios";
 import Configuracion from "./pages/admin/Configuracion";
+import Pedidos from "./pages/admin/Pedidos";
+import Mesas from "./pages/admin/Mesas";
+import Mozos from "./pages/admin/Mozos";
+import MozoForm from "./pages/admin/MozoForm";
+import MozoLogin from "./pages/mozo/Login";
+import MozoMesas from "./pages/mozo/Mesas";
+import MozoPedido from "./pages/mozo/Pedido";
 import ProtectedRoute from "./components/admin/ProtectedRoute";
 import SuperadminDashboard from "./pages/superadmin/Dashboard";
 import SuperadminRestaurantes from "./pages/superadmin/Restaurantes";
@@ -145,6 +152,53 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            {/* Admin Pedidos */}
+            <Route
+              path="/admin/pedidos"
+              element={
+                <ProtectedRoute>
+                  <Pedidos />
+                </ProtectedRoute>
+              }
+            />
+            {/* Admin Mesas */}
+            <Route
+              path="/admin/mesas"
+              element={
+                <ProtectedRoute>
+                  <Mesas />
+                </ProtectedRoute>
+              }
+            />
+            {/* Admin Mozos */}
+            <Route
+              path="/admin/mozos"
+              element={
+                <ProtectedRoute>
+                  <Mozos />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/mozos/nuevo"
+              element={
+                <ProtectedRoute>
+                  <MozoForm />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/mozos/:id/editar"
+              element={
+                <ProtectedRoute>
+                  <MozoForm />
+                </ProtectedRoute>
+              }
+            />
+            {/* Interface Mozos */}
+            <Route path="/mozo/:slug" element={<MozoLogin />} />
+            <Route path="/mozo/:slug/mesas" element={<MozoMesas />} />
+            <Route path="/mozo/:slug/mesa/:mesaId" element={<MozoPedido />} />
             {/* Superadmin Dashboard */}
             <Route
               path="/superadmin"

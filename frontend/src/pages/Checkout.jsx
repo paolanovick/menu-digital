@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { ArrowLeft, Minus, Plus, Trash2 } from "lucide-react";
-import { getRestauranteBySlug } from "../services/api";
+import { getRestauranteBySlug, crearPedido } from "../services/api";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { ThemeProvider } from "../context/ThemeContext";
@@ -35,31 +35,73 @@ export default function Checkout() {
     }
   }, [items, navigate, slug]);
 
-  const handleConfirmarPedido = () => {
-    const restauranteData = JSON.parse(
-      localStorage.getItem("restauranteData") || "{}",
-    );
-    const whatsapp = restauranteData.whatsapp || "5491123456789";
+  const costoEnvio = restaurante?.envioGratis ? 0 : (restaurante?.costoEnvio || 0);
+  const totalConEnvio = totalPrecio + costoEnvio;
 
-    let mensaje = "🛒 *NUEVO PEDIDO*\n\n";
+  const handleConfirmarPedido = async () => {
+    const whatsapp = restaurante?.contacto?.whatsapp || "5491123456789";
 
-    items.forEach((item) => {
-      mensaje += `• ${item.cantidad}x ${item.nombre} - $${(item.precio * item.cantidad).toLocaleString("es-AR")}\n`;
-    });
+    // Guardar pedido en BD
+    try {
+      await crearPedido({
+        restauranteId: restaurante._id,
+        tipo: "delivery",
+        items: items.map((item) => ({
+          platoId: item._id,
+          nombre: item.nombre,
+          precio: item.precio,
+          cantidad: item.cantidad,
+          subtotal: item.precio * item.cantidad,
+        })),
+        total: totalConEnvio,
+        notas: formData.notas,
+        datosCliente: {
+          direccion: formData.direccion,
+          telefono: formData.telefono,
+          email: formData.email,
+        },
+      });
+    } catch {
+      // Si falla el guardado igual abrimos WhatsApp
+    }
 
-    mensaje += `\n*Subtotal: $${totalPrecio.toLocaleString("es-AR")}*\n`;
-    mensaje += `*Envío: A calcular*\n`;
-    mensaje += `*TOTAL: $${totalPrecio.toLocaleString("es-AR")}*\n\n`;
-    mensaje += `📍 *Dirección:* ${formData.direccion || "[Sin especificar]"}\n`;
-    mensaje += `📞 *Teléfono:* ${formData.telefono || "[Sin especificar]"}\n`;
-    if (formData.email) mensaje += `📧 *Email:* ${formData.email}\n`;
-    if (formData.notas) mensaje += `\n📝 *Notas:* ${formData.notas}`;
+    // Armar mensaje de WhatsApp
+    let mensaje = restaurante?.mensajeWhatsapp || "";
+
+    if (!mensaje) {
+      mensaje = "🛒 *NUEVO PEDIDO*\n\n";
+      items.forEach((item) => {
+        mensaje += `• ${item.cantidad}x ${item.nombre} - $${(item.precio * item.cantidad).toLocaleString("es-AR")}\n`;
+      });
+      mensaje += `\n*Subtotal: $${totalPrecio.toLocaleString("es-AR")}*\n`;
+      if (restaurante?.envioGratis) {
+        mensaje += `*Envío: GRATIS 🎉*\n`;
+      } else if (costoEnvio > 0) {
+        mensaje += `*Envío: $${costoEnvio.toLocaleString("es-AR")}*\n`;
+      } else {
+        mensaje += `*Envío: A coordinar*\n`;
+      }
+      mensaje += `*TOTAL: $${totalConEnvio.toLocaleString("es-AR")}*\n\n`;
+      mensaje += `📍 *Dirección:* ${formData.direccion || "[Sin especificar]"}\n`;
+      mensaje += `📞 *Teléfono:* ${formData.telefono || "[Sin especificar]"}\n`;
+      if (formData.email) mensaje += `📧 *Email:* ${formData.email}\n`;
+      if (formData.notas) mensaje += `\n📝 *Notas:* ${formData.notas}`;
+    } else {
+      // Template personalizado: reemplazar variables
+      const itemsTexto = items.map((i) => `• ${i.cantidad}x ${i.nombre} - $${(i.precio * i.cantidad).toLocaleString("es-AR")}`).join("\n");
+      mensaje = mensaje
+        .replace("{items}", itemsTexto)
+        .replace("{subtotal}", `$${totalPrecio.toLocaleString("es-AR")}`)
+        .replace("{envio}", restaurante.envioGratis ? "GRATIS" : costoEnvio > 0 ? `$${costoEnvio.toLocaleString("es-AR")}` : "A coordinar")
+        .replace("{total}", `$${totalConEnvio.toLocaleString("es-AR")}`)
+        .replace("{direccion}", formData.direccion || "[Sin especificar]")
+        .replace("{telefono}", formData.telefono || "[Sin especificar]")
+        .replace("{notas}", formData.notas || "");
+    }
 
     const mensajeCodificado = encodeURIComponent(mensaje);
-    window.open(
-      `https://wa.me/${whatsapp}?text=${mensajeCodificado}`,
-      "_blank",
-    );
+    window.open(`https://wa.me/${whatsapp}?text=${mensajeCodificado}`, "_blank");
+    clearCart();
   };
 
   if (!restaurante) return null;
@@ -171,12 +213,18 @@ export default function Checkout() {
                 </div>
                 <div className="flex justify-between text-lg mb-4">
                   <span className="text-gray-700">Envío:</span>
-                  <span className="font-bold text-green-600">A coordinar</span>
+                  {restaurante?.envioGratis ? (
+                    <span className="font-bold text-green-600">GRATIS 🎉</span>
+                  ) : costoEnvio > 0 ? (
+                    <span className="font-bold">${costoEnvio.toLocaleString("es-AR")}</span>
+                  ) : (
+                    <span className="font-bold text-gray-500">A coordinar</span>
+                  )}
                 </div>
                 <div className="border-t-2 border-wine/20 pt-4 flex justify-between">
                   <span className="font-bold text-2xl">Total:</span>
                   <span className="font-bold text-3xl text-wine">
-                    ${totalPrecio.toLocaleString("es-AR")}
+                    ${totalConEnvio.toLocaleString("es-AR")}
                   </span>
                 </div>
               </div>

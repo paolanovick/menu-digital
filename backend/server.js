@@ -39,6 +39,9 @@ const platoRoutes = require('./routes/platos');
 const importRoutes = require("./routes/import");
 const anunciosRoutes = require("./routes/anuncios");
 const superadminRoutes = require("./routes/superadmin");
+const mesasRoutes = require("./routes/mesas");
+const pedidosRoutes = require("./routes/pedidos");
+const mozosRoutes = require("./routes/mozos");
 
 // Usar rutas (descomentaremos después)
  app.use('/api/auth', authRoutes);
@@ -48,6 +51,9 @@ app.use('/api/platos', platoRoutes);
 app.use("/api/import", importRoutes); 
 app.use("/api/anuncios", anunciosRoutes);
  app.use("/api/superadmin", superadminRoutes);
+app.use("/api/mesas", mesasRoutes);
+app.use("/api/pedidos", pedidosRoutes);
+app.use("/api/mozos", mozosRoutes);
 
 // Manejo de errores
 app.use((err, req, res, next) => {

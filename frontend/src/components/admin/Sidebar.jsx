@@ -11,6 +11,9 @@ import {
   Store,
   Users,
   X,
+  ClipboardList,
+  Armchair,
+  UserCheck,
 } from "lucide-react";
 
 export default function Sidebar({ isOpen, onClose }) {
@@ -22,6 +25,9 @@ export default function Sidebar({ isOpen, onClose }) {
     { name: "Platos", path: "/admin/platos", icon: UtensilsCrossed },
     { name: "Categorías", path: "/admin/categorias", icon: FolderTree },
     { name: "Anuncios", path: "/admin/anuncios", icon: Megaphone },
+    { name: "Pedidos", path: "/admin/pedidos", icon: ClipboardList },
+    { name: "Mesas", path: "/admin/mesas", icon: Armchair },
+    { name: "Mozos", path: "/admin/mozos", icon: UserCheck },
     { name: "Importar", path: "/admin/importar", icon: Upload },
     { name: "Configuración", path: "/admin/configuracion", icon: Settings },
   ];

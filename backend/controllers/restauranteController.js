@@ -240,6 +240,33 @@ exports.updateContacto = async (req, res) => {
     });
   }
 };
+// @desc    Actualizar configuración de pedidos (costo envío, mozos, mensaje WhatsApp)
+// @route   PUT /api/restaurantes/:id/pedidos-config
+// @access  Privado
+exports.updatePedidosConfig = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { costoEnvio, envioGratis, sistemaMozosActivo, mensajeWhatsapp } = req.body;
+
+    if (req.usuario.restauranteId.toString() !== id) {
+      return res.status(403).json({ success: false, message: "Sin permiso" });
+    }
+
+    const update = {};
+    if (costoEnvio !== undefined) update.costoEnvio = costoEnvio;
+    if (envioGratis !== undefined) update.envioGratis = envioGratis;
+    if (sistemaMozosActivo !== undefined) update.sistemaMozosActivo = sistemaMozosActivo;
+    if (mensajeWhatsapp !== undefined) update.mensajeWhatsapp = mensajeWhatsapp;
+
+    const restaurante = await Restaurante.findByIdAndUpdate(id, update, { new: true, runValidators: true });
+    if (!restaurante) return res.status(404).json({ success: false, message: "Restaurante no encontrado" });
+
+    res.json({ success: true, message: "Configuración de pedidos actualizada", data: restaurante });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 // Actualizar configuración de delivery y ticker
 exports.updateDeliveryConfig = async (req, res) => {
   try {

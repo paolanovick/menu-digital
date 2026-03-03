@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import DashboardLayout from "../../components/admin/DashboardLayout";
-import { Save, Palette, Globe, Clock, MapPin, FileText } from "lucide-react";
+import { Save, Palette, Globe, Clock, MapPin, FileText, ShoppingBag } from "lucide-react";
 import api from "../../services/api";
 import toast from "react-hot-toast";
 
@@ -51,6 +51,12 @@ export default function Configuracion() {
 
     // Servicios
     deliveryActivo: true,
+
+    // Pedidos
+    costoEnvio: 0,
+    envioGratis: false,
+    sistemaMozosActivo: false,
+    mensajeWhatsapp: "",
   });
 
   useEffect(() => {
@@ -89,6 +95,10 @@ export default function Configuracion() {
         sabado: rest.horarios?.sabado || { apertura: "", cierre: "" },
         domingo: rest.horarios?.domingo || { apertura: "", cierre: "" },
         deliveryActivo: rest.deliveryActivo ?? true,
+        costoEnvio: rest.costoEnvio ?? 0,
+        envioGratis: rest.envioGratis ?? false,
+        sistemaMozosActivo: rest.sistemaMozosActivo ?? false,
+        mensajeWhatsapp: rest.mensajeWhatsapp ?? "",
       });
     } catch (error) {
       console.error("Error:", error);
@@ -213,6 +223,26 @@ export default function Configuracion() {
     }
   };
 
+  const handleSubmitPedidos = async (e) => {
+    e.preventDefault();
+    setSaving(true);
+    try {
+      await api.put(`/restaurantes/${restaurante._id}/pedidos-config`, {
+        costoEnvio: Number(formData.costoEnvio),
+        envioGratis: formData.envioGratis,
+        sistemaMozosActivo: formData.sistemaMozosActivo,
+        mensajeWhatsapp: formData.mensajeWhatsapp,
+      });
+      toast.success("Configuración de pedidos actualizada");
+      fetchRestaurante();
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("Error al actualizar configuración");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleHorarioChange = (dia, campo, valor) => {
     setFormData({
       ...formData,
@@ -239,6 +269,7 @@ export default function Configuracion() {
     { id: "contacto", name: "Contacto", icon: Globe },
     { id: "horarios", name: "Horarios", icon: Clock },
     { id: "servicios", name: "Servicios", icon: MapPin },
+    { id: "pedidos", name: "Pedidos", icon: ShoppingBag },
   ];
 
   const fontOptions = [
@@ -868,6 +899,114 @@ export default function Configuracion() {
                 className="w-6 h-6 text-wine focus:ring-wine border-gray-300 rounded cursor-pointer"
               />
             </label>
+          </div>
+
+          <div className="flex justify-end mt-8 pt-6 border-t">
+            <button
+              type="submit"
+              disabled={saving}
+              className="btn-primary inline-flex items-center gap-2 disabled:opacity-50"
+            >
+              <Save size={20} />
+              {saving ? "Guardando..." : "Guardar Cambios"}
+            </button>
+          </div>
+        </form>
+      )}
+      {/* Tab: Pedidos */}
+      {activeTab === "pedidos" && (
+        <form
+          onSubmit={handleSubmitPedidos}
+          className="bg-white rounded-xl shadow-md p-4 lg:p-8"
+        >
+          <h2 className="text-lg lg:text-xl font-bold text-gray-800 mb-6">
+            📦 Configuración de Pedidos
+          </h2>
+
+          <div className="space-y-6">
+            {/* Costo de envío */}
+            <div className="p-4 bg-gray-50 rounded-lg space-y-4">
+              <h3 className="font-semibold text-gray-800">Costo de Envío (Delivery)</h3>
+
+              <label className="flex items-center justify-between cursor-pointer">
+                <div>
+                  <p className="font-medium text-gray-900">Envío Gratis</p>
+                  <p className="text-sm text-gray-500">
+                    Activar para mostrar "GRATIS" en lugar del costo
+                  </p>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={formData.envioGratis}
+                  onChange={(e) =>
+                    setFormData({ ...formData, envioGratis: e.target.checked })
+                  }
+                  className="w-6 h-6 text-wine focus:ring-wine border-gray-300 rounded cursor-pointer"
+                />
+              </label>
+
+              {!formData.envioGratis && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Costo fijo de envío ($)
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={formData.costoEnvio}
+                    onChange={(e) =>
+                      setFormData({ ...formData, costoEnvio: e.target.value })
+                    }
+                    className="w-full max-w-xs px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine focus:border-transparent"
+                    placeholder="0 = A coordinar"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Si lo dejás en 0 aparecerá "A coordinar"
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Sistema de mozos */}
+            <label className="flex items-center justify-between p-4 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100 transition-all">
+              <div>
+                <p className="font-medium text-gray-900">Sistema de Mozos</p>
+                <p className="text-sm text-gray-500">
+                  Permite que los mozos inicien sesión y tomen pedidos por mesa
+                </p>
+              </div>
+              <input
+                type="checkbox"
+                checked={formData.sistemaMozosActivo}
+                onChange={(e) =>
+                  setFormData({ ...formData, sistemaMozosActivo: e.target.checked })
+                }
+                className="w-6 h-6 text-wine focus:ring-wine border-gray-300 rounded cursor-pointer"
+              />
+            </label>
+
+            {/* Mensaje WhatsApp personalizado */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Mensaje de WhatsApp personalizado
+              </label>
+              <textarea
+                value={formData.mensajeWhatsapp}
+                onChange={(e) =>
+                  setFormData({ ...formData, mensajeWhatsapp: e.target.value })
+                }
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine focus:border-transparent font-mono text-sm"
+                rows="8"
+                placeholder={`Dejalo vacío para usar el mensaje por defecto.\n\nVariables disponibles:\n{items} - Lista de productos\n{subtotal} - Subtotal\n{envio} - Costo de envío\n{total} - Total\n{direccion} - Dirección de entrega\n{telefono} - Teléfono del cliente\n{notas} - Notas del pedido`}
+              />
+              <p className="text-xs text-gray-500 mt-2">
+                Variables: <code className="bg-gray-100 px-1 rounded">{"{items}"}</code>{" "}
+                <code className="bg-gray-100 px-1 rounded">{"{total}"}</code>{" "}
+                <code className="bg-gray-100 px-1 rounded">{"{direccion}"}</code>{" "}
+                <code className="bg-gray-100 px-1 rounded">{"{envio}"}</code>{" "}
+                <code className="bg-gray-100 px-1 rounded">{"{notas}"}</code>
+              </p>
+            </div>
           </div>
 
           <div className="flex justify-end mt-8 pt-6 border-t">

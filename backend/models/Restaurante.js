@@ -193,6 +193,26 @@ const restauranteSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+
+    // PEDIDOS Y MOZOS
+    costoEnvio: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    envioGratis: {
+      type: Boolean,
+      default: false,
+    },
+    sistemaMozosActivo: {
+      type: Boolean,
+      default: false,
+    },
+    mensajeWhatsapp: {
+      type: String,
+      default: "",
+      maxlength: [1000, "El mensaje no puede tener más de 1000 caracteres"],
+    },
   },
   {
     timestamps: true, // Crea automáticamente createdAt y updatedAt

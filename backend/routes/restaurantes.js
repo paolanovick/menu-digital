@@ -8,6 +8,7 @@ const {
   updateHorarios,
   updateContacto,
   updateDeliveryConfig,
+  updatePedidosConfig,
 } = require("../controllers/restauranteController");
 
 const { protect } = require("../middleware/auth");
@@ -22,5 +23,6 @@ router.put("/:id/tema", protect, updateTema);
 router.put("/:id/horarios", protect, updateHorarios);
 router.put("/:id/contacto", protect, updateContacto);
 router.put("/:id/delivery-config", protect, updateDeliveryConfig);
+router.put("/:id/pedidos-config", protect, updatePedidosConfig);
 
 module.exports = router;

@@ -39,12 +39,23 @@ exports.protect = async (req, res, next) => {
   }
 };
 
-// ⭐ NUEVO: Middleware para Superadmin
+// Middleware para Superadmin
 exports.superadminOnly = async (req, res, next) => {
   if (req.usuario.rol !== "superadmin") {
     return res.status(403).json({
       success: false,
       message: "Acceso denegado - Solo superadmin",
+    });
+  }
+  next();
+};
+
+// Middleware para admin (excluye mozo y superadmin)
+exports.adminOnly = async (req, res, next) => {
+  if (req.usuario.rol !== "admin") {
+    return res.status(403).json({
+      success: false,
+      message: "Acceso denegado - Solo admin",
     });
   }
   next();
