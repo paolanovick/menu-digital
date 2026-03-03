@@ -23,6 +23,9 @@ export default function RestauranteForm() {
     provincia: "",
     activo: true,
     plan: "basico",
+    sistemaMozosActivo: false,
+    envioGratis: false,
+    costoEnvio: 0,
   });
 
   useEffect(() => {
@@ -49,6 +52,9 @@ export default function RestauranteForm() {
         provincia: rest.contacto?.direccion?.provincia || "",
         activo: rest.activo,
         plan: rest.plan || "basico",
+        sistemaMozosActivo: rest.sistemaMozosActivo || false,
+        envioGratis: rest.envioGratis || false,
+        costoEnvio: rest.costoEnvio || 0,
       });
     } catch (error) {
       console.error("Error:", error);
@@ -78,6 +84,9 @@ export default function RestauranteForm() {
         },
         activo: formData.activo,
         plan: formData.plan,
+        sistemaMozosActivo: formData.sistemaMozosActivo,
+        envioGratis: formData.envioGratis,
+        costoEnvio: Number(formData.costoEnvio),
       };
 
       if (isEditing) {
@@ -303,6 +312,59 @@ export default function RestauranteForm() {
                     Restaurante Activo
                   </span>
                 </label>
+              </div>
+            </div>
+          </div>
+
+          {/* Funcionalidades */}
+          <div className="pt-6 border-t">
+            <h2 className="text-xl font-bold text-gray-800 mb-1">Funcionalidades</h2>
+            <p className="text-sm text-gray-500 mb-4">Activá o desactivá módulos para este restaurante</p>
+
+            <div className="space-y-4">
+              {/* Sistema de mozos */}
+              <label className="flex items-start gap-3 cursor-pointer p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-all">
+                <input
+                  type="checkbox"
+                  name="sistemaMozosActivo"
+                  checked={formData.sistemaMozosActivo}
+                  onChange={handleChange}
+                  className="w-5 h-5 text-wine focus:ring-wine border-gray-300 rounded mt-0.5"
+                />
+                <div>
+                  <p className="text-sm font-medium text-gray-700">🪑 Sistema de Mozos y Mesas</p>
+                  <p className="text-xs text-gray-500">Habilita el panel de mesas, login de mozos y toma de pedidos por mesa</p>
+                </div>
+              </label>
+
+              {/* Delivery */}
+              <div className="p-3 rounded-lg border border-gray-200">
+                <label className="flex items-start gap-3 cursor-pointer mb-3">
+                  <input
+                    type="checkbox"
+                    name="envioGratis"
+                    checked={formData.envioGratis}
+                    onChange={handleChange}
+                    className="w-5 h-5 text-wine focus:ring-wine border-gray-300 rounded mt-0.5"
+                  />
+                  <div>
+                    <p className="text-sm font-medium text-gray-700">🛵 Envío Gratis</p>
+                    <p className="text-xs text-gray-500">Si está activado, no se cobra costo de envío en delivery</p>
+                  </div>
+                </label>
+                {!formData.envioGratis && (
+                  <div className="ml-8">
+                    <label className="block text-xs font-medium text-gray-600 mb-1">Costo de envío ($)</label>
+                    <input
+                      type="number"
+                      name="costoEnvio"
+                      value={formData.costoEnvio}
+                      onChange={handleChange}
+                      min="0"
+                      className="w-40 px-3 py-1.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-wine focus:border-transparent"
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </div>

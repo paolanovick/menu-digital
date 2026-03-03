@@ -105,6 +105,9 @@ export default function Restaurantes() {
                   Plan
                 </th>
                 <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">
+                  Módulos
+                </th>
+                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">
                   Estado
                 </th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
@@ -115,7 +118,7 @@ export default function Restaurantes() {
             <tbody className="divide-y divide-gray-200">
               {restaurantesFiltrados.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="px-6 py-8 text-center text-gray-500">
+                  <td colSpan="8" className="px-6 py-8 text-center text-gray-500">
                     No se encontraron restaurantes
                   </td>
                 </tr>
@@ -161,6 +164,23 @@ export default function Restaurantes() {
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                         {rest.plan || 'básico'}
                       </span>
+                    </td>
+
+                    {/* Módulos */}
+                    <td className="px-6 py-4 text-center">
+                      <div className="flex items-center justify-center gap-1">
+                        {rest.sistemaMozosActivo && (
+                          <span title="Mozos y Mesas" className="text-base">🪑</span>
+                        )}
+                        {rest.envioGratis ? (
+                          <span title="Envío gratis" className="text-base">🆓</span>
+                        ) : rest.costoEnvio > 0 ? (
+                          <span title={`Envío $${rest.costoEnvio}`} className="text-base">🛵</span>
+                        ) : null}
+                        {!rest.sistemaMozosActivo && !rest.envioGratis && !rest.costoEnvio && (
+                          <span className="text-gray-400 text-xs">—</span>
+                        )}
+                      </div>
                     </td>
 
                     {/* Estado */}
