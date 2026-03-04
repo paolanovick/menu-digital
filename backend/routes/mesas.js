@@ -36,6 +36,9 @@ router.post("/", protect, async (req, res) => {
     });
     res.status(201).json({ success: true, data: mesa });
   } catch (error) {
+    if (error.code === 11000) {
+      return res.status(400).json({ success: false, message: `Ya existe una mesa con el número ${req.body.numero}` });
+    }
     res.status(400).json({ success: false, message: error.message });
   }
 });
@@ -54,6 +57,9 @@ router.put("/:id", protect, async (req, res) => {
     if (!mesa) return res.status(404).json({ success: false, message: "Mesa no encontrada" });
     res.json({ success: true, data: mesa });
   } catch (error) {
+    if (error.code === 11000) {
+      return res.status(400).json({ success: false, message: `Ya existe una mesa con el número ${req.body.numero}` });
+    }
     res.status(400).json({ success: false, message: error.message });
   }
 });

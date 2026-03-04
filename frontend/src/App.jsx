@@ -83,7 +83,7 @@ function App() {
             <Route
               path="/admin"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["admin"]}>
                   <Dashboard />
                 </ProtectedRoute>
               }
@@ -93,7 +93,7 @@ function App() {
             <Route
               path="/admin/platos"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["admin"]}>
                   <Platos />
                 </ProtectedRoute>
               }
@@ -101,7 +101,7 @@ function App() {
             <Route
               path="/admin/platos/nuevo"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["admin"]}>
                   <PlatoForm />
                 </ProtectedRoute>
               }
@@ -109,7 +109,7 @@ function App() {
             <Route
               path="/admin/platos/:id/editar"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["admin"]}>
                   <PlatoForm />
                 </ProtectedRoute>
               }
@@ -119,7 +119,7 @@ function App() {
             <Route
               path="/admin/categorias"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["admin"]}>
                   <Categorias />
                 </ProtectedRoute>
               }
@@ -129,7 +129,7 @@ function App() {
             <Route
               path="/admin/importar"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["admin"]}>
                   <Importar />
                 </ProtectedRoute>
               }
@@ -138,7 +138,7 @@ function App() {
             <Route
               path="/admin/anuncios"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["admin"]}>
                   <Anuncios />
                 </ProtectedRoute>
               }
@@ -147,7 +147,7 @@ function App() {
             <Route
               path="/admin/configuracion"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["admin"]}>
                   <Configuracion />
                 </ProtectedRoute>
               }
@@ -156,7 +156,7 @@ function App() {
             <Route
               path="/admin/pedidos"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["admin"]}>
                   <Pedidos />
                 </ProtectedRoute>
               }
@@ -165,7 +165,7 @@ function App() {
             <Route
               path="/admin/mesas"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["admin"]}>
                   <Mesas />
                 </ProtectedRoute>
               }
@@ -174,7 +174,7 @@ function App() {
             <Route
               path="/admin/mozos"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["admin"]}>
                   <Mozos />
                 </ProtectedRoute>
               }
@@ -182,7 +182,7 @@ function App() {
             <Route
               path="/admin/mozos/nuevo"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["admin"]}>
                   <MozoForm />
                 </ProtectedRoute>
               }
@@ -190,7 +190,7 @@ function App() {
             <Route
               path="/admin/mozos/:id/editar"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["admin"]}>
                   <MozoForm />
                 </ProtectedRoute>
               }
@@ -203,7 +203,7 @@ function App() {
             <Route
               path="/superadmin"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["superadmin"]}>
                   <SuperadminDashboard />
                 </ProtectedRoute>
               }
@@ -211,7 +211,7 @@ function App() {
             <Route
               path="/superadmin/restaurantes"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["superadmin"]}>
                   <SuperadminRestaurantes />
                 </ProtectedRoute>
               }
@@ -219,7 +219,7 @@ function App() {
             <Route
               path="/superadmin/usuarios"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["superadmin"]}>
                   <SuperadminUsuarios />
                 </ProtectedRoute>
               }
@@ -227,7 +227,7 @@ function App() {
             <Route
               path="/superadmin/restaurantes/nuevo"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["superadmin"]}>
                   <RestauranteForm />
                 </ProtectedRoute>
               }
@@ -235,7 +235,7 @@ function App() {
             <Route
               path="/superadmin/restaurantes/:id/editar"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["superadmin"]}>
                   <RestauranteForm />
                 </ProtectedRoute>
               }
@@ -244,7 +244,7 @@ function App() {
             <Route
               path="/superadmin/usuarios/nuevo"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["superadmin"]}>
                   <UsuarioForm />
                 </ProtectedRoute>
               }
@@ -252,11 +252,15 @@ function App() {
             <Route
               path="/superadmin/usuarios/:id/editar"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoles={["superadmin"]}>
                   <UsuarioForm />
                 </ProtectedRoute>
               }
             />
+
+            {/* Alias legacy para evitar "No routes matched" */}
+            <Route path="/:slug/admin" element={<Navigate to="/admin/login" replace />} />
+            <Route path="/:slug/admin/login" element={<Navigate to="/admin/login" replace />} />
           </Routes>
         </Router>
       </AuthProvider>
