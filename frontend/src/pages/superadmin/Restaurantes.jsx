@@ -135,10 +135,7 @@ export default function Restaurantes() {
                             className="h-10 w-10 object-contain"
                           />
                         )}
-                        <div>
-                          <div className="font-medium text-gray-900">{rest.nombre}</div>
-                          <div className="text-sm text-gray-500">{rest.descripcion}</div>
-                        </div>
+                        <div className="font-medium text-gray-900">{rest.nombre}</div>
                       </div>
                     </td>
 
