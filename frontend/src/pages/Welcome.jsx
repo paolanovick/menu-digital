@@ -53,7 +53,17 @@ export default function Welcome() {
   const handleScan = (qrData) => {
     console.log("✅ QR detectado:", qrData);
     if (qrData.startsWith("http")) {
-      window.location.href = qrData;
+      try {
+        const url = new URL(qrData);
+        const allowedDomains = ["elmenu.ar", "www.elmenu.ar", window.location.hostname];
+        if (allowedDomains.includes(url.hostname)) {
+          window.location.href = qrData;
+        } else {
+          alert("QR no reconocido. Solo se aceptan códigos QR de este sistema.");
+        }
+      } catch {
+        alert("QR inválido.");
+      }
     } else {
       alert(`QR detectado: ${qrData}`);
     }

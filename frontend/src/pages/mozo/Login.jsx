@@ -23,15 +23,17 @@ export default function MozoLogin() {
     setLoading(true);
     try {
       const res = await api.post("/auth/login", form);
-      const { token, user } = res.data;
+      const { token, usuario } = res.data.data;
 
-      if (user.rol !== "mozo") {
+      if (usuario.rol !== "mozo") {
         toast.error("Esta sección es solo para mozos");
         return;
       }
 
+      // Normalizar id → _id para uso interno
+      const mozoData = { ...usuario, _id: usuario.id || usuario._id };
       localStorage.setItem("token", token);
-      localStorage.setItem("mozoData", JSON.stringify(user));
+      localStorage.setItem("mozoData", JSON.stringify(mozoData));
       navigate(`/mozo/${slug}/mesas`);
     } catch (err) {
       toast.error(err.response?.data?.message || "Credenciales incorrectas");

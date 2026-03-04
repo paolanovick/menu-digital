@@ -4,6 +4,7 @@ import {
   getRestauranteBySlug,
   getPlatos,
   getPlatosDestacados,
+  getCategorias,
 } from "../services/api";
 import { ThemeProvider } from "../context/ThemeContext";
 import Header from "../components/Header";
@@ -14,7 +15,7 @@ import AnunciosTicker from "../components/AnunciosTicker";
 import Footer from "../components/Footer";
 
 export default function CategoryPage() {
-  const { slug } = useParams();
+  const { slug, categoriaSlug } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -22,33 +23,37 @@ export default function CategoryPage() {
   const [platos, setPlatos] = useState([]);
   const [platosDestacados, setPlatosDestacados] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // Obtener info de categoría desde location.state
-  const categoriaId = location.state?.categoriaId;
-  const categoriaNombre = location.state?.categoriaNombre || "Menú";
+  const [categoriaNombre, setCategoriaNombre] = useState(location.state?.categoriaNombre || "");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Obtener restaurante
         const resRestaurante = await getRestauranteBySlug(slug);
-        setRestaurante(resRestaurante.data.data);
+        const restData = resRestaurante.data.data;
+        setRestaurante(restData);
+        const restauranteId = restData._id;
 
-        const restauranteId = resRestaurante.data.data._id;
-
-        // Obtener platos destacados (para carousel)
         const resDestacados = await getPlatosDestacados(restauranteId);
         setPlatosDestacados(resDestacados.data.data);
 
-        // Obtener platos de esta categoría
-        if (categoriaId) {
-          const resPlatos = await getPlatos(restauranteId, categoriaId);
-          setPlatos(resPlatos.data.data);
-        } else {
-          // Si no hay categoriaId, mostrar todos
-          const resPlatos = await getPlatos(restauranteId);
-          setPlatos(resPlatos.data.data);
+        // Resolver categoriaId: desde state (navegación directa) o desde URL (deep-link/refresh)
+        let catId = location.state?.categoriaId || null;
+        if (!catId && categoriaSlug) {
+          const resCats = await getCategorias(restauranteId);
+          const cats = resCats.data.data;
+          const match = cats.find((c) => {
+            const cs = c.nombre.toLowerCase().normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "-");
+            return cs === categoriaSlug;
+          });
+          if (match) {
+            catId = match._id;
+            setCategoriaNombre(match.nombre);
+          }
         }
+
+        const resPlatos = await getPlatos(restauranteId, catId || undefined);
+        setPlatos(resPlatos.data.data);
       } catch (error) {
         console.error("Error:", error);
       } finally {
@@ -57,7 +62,7 @@ export default function CategoryPage() {
     };
 
     fetchData();
-  }, [slug, categoriaId]);
+  }, [slug, categoriaSlug]);
 
   if (loading) {
     return (
@@ -98,7 +103,7 @@ export default function CategoryPage() {
         <Header restaurante={restaurante} />
         <AnunciosTicker
           restauranteId={restaurante._id}
-          categoriaId={categoriaId}
+          categoriaId={location.state?.categoriaId}
         />
 
         <div className="container mx-auto px-4 py-6">
