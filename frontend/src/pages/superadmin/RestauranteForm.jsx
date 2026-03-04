@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import DashboardLayout from "../../components/admin/DashboardLayout";
-import { Save, ArrowLeft, UserCircle } from "lucide-react";
+import { Save, ArrowLeft, UserCircle, AlertTriangle } from "lucide-react";
 import api from "../../services/api";
 import toast from "react-hot-toast";
 
@@ -13,6 +13,7 @@ export default function RestauranteForm() {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     nombre: "",
+    slug: "",
     descripcion: "",
     logo: "",
     email: "",
@@ -45,6 +46,7 @@ export default function RestauranteForm() {
 
       setFormData({
         nombre: rest.nombre,
+        slug: rest.slug || "",
         descripcion: rest.descripcion || "",
         logo: rest.logo || "",
         email: rest.contacto?.email || "",
@@ -72,6 +74,7 @@ export default function RestauranteForm() {
     try {
       const data = {
         nombre: formData.nombre,
+        slug: formData.slug,
         descripcion: formData.descripcion,
         logo: formData.logo,
         contacto: {
@@ -171,6 +174,31 @@ export default function RestauranteForm() {
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine focus:border-transparent"
                   required
                 />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Slug (URL) *
+                </label>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-400 whitespace-nowrap">elmenu.ar/</span>
+                  <input
+                    type="text"
+                    name="slug"
+                    value={formData.slug}
+                    onChange={handleChange}
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine focus:border-transparent"
+                    placeholder="mi-restaurante"
+                    pattern="[a-z0-9\-]+"
+                    required
+                  />
+                </div>
+                {isEditing && (
+                  <div className="flex items-start gap-1.5 mt-1.5 text-amber-600">
+                    <AlertTriangle size={13} className="flex-shrink-0 mt-0.5" />
+                    <p className="text-xs">Cambiar el slug rompe los QR codes y URLs existentes del restaurante</p>
+                  </div>
+                )}
               </div>
 
               <div className="md:col-span-2">
