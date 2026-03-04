@@ -99,7 +99,19 @@ exports.getRestauranteById = async (req, res) => {
 // Crear restaurante (superadmin)
 exports.crearRestaurante = async (req, res) => {
   try {
-    const restaurante = await Restaurante.create(req.body);
+    const { adminNombre, adminEmail, adminPassword, ...restData } = req.body;
+
+    const restaurante = await Restaurante.create(restData);
+
+    if (adminEmail && adminPassword) {
+      await Usuario.create({
+        nombre: adminNombre || adminEmail,
+        email: adminEmail,
+        password: adminPassword,
+        rol: "admin",
+        restauranteId: restaurante._id,
+      });
+    }
 
     res.status(201).json({
       success: true,
