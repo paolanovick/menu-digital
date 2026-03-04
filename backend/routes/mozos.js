@@ -89,13 +89,15 @@ router.put("/:id", protect, soloAdmin, async (req, res) => {
   }
 });
 
-// DELETE /api/mozos/:id - desactivar mozo
+// DELETE /api/mozos/:id - eliminar mozo
 router.delete("/:id", protect, soloAdmin, async (req, res) => {
   try {
-    await Usuario.findOneAndUpdate(
-      { _id: req.params.id, restauranteId: req.usuario.restauranteId, rol: "mozo" },
-      { activo: false }
-    );
+    const mozo = await Usuario.findOneAndDelete({
+      _id: req.params.id,
+      restauranteId: req.usuario.restauranteId,
+      rol: "mozo",
+    });
+    if (!mozo) return res.status(404).json({ success: false, message: "Mozo no encontrado" });
     res.json({ success: true, message: "Mozo eliminado" });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
