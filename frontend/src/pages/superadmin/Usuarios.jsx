@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import DashboardLayout from "../../components/admin/DashboardLayout";
-import { Plus, Trash2, Shield, User, Edit, ChefHat, Store } from "lucide-react";
-import { getSuperadminUsuarios, eliminarUsuarioSuperadmin } from "../../services/api";
+import { Plus, Trash2, Shield, User, Edit, ChefHat, Store, AlertTriangle } from "lucide-react";
+import { getSuperadminUsuarios, getSuperadminRestaurantes, eliminarUsuarioSuperadmin } from "../../services/api";
 import toast from "react-hot-toast";
 
 const ROL_BADGE = {
@@ -58,21 +58,28 @@ function UsuarioFila({ usuario, onEliminar }) {
 
 export default function Usuarios() {
   const [usuarios, setUsuarios] = useState([]);
+  const [restaurantes, setRestaurantes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [busqueda, setBusqueda] = useState("");
 
-  useEffect(() => { fetchUsuarios(); }, []);
+  useEffect(() => { fetchData(); }, []);
 
-  const fetchUsuarios = async () => {
+  const fetchData = async () => {
     try {
-      const res = await getSuperadminUsuarios();
-      setUsuarios(res.data.data);
+      const [resUsuarios, resRestaurantes] = await Promise.all([
+        getSuperadminUsuarios(),
+        getSuperadminRestaurantes(),
+      ]);
+      setUsuarios(resUsuarios.data.data);
+      setRestaurantes(resRestaurantes.data.data);
     } catch {
       toast.error("Error al cargar usuarios");
     } finally {
       setLoading(false);
     }
   };
+
+  const fetchUsuarios = fetchData;
 
   const handleEliminar = async (id, nombre) => {
     if (!confirm(`¿Eliminar al usuario "${nombre}"?`)) return;
@@ -108,6 +115,10 @@ export default function Usuarios() {
   const grupos = Object.values(mapaRestaurantes).sort((a, b) =>
     a.restaurante.nombre.localeCompare(b.restaurante.nombre)
   );
+
+  // Restaurantes sin ningún usuario
+  const idsConUsuarios = new Set(Object.keys(mapaRestaurantes));
+  const sinUsuarios = restaurantes.filter((r) => !idsConUsuarios.has(r._id));
 
   // Filtro de búsqueda
   const filtrar = (lista) =>
@@ -236,7 +247,37 @@ export default function Usuarios() {
           </div>
         ))}
 
-        {gruposFiltrados.length === 0 && filtrar(superadmins).length === 0 && (
+        {/* Restaurantes sin usuarios */}
+        {!busqueda && sinUsuarios.length > 0 && (
+          <div className="bg-amber-50 rounded-xl border border-amber-200 overflow-hidden">
+            <div className="flex items-center gap-2 px-4 py-3 bg-amber-100 border-b border-amber-200">
+              <AlertTriangle size={16} className="text-amber-600" />
+              <span className="font-semibold text-amber-800 text-sm">Sin administrador asignado</span>
+              <span className="ml-auto text-xs text-amber-600">{sinUsuarios.length} restaurante{sinUsuarios.length !== 1 ? "s" : ""}</span>
+            </div>
+            <div className="p-2 space-y-1">
+              {sinUsuarios.map((rest) => (
+                <div key={rest._id} className="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-amber-100/50">
+                  <div className="h-8 w-8 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
+                    <Store size={15} className="text-amber-600" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-gray-800 truncate">{rest.nombre}</p>
+                    <p className="text-xs text-gray-500">{rest.slug}</p>
+                  </div>
+                  <Link
+                    to={`/superadmin/restaurantes/${rest._id}/editar`}
+                    className="text-xs px-3 py-1.5 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-all font-medium whitespace-nowrap"
+                  >
+                    + Crear admin
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {gruposFiltrados.length === 0 && filtrar(superadmins).length === 0 && sinUsuarios.length === 0 && (
           <div className="text-center py-16 text-gray-400">
             <User size={40} className="mx-auto mb-3 opacity-30" />
             <p>No se encontraron usuarios</p>
