@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import DashboardLayout from "../../components/admin/DashboardLayout";
-import { Save, ArrowLeft } from "lucide-react";
+import { Save, ArrowLeft, UserCircle } from "lucide-react";
 import api from "../../services/api";
 import toast from "react-hot-toast";
 
@@ -26,6 +26,9 @@ export default function RestauranteForm() {
     sistemaMozosActivo: false,
     envioGratis: false,
     costoEnvio: 0,
+    adminNombre: "",
+    adminEmail: "",
+    adminPassword: "",
   });
 
   useEffect(() => {
@@ -91,11 +94,20 @@ export default function RestauranteForm() {
 
       if (isEditing) {
         await api.put(`/superadmin/restaurantes/${id}`, data);
-        // Por:
         toast.success("Restaurante actualizado correctamente");
       } else {
-        await api.post("/superadmin/restaurantes", data);
-        toast.success("Restaurante creado correctamente");
+        if (!formData.adminEmail || !formData.adminPassword) {
+          toast.error("El email y contraseña del administrador son requeridos");
+          setLoading(false);
+          return;
+        }
+        await api.post("/superadmin/restaurantes", {
+          ...data,
+          adminNombre: formData.adminNombre,
+          adminEmail: formData.adminEmail,
+          adminPassword: formData.adminPassword,
+        });
+        toast.success("Restaurante y administrador creados correctamente");
       }
 
       navigate("/superadmin/restaurantes");
@@ -369,6 +381,63 @@ export default function RestauranteForm() {
             </div>
           </div>
         </div>
+
+          {/* Cuenta del Administrador — solo al crear */}
+          {!isEditing && (
+            <div className="pt-6 border-t">
+              <div className="flex items-center gap-2 mb-1">
+                <UserCircle size={20} className="text-wine" />
+                <h2 className="text-xl font-bold text-gray-800">Cuenta del Administrador</h2>
+              </div>
+              <p className="text-sm text-gray-500 mb-4">
+                Se creará automáticamente junto con el restaurante
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Nombre completo
+                  </label>
+                  <input
+                    type="text"
+                    name="adminNombre"
+                    value={formData.adminNombre}
+                    onChange={handleChange}
+                    placeholder="Ej: Juan García"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Email del admin *
+                  </label>
+                  <input
+                    type="email"
+                    name="adminEmail"
+                    value={formData.adminEmail}
+                    onChange={handleChange}
+                    placeholder="admin@restaurante.com"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine focus:border-transparent"
+                    required={!isEditing}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Contraseña *
+                  </label>
+                  <input
+                    type="password"
+                    name="adminPassword"
+                    value={formData.adminPassword}
+                    onChange={handleChange}
+                    placeholder="Mínimo 6 caracteres"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-wine focus:border-transparent"
+                    required={!isEditing}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
 
         {/* Botones */}
         <div className="flex items-center justify-end gap-4 mt-8 pt-6 border-t">
