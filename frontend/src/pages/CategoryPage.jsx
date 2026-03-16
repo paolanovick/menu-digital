@@ -133,9 +133,11 @@ export default function CategoryPage() {
 
           {/* Grid de platos */}
           {platos.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="flex flex-wrap justify-center gap-6">
               {platos.map((plato) => (
-                <PlatoCard key={plato._id} plato={plato} />
+                <div key={plato._id} className="w-full sm:w-[280px]">
+                  <PlatoCard plato={plato} />
+                </div>
               ))}
             </div>
           ) : (
