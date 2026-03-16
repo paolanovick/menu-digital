@@ -97,7 +97,7 @@ export default function Envios() {
         </section>
 
         {/* Categorías */}
-        <div className="space-y-16 px-4">
+        <div className="space-y-16 container mx-auto px-4">
           <h2 className="font-display text-3xl font-bold text-center mb-6">
             Te llevamos tu pedido a donde estés
           </h2>
