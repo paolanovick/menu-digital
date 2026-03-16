@@ -49,7 +49,7 @@ export default function CarouselDestacados({ platos }) {
         {items.map((plato, index) => (
           <div
             key={`${plato._id}-${index}`}
-            className="min-w-[260px] sm:min-w-[280px] lg:min-w-[300px]"
+            className="w-[220px] sm:w-[240px] lg:w-[260px] flex-shrink-0"
           >
             <div className="bg-white rounded-3xl shadow-card overflow-hidden hover:shadow-card-hover transition-all duration-300">
               <div className="relative h-40 bg-gray-100 overflow-hidden">
