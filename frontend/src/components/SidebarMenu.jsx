@@ -259,7 +259,15 @@ export default function SidebarMenu({ isOpen, onClose, restaurante }) {
             {/* Footer del Sidebar */}
             <div className="p-4 border-t bg-gray-50">
               <p className="text-center text-xs text-gray-400">
-                Powered by MenuDigital
+                Powered by{" "}
+                <a
+                  href="https://landing.elmenu.ar/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold text-gray-500 hover:text-wine transition-colors"
+                >
+                  elmenu.ar
+                </a>
               </p>
             </div>
           </motion.aside>
