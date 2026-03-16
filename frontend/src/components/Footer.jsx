@@ -229,9 +229,14 @@ export default function Footer({ restaurante }) {
             </p>
             <div className="flex items-center gap-2">
               <span className="text-xs text-gray-400">Powered by</span>
-              <span className="text-sm font-semibold text-gray-700">
-                ConCodigoART
-              </span>
+              <a
+                href="https://landing.elmenu.ar/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm font-semibold text-gray-700 hover:text-wine transition-colors"
+              >
+                elmenu.ar
+              </a>
               <span className="text-gray-400">✨</span>
             </div>
           </div>
