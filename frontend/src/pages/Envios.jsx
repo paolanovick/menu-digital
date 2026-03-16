@@ -104,7 +104,7 @@ export default function Envios() {
           {productosPorCategoria.map(({ categoria, productos }) =>
             productos.length > 0 ? (
               <section key={categoria._id}>
-                <h3 className="font-display text-2xl font-bold mb-4">
+                <h3 className="font-display text-2xl font-bold mb-4 text-center">
                   {categoria.nombre}
                 </h3>
                 <CarouselEnvios productos={productos} />

@@ -48,11 +48,11 @@ export default function CarouselEnvios({ productos }) {
       )}
 
       {/* Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-2">
+      <div className="flex flex-wrap justify-center gap-4 px-2">
         {visible.map((producto) => (
           <div
             key={producto._id}
-            className="bg-white rounded-2xl shadow-card hover:shadow-card-hover transition-all overflow-hidden flex flex-col"
+            className="bg-white rounded-2xl shadow-card hover:shadow-card-hover transition-all overflow-hidden flex flex-col w-full sm:w-[260px]"
           >
             {/* Imagen */}
             <div className="relative h-40 bg-gray-100">
