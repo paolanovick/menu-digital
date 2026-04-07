@@ -42,6 +42,7 @@ const features = [
     color: "from-violet-500/20 to-violet-500/5",
     border: "border-violet-500/30",
     iconColor: "text-violet-400",
+    image: "/tucomida.png",
   },
   {
     icon: ShoppingBag,
@@ -50,6 +51,7 @@ const features = [
     color: "from-emerald-500/20 to-emerald-500/5",
     border: "border-emerald-500/30",
     iconColor: "text-emerald-400",
+    image: "/carrito.png",
   },
   {
     icon: ChefHat,
@@ -58,6 +60,7 @@ const features = [
     color: "from-amber-500/20 to-amber-500/5",
     border: "border-amber-500/30",
     iconColor: "text-amber-400",
+    image: "/mozo.png",
   },
   {
     icon: LayoutDashboard,
@@ -66,6 +69,7 @@ const features = [
     color: "from-sky-500/20 to-sky-500/5",
     border: "border-sky-500/30",
     iconColor: "text-sky-400",
+    image: "/admin.png",
   },
   {
     icon: Globe,
@@ -74,14 +78,16 @@ const features = [
     color: "from-pink-500/20 to-pink-500/5",
     border: "border-pink-500/30",
     iconColor: "text-pink-400",
+    image: "/tucomida.png",
   },
   {
     icon: Zap,
-    title: "Activación inmediata",
+    title: "Carta siempre actualizada",
     description: "En minutos tu menú está online. Cargás tus platos, configurás y ya podés compartirlo.",
     color: "from-wine/20 to-wine/5",
     border: "border-wine/30",
     iconColor: "text-wine-light",
+    image: "/platos.png",
   },
 ];
 
@@ -227,19 +233,40 @@ export default function Welcome() {
             </div>
 
             {/* Feature grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-14">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-14">
               {features.map((f) => {
                 const Icon = f.icon;
                 return (
                   <div
                     key={f.title}
-                    className={`relative p-5 rounded-2xl border ${f.border} bg-gradient-to-br ${f.color} backdrop-blur-sm hover:scale-[1.02] transition-all duration-300 group`}
+                    className={`relative p-5 rounded-2xl border ${f.border} bg-gradient-to-br ${f.color} backdrop-blur-sm hover:scale-[1.02] transition-all duration-300 group flex flex-col`}
                   >
-                    <div className={`w-10 h-10 rounded-xl bg-gray-800/80 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                      <Icon className={`w-5 h-5 ${f.iconColor}`} />
+                    {/* Phone mockup */}
+                    <div className="flex justify-center mb-5">
+                      <div className="relative w-32 h-56">
+                        {/* Phone frame */}
+                        <div className="absolute inset-0 rounded-[20px] border-2 border-gray-600 bg-gray-900 shadow-2xl overflow-hidden">
+                          {/* Notch */}
+                          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-3 bg-gray-900 rounded-b-xl z-10" />
+                          {/* Screen */}
+                          <img
+                            src={f.image}
+                            alt={f.title}
+                            className="w-full h-full object-cover object-top"
+                          />
+                        </div>
+                        {/* Glow */}
+                        <div className={`absolute inset-0 rounded-[20px] blur-xl opacity-20 bg-gradient-to-b ${f.color} -z-10 scale-110`} />
+                      </div>
                     </div>
-                    <h3 className="text-white font-semibold text-base mb-2">{f.title}</h3>
-                    <p className="text-gray-400 text-sm leading-relaxed">{f.description}</p>
+
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-7 h-7 rounded-lg bg-gray-800/80 flex items-center justify-center flex-shrink-0">
+                        <Icon className={`w-4 h-4 ${f.iconColor}`} />
+                      </div>
+                      <h3 className="text-white font-semibold text-sm">{f.title}</h3>
+                    </div>
+                    <p className="text-gray-400 text-xs leading-relaxed">{f.description}</p>
                   </div>
                 );
               })}
