@@ -29,6 +29,7 @@ import MozoLogin from "./pages/mozo/Login";
 import MozoMesas from "./pages/mozo/Mesas";
 import MozoPedido from "./pages/mozo/Pedido";
 import ProtectedRoute from "./components/admin/ProtectedRoute";
+import ClarityBySlug from "./lib/ClarityBySlug";
 import SuperadminDashboard from "./pages/superadmin/Dashboard";
 import SuperadminRestaurantes from "./pages/superadmin/Restaurantes";
 import SuperadminUsuarios from "./pages/superadmin/Usuarios";
@@ -41,6 +42,7 @@ function App() {
     <CartProvider>
       <AuthProvider>
         <Router>
+          <ClarityBySlug />
           <Toaster
             position="top-center"
             toastOptions={{
