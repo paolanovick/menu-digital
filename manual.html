@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Manual de Uso - Menú Digital</title>
+<style>
+  @page { size: A4; margin: 22mm 18mm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    color: #2d2d2d;
+    line-height: 1.65;
+    font-size: 11pt;
+    margin: 0;
+  }
+  h1 {
+    color: #a83132;
+    font-size: 26pt;
+    border-bottom: 3px solid #a83132;
+    padding-bottom: 8px;
+    margin-top: 28px;
+    page-break-after: avoid;
+  }
+  h2 {
+    color: #a83132;
+    font-size: 18pt;
+    margin-top: 36px;
+    border-bottom: 1px solid #e0c4c4;
+    padding-bottom: 4px;
+    page-break-after: avoid;
+    page-break-before: auto;
+  }
+  h2:first-of-type { page-break-before: avoid; }
+  h3 {
+    color: #5b1a1b;
+    font-size: 13pt;
+    margin-top: 20px;
+    page-break-after: avoid;
+  }
+  h4 {
+    color: #5b1a1b;
+    font-size: 11pt;
+    margin-top: 14px;
+    page-break-after: avoid;
+  }
+  p { margin: 8px 0; }
+  ul, ol { margin: 8px 0 8px 0; padding-left: 24px; }
+  li { margin: 4px 0; }
+  strong { color: #1f1f1f; }
+  code {
+    background: #f4f0eb;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 9.5pt;
+    color: #a83132;
+  }
+  pre {
+    background: #f4f0eb;
+    border-left: 4px solid #a83132;
+    padding: 12px 16px;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-size: 9.5pt;
+    page-break-inside: avoid;
+  }
+  pre code {
+    background: transparent;
+    padding: 0;
+    color: #2d2d2d;
+  }
+  blockquote {
+    border-left: 4px solid #d4a574;
+    background: #fff8ef;
+    padding: 10px 16px;
+    margin: 12px 0;
+    color: #5b3a1a;
+    border-radius: 0 6px 6px 0;
+    page-break-inside: avoid;
+  }
+  blockquote p { margin: 4px 0; }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 14px 0;
+    font-size: 10pt;
+    page-break-inside: avoid;
+  }
+  th {
+    background: #a83132;
+    color: white;
+    padding: 8px 10px;
+    text-align: left;
+    font-weight: 600;
+  }
+  td {
+    padding: 7px 10px;
+    border-bottom: 1px solid #e8e8e8;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #faf7f2; }
+  a { color: #a83132; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  hr {
+    border: none;
+    border-top: 1px solid #e0c4c4;
+    margin: 28px 0;
+  }
+  /* Índice */
+  h2:first-of-type + ol,
+  h1 + ol {
+    background: #faf7f2;
+    padding: 18px 18px 18px 42px;
+    border-radius: 8px;
+    border-left: 4px solid #a83132;
+  }
+  /* Evitar cortes feos */
+  table, pre, blockquote { page-break-inside: avoid; }
+  h1, h2, h3, h4 { page-break-after: avoid; }
+</style>
+</head>
+<body>
+<h1>📘 Manual de Uso — Menú Digital</h1>
+<p>Bienvenido. Esta guía te enseña paso a paso cómo administrar tu restaurante en la plataforma. Está pensada para que cualquier persona, sin conocimientos técnicos, pueda configurar y gestionar el menú, los pedidos, las mesas y los mozos.</p>
+<hr>
+<h2>📑 Índice</h2>
+<ol>
+<li><a href="#1-conceptos-b%C3%A1sicos">Conceptos básicos</a></li>
+<li><a href="#2-c%C3%B3mo-entrar-al-panel-de-administraci%C3%B3n">Cómo entrar al panel de administración</a></li>
+<li><a href="#3-configuraci%C3%B3n-inicial-del-restaurante">Configuración inicial del restaurante</a></li>
+<li><a href="#4-crear-y-gestionar-categor%C3%ADas">Crear y gestionar Categorías</a></li>
+<li><a href="#5-cargar-productos-platos">Cargar Productos (Platos)</a></li>
+<li><a href="#6-importar-el-men%C3%BA-desde-excel">Importar el menú desde Excel</a></li>
+<li><a href="#7-crear-anuncios-y-promociones">Crear Anuncios y Promociones</a></li>
+<li><a href="#8-activar-y-configurar-delivery">Activar y configurar Delivery</a></li>
+<li><a href="#9-activar-y-configurar-el-sistema-de-mozos">Activar y configurar el Sistema de Mozos</a></li>
+<li><a href="#10-cargar-mesas">Cargar Mesas</a></li>
+<li><a href="#11-cargar-mozos">Cargar Mozos</a></li>
+<li><a href="#12-gestionar-pedidos">Gestionar Pedidos</a></li>
+<li><a href="#13-c%C3%B3mo-lo-usa-el-cliente-final-men%C3%BA-digital">Cómo lo usa el cliente final (Menú Digital)</a></li>
+<li><a href="#14-c%C3%B3mo-lo-usa-el-cliente-final-delivery">Cómo lo usa el cliente final (Delivery)</a></li>
+<li><a href="#15-c%C3%B3mo-lo-usa-el-mozo-sal%C3%B3n">Cómo lo usa el Mozo (Salón)</a></li>
+<li><a href="#16-consejos-y-preguntas-frecuentes">Consejos y preguntas frecuentes</a></li>
+</ol>
+<hr>
+<h2>1. Conceptos básicos</h2>
+<p>Tu restaurante tiene <strong>dos modos de uso</strong> que pueden funcionar al mismo tiempo:</p>
+<ul>
+<li><strong>Menú Digital con Delivery</strong> → los clientes ven el menú desde su celular (escaneando un QR o entrando a un link) y pueden hacer pedidos a domicilio que llegan por WhatsApp.</li>
+<li><strong>Sistema de Mozos</strong> → los mozos del salón usan sus celulares para tomar pedidos por mesa, controlar el estado de las mesas (libre / ocupada) y enviar los pedidos a cocina.</li>
+</ul>
+<p>Cada restaurante tiene:</p>
+<ul>
+<li>Un <strong>link público</strong> del estilo <code>tudominio.com/tu-restaurante</code> para los clientes.</li>
+<li>Un <strong>panel de administración</strong> en <code>tudominio.com/admin</code> solo para vos.</li>
+<li>Una <strong>interfaz de mozos</strong> en <code>tudominio.com/mozo/tu-restaurante</code> solo para tu equipo.</li>
+</ul>
+<hr>
+<h2>2. Cómo entrar al panel de administración</h2>
+<ol>
+<li>Abrí tu navegador y entrá a <code>https://tudominio.com/admin/login</code>.</li>
+<li>Ingresá tu <strong>email</strong> y <strong>contraseña</strong>.</li>
+<li>Hacé clic en <strong>Ingresar</strong>.</li>
+</ol>
+<p>Vas a entrar al <strong>Dashboard</strong>, donde verás:</p>
+<ul>
+<li>Cantidad total de platos cargados.</li>
+<li>Cantidad de categorías.</li>
+<li>Platos destacados.</li>
+<li>Platos agotados.</li>
+<li>Accesos rápidos para agregar plato, importar menú o ir a configuración.</li>
+</ul>
+<blockquote>
+<p>💡 Del lado izquierdo (o pulsando el ☰ en celular) tenés el menú con todas las secciones: <strong>Dashboard, Platos, Categorías, Anuncios, Pedidos, Mesas, Mozos, Importar, Configuración</strong>.</p>
+</blockquote>
+<hr>
+<h2>3. Configuración inicial del restaurante</h2>
+<p>Antes de cargar productos, configurá los datos básicos del restaurante. Andá a <strong>Configuración</strong> (menú lateral). Vas a ver 6 pestañas:</p>
+<h3>3.1 Info Básica</h3>
+<ul>
+<li><strong>Nombre del Restaurante</strong>: aparece en el menú público.</li>
+<li><strong>Descripción</strong>: breve texto que el cliente verá debajo del logo.</li>
+<li>Hacé clic en <strong>Guardar Cambios</strong>.</li>
+</ul>
+<h3>3.2 Tema y Logo</h3>
+<p>Personalizá la apariencia de tu menú:</p>
+<ul>
+<li><strong>URL del Logo</strong>: pegá el link de la imagen de tu logo (lo subís a un servicio como imgbb.com o Cloudinary y copiás el enlace).</li>
+<li><strong>Tipografía</strong>: elegí entre 8 fuentes (Playfair, Montserrat, Lora, Poppins, etc.).</li>
+<li><strong>Color Primario</strong>: color principal (botones, precios). Por defecto es bordó.</li>
+<li><strong>Color Secundario</strong>: color de acentos.</li>
+<li><strong>Color de Fondo</strong>: fondo del menú.</li>
+<li><strong>Color de Texto</strong>: texto principal.</li>
+</ul>
+<p>Vas viendo una <strong>Vista Previa</strong> abajo en tiempo real. Cuando esté como querés, <strong>Guardar Cambios</strong>.</p>
+<h3>3.3 Contacto</h3>
+<ul>
+<li><strong>Email</strong>, <strong>Teléfono</strong>, <strong>WhatsApp</strong> (con código de país, ej: <code>5491123456789</code>).</li>
+<li><strong>Dirección</strong> completa (calle, ciudad, provincia, código postal).</li>
+<li><strong>Redes sociales</strong>: Instagram y Facebook (solo el usuario, sin @).</li>
+</ul>
+<blockquote>
+<p>⚠️ El WhatsApp es <strong>crítico</strong>: es a donde van a llegar los pedidos. Asegurate de cargarlo bien.</p>
+</blockquote>
+<h3>3.4 Horarios</h3>
+<p>Cargá los horarios de apertura y cierre para cada día de la semana. Si un día está cerrado, dejalo vacío.</p>
+<h3>3.5 Servicios</h3>
+<ul>
+<li><strong>Delivery</strong>: activá o desactivá si querés que se muestre la opción de envíos en el menú público.</li>
+</ul>
+<h3>3.6 Pedidos</h3>
+<p>Acá configurás cómo funciona la toma de pedidos. Ver detalles en las secciones <a href="#8-activar-y-configurar-delivery">Delivery</a> y <a href="#9-activar-y-configurar-el-sistema-de-mozos">Mozos</a>.</p>
+<hr>
+<h2>4. Crear y gestionar Categorías</h2>
+<p>Las categorías agrupan tus productos (Entradas, Pizzas, Bebidas, Postres, etc.). <strong>Es lo primero que tenés que cargar</strong> antes de los platos.</p>
+<h3>Crear una categoría</h3>
+<ol>
+<li>En el menú lateral, andá a <strong>Categorías</strong>.</li>
+<li>Hacé clic en <strong>+ Nueva Categoría</strong>.</li>
+<li>Completá:<ul>
+<li><strong>Nombre</strong> (obligatorio): ej. &quot;Entradas&quot;.</li>
+<li><strong>Descripción</strong> (opcional).</li>
+<li><strong>URL de imagen</strong> (opcional): si subís una imagen, se usa en lugar del icono.</li>
+<li><strong>Icono</strong>: si no usás imagen, elegí uno de los emojis (🍽️ 🍕 🍔 🥗 🍰 🍺 ☕ 🥘 🍜 🍱 🌮 🍟) o escribí el tuyo.</li>
+<li><strong>Visible en el menú</strong>: dejalo tildado para que aparezca.</li>
+</ul>
+</li>
+<li>Hacé clic en <strong>Crear</strong>.</li>
+</ol>
+<h3>Acciones disponibles sobre cada categoría</h3>
+<ul>
+<li>👁️ <strong>Mostrar/Ocultar</strong>: el ojo a la derecha. Útil para esconder temporalmente (ej. &quot;Helados&quot; en invierno).</li>
+<li>✏️ <strong>Editar</strong>: cambiar nombre, icono, imagen.</li>
+<li>🗑️ <strong>Eliminar</strong>: borrar la categoría. ⚠️ Solo se puede si no tiene platos asociados.</li>
+</ul>
+<hr>
+<h2>5. Cargar Productos (Platos)</h2>
+<p>Esta es la sección más importante. Cada plato/bebida/producto se carga acá.</p>
+<h3>Agregar un plato manualmente</h3>
+<ol>
+<li>Andá a <strong>Platos</strong> en el menú lateral.</li>
+<li>Hacé clic en <strong>+ Nuevo Plato</strong> (o en el Dashboard usá el acceso rápido &quot;Agregar Plato&quot;).</li>
+<li>Completá el formulario:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Obligatorio</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Nombre</strong></td>
+<td>✅</td>
+<td>Nombre del producto. Ej: &quot;Milanesa Napolitana&quot;.</td>
+</tr>
+<tr>
+<td><strong>Descripción</strong></td>
+<td>—</td>
+<td>Texto que verá el cliente.</td>
+</tr>
+<tr>
+<td><strong>Precio</strong></td>
+<td>✅</td>
+<td>Solo números. Ej: <code>1500</code>.</td>
+</tr>
+<tr>
+<td><strong>Stock</strong></td>
+<td>✅</td>
+<td>Cantidad disponible. Si va a 0, el plato se marca como agotado.</td>
+</tr>
+<tr>
+<td><strong>Orden</strong></td>
+<td>—</td>
+<td>Número 1-10 para ordenar manualmente (1 aparece primero).</td>
+</tr>
+<tr>
+<td><strong>Imagen (URL)</strong></td>
+<td>—</td>
+<td>Link directo a la foto del plato.</td>
+</tr>
+<tr>
+<td><strong>Categoría</strong></td>
+<td>✅</td>
+<td>Elegí una sola tildando la tarjeta.</td>
+</tr>
+<tr>
+<td><strong>Ingredientes</strong></td>
+<td>—</td>
+<td>Separados por comas: <code>carne, queso, jamón</code>.</td>
+</tr>
+<tr>
+<td><strong>Alérgenos</strong></td>
+<td>—</td>
+<td>Separados por comas, <strong>sin acentos</strong>: <code>gluten, lacteos</code>.</td>
+</tr>
+<tr>
+<td><strong>⭐ Producto destacado</strong></td>
+<td>—</td>
+<td>Si lo activás, aparece en el carrusel de destacados.</td>
+</tr>
+<tr>
+<td><strong>🎁 Sugerir como incentivo</strong></td>
+<td>—</td>
+<td>Marca este plato como promoción especial.</td>
+</tr>
+<tr>
+<td><strong>Etiquetas</strong></td>
+<td>—</td>
+<td>Tildá las que correspondan: 🌱 Vegetariano, 🌿 Vegano, 🌾 Sin Gluten, 🌶️ Picante.</td>
+</tr>
+</tbody></table>
+<ol start="4">
+<li>Hacé clic en <strong>Guardar</strong>.</li>
+</ol>
+<h3>Editar / Eliminar / Destacar un plato</h3>
+<p>En la lista de <strong>Platos</strong> podés:</p>
+<ul>
+<li>Buscar por nombre.</li>
+<li>Filtrar por categoría.</li>
+<li>⭐ Marcar/desmarcar como destacado con un clic.</li>
+<li>✏️ Editar.</li>
+<li>🗑️ Eliminar.</li>
+</ul>
+<blockquote>
+<p>💡 <strong>Stock = 0</strong> → el plato aparece como &quot;Agotado&quot; en el menú público (no se puede pedir).</p>
+</blockquote>
+<hr>
+<h2>6. Importar el menú desde Excel</h2>
+<p>Si tenés muchos productos, en vez de cargarlos uno por uno, podés subir un Excel con todo.</p>
+<h3>Paso a paso</h3>
+<ol>
+<li>Andá a <strong>Importar</strong> en el menú lateral.</li>
+<li>Hacé clic en <strong>Descargar Plantilla Excel</strong> → se baja un archivo <code>plantilla-menu.xlsx</code>.</li>
+<li>Abrí el Excel y completá una fila por cada plato. Columnas:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Obligatoria</th>
+<th>Ejemplo</th>
+<th>Notas</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>categoria</code></td>
+<td>✅</td>
+<td>Entradas</td>
+<td>Nombre de la categoría. Si no existe, se crea automáticamente.</td>
+</tr>
+<tr>
+<td><code>nombre</code></td>
+<td>✅</td>
+<td>Empanadas de carne</td>
+<td></td>
+</tr>
+<tr>
+<td><code>descripcion</code></td>
+<td>—</td>
+<td>Caseras al horno</td>
+<td></td>
+</tr>
+<tr>
+<td><code>precio</code></td>
+<td>✅</td>
+<td>1200</td>
+<td>Solo números, sin <code>$</code>.</td>
+</tr>
+<tr>
+<td><code>imagen_url</code></td>
+<td>—</td>
+<td>https://...</td>
+<td>URL de la foto.</td>
+</tr>
+<tr>
+<td><code>ingredientes</code></td>
+<td>—</td>
+<td>carne,cebolla,huevo</td>
+<td>Separados por comas.</td>
+</tr>
+<tr>
+<td><code>alergenos</code></td>
+<td>—</td>
+<td>gluten,lacteos</td>
+<td><strong>Sin acentos</strong>.</td>
+</tr>
+<tr>
+<td><code>vegetariano</code></td>
+<td>—</td>
+<td>si / no</td>
+<td>Solo <code>si</code> o <code>no</code>.</td>
+</tr>
+</tbody></table>
+<ol start="4">
+<li>Guardá el Excel.</li>
+<li>Volvé a <strong>Importar</strong>, hacé clic en <strong>Seleccionar Archivo</strong> y elegí tu Excel.</li>
+<li>Hacé clic en <strong>Importar Menú</strong>.</li>
+<li>Vas a ver el resultado: cuántos platos se crearon, cuántas categorías nuevas y si hubo errores (con número de fila).</li>
+</ol>
+<blockquote>
+<p>⚠️ <strong>No cambies los nombres de las columnas</strong> del Excel ni borres ninguna. Si lo hacés, la importación falla.</p>
+</blockquote>
+<hr>
+<h2>7. Crear Anuncios y Promociones</h2>
+<p>Los <strong>anuncios</strong> aparecen como un cartel que se desliza arriba del menú (tipo banner). Sirven para comunicar promos, horarios especiales o avisos.</p>
+<h3>Crear un anuncio</h3>
+<ol>
+<li>Andá a <strong>Anuncios</strong> → <strong>+ Nuevo Anuncio</strong>.</li>
+<li>Completá:<ul>
+<li><strong>Mensaje</strong> (máx. 200 caracteres): ej. <em>&quot;Lunes a Viernes: 20% OFF Banco Galicia hasta las 11am&quot;</em>.</li>
+<li><strong>Icono</strong>: elegí un emoji (📢 🎉 🔥 💰 ⭐ 🍕 🎁 💳) o escribí otro.</li>
+<li><strong>Alcance</strong>:<ul>
+<li><strong>🌐 Global</strong>: aparece en todas las páginas del menú.</li>
+<li><strong>Por categoría</strong>: solo cuando el cliente entra a esa categoría.</li>
+</ul>
+</li>
+<li><strong>Activo</strong>: tildado para que aparezca, destildado para ocultarlo sin borrarlo.</li>
+</ul>
+</li>
+<li>Hacé clic en <strong>Crear</strong>.</li>
+</ol>
+<h3>Activar/Desactivar al instante</h3>
+<p>En la lista de anuncios, hacé clic en el botón <strong>Activo/Inactivo</strong> para encender o apagar sin necesidad de eliminar.</p>
+<hr>
+<h2>8. Activar y configurar Delivery</h2>
+<p>El delivery permite que clientes pidan a domicilio desde el menú público. El pedido se guarda en tu sistema y te llega por WhatsApp.</p>
+<h3>Activar Delivery</h3>
+<ol>
+<li>Andá a <strong>Configuración</strong> → pestaña <strong>Servicios</strong>.</li>
+<li>Tildá <strong>Delivery</strong>.</li>
+<li><strong>Guardar Cambios</strong>.</li>
+</ol>
+<h3>Configurar costo de envío</h3>
+<ol>
+<li>Andá a <strong>Configuración</strong> → pestaña <strong>Pedidos</strong>.</li>
+<li>Opciones:<ul>
+<li><strong>Envío Gratis</strong>: tildalo y en el menú aparecerá &quot;GRATIS&quot;.</li>
+<li><strong>Costo fijo</strong>: si destildaste lo anterior, escribí el costo. Si dejás <code>0</code>, aparecerá &quot;A coordinar&quot;.</li>
+</ul>
+</li>
+<li><strong>Guardar Cambios</strong>.</li>
+</ol>
+<h3>Personalizar el mensaje de WhatsApp del pedido</h3>
+<p>En la misma pestaña <strong>Pedidos</strong>, hay un cuadro grande para el mensaje. Si lo dejás vacío, se usa el mensaje por defecto. Si querés personalizarlo, podés usar estas <strong>variables</strong> (se reemplazan solas con los datos reales):</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Reemplaza con</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>{items}</code></td>
+<td>Lista de productos pedidos</td>
+</tr>
+<tr>
+<td><code>{subtotal}</code></td>
+<td>Subtotal del pedido</td>
+</tr>
+<tr>
+<td><code>{envio}</code></td>
+<td>Costo de envío</td>
+</tr>
+<tr>
+<td><code>{total}</code></td>
+<td>Total final</td>
+</tr>
+<tr>
+<td><code>{direccion}</code></td>
+<td>Dirección de entrega</td>
+</tr>
+<tr>
+<td><code>{telefono}</code></td>
+<td>Teléfono del cliente</td>
+</tr>
+<tr>
+<td><code>{notas}</code></td>
+<td>Notas que dejó el cliente</td>
+</tr>
+</tbody></table>
+<p><strong>Ejemplo de mensaje personalizado</strong>:</p>
+<pre><code>🛵 NUEVO PEDIDO
+
+{items}
+
+Subtotal: {subtotal}
+Envío: {envio}
+TOTAL: {total}
+
+📍 Dirección: {direccion}
+📞 Tel: {telefono}
+
+Notas: {notas}
+</code></pre>
+<hr>
+<h2>9. Activar y configurar el Sistema de Mozos</h2>
+<p>Si tenés mesas y querés que tus mozos tomen pedidos desde el celular, activá este sistema.</p>
+<h3>Activar Sistema de Mozos</h3>
+<ol>
+<li>Andá a <strong>Configuración</strong> → pestaña <strong>Pedidos</strong>.</li>
+<li>Tildá <strong>Sistema de Mozos</strong>.</li>
+<li><strong>Guardar Cambios</strong>.</li>
+</ol>
+<blockquote>
+<p>💡 Al activarlo, en el menú lateral aparecen automáticamente las secciones <strong>Mesas</strong> y <strong>Mozos</strong>.</p>
+</blockquote>
+<hr>
+<h2>10. Cargar Mesas</h2>
+<p>Antes de que los mozos tomen pedidos, tenés que dar de alta las mesas del salón.</p>
+<h3>Crear una mesa</h3>
+<ol>
+<li>Andá a <strong>Mesas</strong> → <strong>+ Nueva Mesa</strong>.</li>
+<li>Completá:<ul>
+<li><strong>Número de mesa</strong> (obligatorio): ej. <code>1</code>, <code>2</code>, <code>15</code>.</li>
+<li><strong>Nombre / Sector</strong> (opcional): ej. &quot;Terraza&quot;, &quot;VIP&quot;, &quot;Salón&quot;.</li>
+<li><strong>Capacidad</strong>: cantidad de personas. Default: 4.</li>
+</ul>
+</li>
+<li><strong>Guardar</strong>.</li>
+</ol>
+<h3>Estados de una mesa</h3>
+<p>Cada mesa tiene un color según su estado:</p>
+<ul>
+<li>🟢 <strong>Libre</strong> (verde): disponible para tomar pedido.</li>
+<li>🔴 <strong>Ocupada</strong> (rojo): ya hay un pedido en curso.</li>
+<li>🟡 <strong>Reservada</strong> (amarillo): reservada para una hora específica.</li>
+</ul>
+<h3>Editar / Eliminar</h3>
+<p>En la grilla de mesas, cada tarjeta tiene los iconos ✏️ (editar) y 🗑️ (eliminar).</p>
+<hr>
+<h2>11. Cargar Mozos</h2>
+<p>Cada mozo debe tener su usuario propio para poder iniciar sesión en la app de mozos.</p>
+<h3>Crear un mozo</h3>
+<ol>
+<li>Andá a <strong>Mozos</strong> → <strong>+ Nuevo Mozo</strong>.</li>
+<li>Completá:<ul>
+<li><strong>Nombre</strong> (obligatorio): nombre real del mozo.</li>
+<li><strong>Email</strong> (obligatorio): será su usuario para entrar.</li>
+<li><strong>Contraseña</strong> (obligatorio): mínimo 6 caracteres. Anotala y compartila con el mozo.</li>
+<li><strong>Teléfono</strong> (opcional).</li>
+</ul>
+</li>
+<li><strong>Guardar</strong>.</li>
+</ol>
+<h3>Editar / Desactivar un mozo</h3>
+<ul>
+<li>✏️ <strong>Editar</strong>: cambiar nombre, email, teléfono. También podés cambiarle la contraseña (dejá el campo vacío si no querés cambiarla).</li>
+<li><strong>Activo / Inactivo</strong>: si el mozo dejó de trabajar, destildá <strong>Mozo activo</strong> en lugar de eliminarlo. Así guarda el historial.</li>
+<li>🗑️ <strong>Eliminar</strong>: lo borra definitivamente.</li>
+</ul>
+<hr>
+<h2>12. Gestionar Pedidos</h2>
+<p>Todos los pedidos (de delivery y de mesa) caen acá en tiempo real.</p>
+<p>Andá a <strong>Pedidos</strong> en el menú lateral. La pantalla se <strong>refresca sola cada 30 segundos</strong>, o podés hacer clic en <strong>Actualizar</strong>.</p>
+<h3>Filtros disponibles</h3>
+<ul>
+<li><strong>Tipo</strong>: Todos / Delivery / Mesa.</li>
+<li><strong>Estado</strong>: Todos / Nuevo / Preparando / Listo / Entregado / Cancelado.</li>
+</ul>
+<h3>Cada pedido te muestra</h3>
+<ul>
+<li>🛵 (delivery) o 🪑 (mesa) y número de orden.</li>
+<li>Si es de mesa: número de mesa y nombre del mozo.</li>
+<li>Fecha y hora.</li>
+<li>Lista de productos con cantidades y precios.</li>
+<li><strong>Total</strong>.</li>
+<li>Dirección y teléfono (si es delivery).</li>
+<li>Notas del cliente (si dejó).</li>
+</ul>
+<h3>Flujo del pedido</h3>
+<p>Cada pedido pasa por estos estados:</p>
+<ol>
+<li><strong>Nuevo</strong> (azul) → recién entró.</li>
+<li><strong>Preparando</strong> (amarillo) → en cocina.</li>
+<li><strong>Listo</strong> (verde) → para entregar/servir.</li>
+<li><strong>Entregado</strong> (gris) → ya cerrado.</li>
+</ol>
+<p>Para avanzar al siguiente estado, hacé clic en el botón <strong>→ [Siguiente estado]</strong>. También podés <strong>Cancelar</strong> un pedido si hace falta.</p>
+<hr>
+<h2>13. Cómo lo usa el cliente final (Menú Digital)</h2>
+<p>Este es el flujo que vive tu cliente cuando entra a ver el menú.</p>
+<ol>
+<li>El cliente abre el link de tu restaurante (<code>tudominio.com/tu-restaurante</code>) o escanea el <strong>QR</strong> que tengas en la mesa.</li>
+<li>Ve la pantalla principal con:<ul>
+<li>Logo y nombre del restaurante.</li>
+<li>Banner de anuncios deslizándose arriba (si tenés activos).</li>
+<li>Grilla de <strong>categorías</strong>.</li>
+</ul>
+</li>
+<li>Hace clic en una categoría y ve la lista de productos con foto, precio, descripción, ingredientes y etiquetas (🌱 vegetariano, 🌶️ picante, etc.).</li>
+<li>Si el plato está <strong>agotado</strong>, lo ve marcado y no puede pedirlo.</li>
+</ol>
+<blockquote>
+<p>💡 Si solo querés ofrecer el menú <strong>como carta digital</strong> (sin delivery ni pedidos), simplemente <strong>desactivá Delivery</strong> y no actives Sistema de Mozos. Los clientes verán todo el menú pero sin botones para pedir.</p>
+</blockquote>
+<hr>
+<h2>14. Cómo lo usa el cliente final (Delivery)</h2>
+<p>Si activaste Delivery, el flujo del cliente es:</p>
+<ol>
+<li>Entra al menú (igual que antes).</li>
+<li>Hace clic en <strong>Delivery</strong> desde el menú principal.</li>
+<li>Navega categorías y va sumando productos al <strong>carrito</strong>:<ul>
+<li>Botón <strong>+</strong> para agregar.</li>
+<li>Botón <strong>−</strong> para quitar.</li>
+</ul>
+</li>
+<li>Cuando termina, va al <strong>Checkout</strong> y completa:<ul>
+<li><strong>Dirección</strong> de entrega.</li>
+<li><strong>Teléfono</strong> de contacto.</li>
+<li><strong>Email</strong> (opcional).</li>
+<li><strong>Notas</strong> del pedido (opcional).</li>
+</ul>
+</li>
+<li>Ve el resumen con subtotal + envío + total.</li>
+<li>Hace clic en <strong>Confirmar Pedido</strong>:<ul>
+<li>El pedido se <strong>guarda automáticamente</strong> en tu sistema (lo ves en la sección <strong>Pedidos</strong>).</li>
+<li>Se abre <strong>WhatsApp</strong> con el mensaje del pedido listo para enviar a tu número.</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>💡 Aunque el cliente no envíe el WhatsApp, el pedido <strong>ya quedó guardado</strong> en tu panel, así que no perdés ventas.</p>
+</blockquote>
+<hr>
+<h2>15. Cómo lo usa el Mozo (Salón)</h2>
+<p>Solo si activaste el <strong>Sistema de Mozos</strong>.</p>
+<h3>Cómo entra el mozo</h3>
+<ol>
+<li>Desde el celular, el mozo abre <code>tudominio.com/mozo/tu-restaurante</code>.</li>
+<li>Ingresa el <strong>email</strong> y la <strong>contraseña</strong> que vos le diste.</li>
+<li>Hace clic en <strong>Ingresar</strong>.</li>
+</ol>
+<h3>Lo que ve el mozo</h3>
+<ul>
+<li>Su nombre arriba a la izquierda.</li>
+<li>Todas las mesas con colores: 🟢 libre, 🔴 ocupada, 🟡 reservada.</li>
+<li>Leyenda con los colores.</li>
+</ul>
+<h3>Tomar un pedido</h3>
+<ol>
+<li>El mozo toca una mesa <strong>libre</strong> (verde).</li>
+<li>Entra al menú interno: navega categorías y toca productos.</li>
+<li>Cada producto suma con <strong>+</strong> y se resta con <strong>−</strong>.</li>
+<li>Arriba se va viendo el contador de ítems del pedido.</li>
+<li>Puede escribir <strong>notas</strong> (ej. &quot;sin sal&quot;, &quot;para llevar&quot;).</li>
+<li>Toca <strong>Enviar Pedido</strong>:<ul>
+<li>El pedido se <strong>guarda</strong> en tu panel.</li>
+<li>La mesa pasa automáticamente a 🔴 <strong>Ocupada</strong>.</li>
+<li>Se abre WhatsApp con el mensaje del pedido.</li>
+</ul>
+</li>
+</ol>
+<h3>Liberar una mesa</h3>
+<p>Cuando los clientes se van:</p>
+<ol>
+<li>El mozo toca una mesa <strong>ocupada</strong> (roja).</li>
+<li>Aparece un cuadro: <strong>¿Liberar mesa?</strong>.</li>
+<li>Toca <strong>Liberar mesa</strong> → vuelve a 🟢 verde.</li>
+</ol>
+<h3>Cerrar sesión</h3>
+<p>Botón <strong>Salir</strong> arriba a la derecha.</p>
+<hr>
+<h2>16. Consejos y preguntas frecuentes</h2>
+<h3>⭐ Orden recomendado para empezar de cero</h3>
+<ol>
+<li>Configuración → Info Básica, Tema, Contacto, Horarios.</li>
+<li>Crear <strong>Categorías</strong>.</li>
+<li>Cargar <strong>Platos</strong> (manual o por Excel).</li>
+<li>Crear <strong>Anuncios</strong> (opcional).</li>
+<li>Si vas a usar delivery → Configuración → Servicios + Pedidos (costo de envío, mensaje).</li>
+<li>Si vas a usar mozos → Configuración → Pedidos → activar Sistema de Mozos → cargar Mesas → cargar Mozos.</li>
+</ol>
+<h3>❓ Preguntas frecuentes</h3>
+<p><strong>¿Cuánto tarda en aparecer un cambio?</strong>
+Es inmediato. En cuanto guardás, ya se ve en el menú público.</p>
+<p><strong>¿Puedo tener delivery y mozos al mismo tiempo?</strong>
+Sí, los dos sistemas son independientes.</p>
+<p><strong>Un plato no aparece en el menú público.</strong>
+Revisá:</p>
+<ul>
+<li>Que la <strong>categoría</strong> esté visible (👁️).</li>
+<li>Que el plato tenga <strong>stock &gt; 0</strong>.</li>
+<li>Que tenga categoría asignada.</li>
+</ul>
+<p><strong>El cliente confirma el pedido pero no me llega WhatsApp.</strong>
+El mensaje se abre en el celular del cliente, él tiene que apretar enviar. Pero <strong>el pedido ya quedó guardado</strong> en tu panel → revisalo en la sección <strong>Pedidos</strong>.</p>
+<p><strong>¿Cómo cambio mi contraseña de admin?</strong>
+Por ahora se hace desde el panel del <strong>Superadmin</strong>. Pedile al soporte de Con Código Art que la actualice.</p>
+<p><strong>¿Los mozos pueden ver el panel de admin?</strong>
+No. Cada mozo tiene un acceso limitado solo a <code>mozo/tu-restaurante</code>, donde ve únicamente mesas y el menú para tomar pedidos.</p>
+<p><strong>¿Cómo cambio el número de WhatsApp donde llegan los pedidos?</strong>
+Configuración → pestaña <strong>Contacto</strong> → campo <strong>WhatsApp</strong> (incluir código de país: <code>5491123456789</code>).</p>
+<p><strong>¿Puedo desactivar un plato sin borrarlo?</strong>
+Sí, ponele <strong>Stock = 0</strong>. Va a quedar como &quot;Agotado&quot; y no se puede pedir, pero los datos quedan guardados para reactivarlo después.</p>
+<p><strong>¿Puedo tener una imagen distinta para cada categoría?</strong>
+Sí, en Categorías → Editar → URL de imagen. La imagen pisa al icono.</p>
+<h3>🆘 Soporte</h3>
+<p>Si tenés algún problema o duda, contactá al soporte de <strong>Con Código Art</strong> (concodigoart.com).</p>
+
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "name": "menu-digital-docs",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tooling para generar el manual de cliente en HTML",
+  "scripts": {
+    "build:manual": "node manual-build.js"
+  },
+  "devDependencies": {
+    "marked": "^14.1.3"
+  }
+}
