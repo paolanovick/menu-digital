@@ -35,6 +35,7 @@ import SuperadminRestaurantes from "./pages/superadmin/Restaurantes";
 import SuperadminUsuarios from "./pages/superadmin/Usuarios";
 import RestauranteForm from "./pages/superadmin/RestauranteForm";
 import UsuarioForm from "./pages/superadmin/UsuarioForm";
+import CookieBanner from "./components/CookieBanner";
 import "./App.css";
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
       <AuthProvider>
         <Router>
           <ClarityBySlug />
+          <CookieBanner />
           <Toaster
             position="top-center"
             toastOptions={{
