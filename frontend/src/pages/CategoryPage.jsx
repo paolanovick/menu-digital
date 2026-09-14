@@ -3,12 +3,10 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import {
   getRestauranteBySlug,
   getPlatos,
-  getPlatosDestacados,
   getCategorias,
 } from "../services/api";
 import { ThemeProvider } from "../context/ThemeContext";
 import Header from "../components/Header";
-import CarouselDestacados from "../components/CarouselDestacados";
 import PlatoCard from "../components/PlatoCard";
 import { ArrowLeft } from "lucide-react";
 import AnunciosTicker from "../components/AnunciosTicker";
@@ -21,7 +19,6 @@ export default function CategoryPage() {
 
   const [restaurante, setRestaurante] = useState(null);
   const [platos, setPlatos] = useState([]);
-  const [platosDestacados, setPlatosDestacados] = useState([]);
   const [loading, setLoading] = useState(true);
   const [categoriaNombre, setCategoriaNombre] = useState(location.state?.categoriaNombre || "");
 
@@ -32,9 +29,6 @@ export default function CategoryPage() {
         const restData = resRestaurante.data.data;
         setRestaurante(restData);
         const restauranteId = restData._id;
-
-        const resDestacados = await getPlatosDestacados(restauranteId);
-        setPlatosDestacados(resDestacados.data.data);
 
         // Resolver categoriaId: desde state (navegación directa) o desde URL (deep-link/refresh)
         let catId = location.state?.categoriaId || null;
@@ -115,16 +109,6 @@ export default function CategoryPage() {
             <ArrowLeft size={20} />
             Volver a categorías
           </button>
-
-          {/* Carousel de destacados */}
-          {platosDestacados.length > 0 && (
-            <>
-              <h2 className="font-display text-3xl md:text-4xl font-bold text-center mb-8 mt-6">
-                Te recomendamos
-              </h2>
-              <CarouselDestacados platos={platosDestacados} />
-            </>
-          )}
 
           {/* Título de categoría */}
           <h1 className="font-display text-3xl md:text-4xl font-bold text-center mb-8 mt-12">

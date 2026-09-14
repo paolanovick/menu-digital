@@ -1,25 +1,41 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getRestauranteBySlug, getCategorias } from "../services/api";
+import { getRestauranteBySlug, getCategorias, getPlatos } from "../services/api";
 import { ThemeProvider } from "../context/ThemeContext";
 import CategoryIcon from "../components/CategoryIcon";
 import Header from "../components/Header";
 import AnunciosTicker from "../components/AnunciosTicker";
 import Footer from "../components/Footer";
+import CarouselDestacados from "../components/CarouselDestacados";
 
+const destacados = [
+  { nombre: "Tortilla de papas", video: "/cinematic-menu/tortilla2-sin-fondo-blanco.mp4?v=5d1ef7b120" },
+  { nombre: "Milanesa con guarnición", video: "/cinematic-menu/milanesa-sin-fondo-blanco.mp4?v=c0039135ae" },
+  { nombre: "Bife de chorizo", video: "/cinematic-menu/bife-de-chorizo-sin-fondo-blanco.mp4?v=f65a675a08" },
+];
+
+const normalizarNombre = (nombre) => (nombre || "")
+  .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+  .toLowerCase().trim().replace(/\s+/g, " ");
 
 export default function Home() {
   const { slug } = useParams();
   const navigate = useNavigate();
   const [restaurante, setRestaurante] = useState(null);
   const [categorias, setCategorias] = useState([]);
+  const [platosDestacados, setPlatosDestacados] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
     const fetchData = async () => {
+      setLoading(true);
+      setRestaurante(null);
+      setPlatosDestacados([]);
       try {
         const resRestaurante = await getRestauranteBySlug(slug);
         const rest = resRestaurante.data.data;
+        if (cancelled) return;
         setRestaurante(rest);
 
         // Guardar configuración en localStorage
@@ -32,15 +48,26 @@ export default function Home() {
         );
 
         const resCategorias = await getCategorias(rest._id);
+        if (cancelled) return;
         setCategorias(resCategorias.data.data);
+        if (slug === "tucomida") {
+          const resPlatos = await getPlatos(rest._id);
+          if (cancelled) return;
+          setPlatosDestacados(destacados.flatMap((destacado) => {
+            const plato = resPlatos.data.data.find((item) =>
+              normalizarNombre(item.nombre) === normalizarNombre(destacado.nombre));
+            return plato ? [{ ...plato, video: destacado.video, poster: plato.imagen }] : [];
+          }));
+        }
       } catch (error) {
         console.error("Error:", error);
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     };
 
     fetchData();
+    return () => { cancelled = true; };
   }, [slug]);
 
   if (loading) {
@@ -107,6 +134,15 @@ export default function Home() {
             </p>
           )}
         </div>
+
+        {slug === "tucomida" && platosDestacados.length > 0 && (
+          <section className="container mx-auto px-4" aria-labelledby="destacados-titulo">
+            <h2 id="destacados-titulo" className="font-display text-3xl md:text-4xl font-bold text-center mb-6">
+              Lo mejor de la casa
+            </h2>
+            <CarouselDestacados platos={platosDestacados} mostrarDetalles={false} />
+          </section>
+        )}
 
         {/* Categorías */}
         <div className="container mx-auto px-4">
