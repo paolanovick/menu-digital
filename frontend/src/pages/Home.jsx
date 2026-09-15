@@ -7,6 +7,7 @@ import Header from "../components/Header";
 import AnunciosTicker from "../components/AnunciosTicker";
 import Footer from "../components/Footer";
 import CarouselDestacados from "../components/CarouselDestacados";
+import styles from "./Home.module.css";
 
 const destacados = [
   { nombre: "Tortilla de papas", video: "/cinematic-menu/tortilla2-sin-fondo-blanco.mp4?v=5d1ef7b120" },
@@ -118,38 +119,40 @@ export default function Home() {
         <AnunciosTicker restauranteId={restaurante._id} />
 
         {/* Presentación y platos: dos columnas en desktop, apiladas en móvil. */}
-        <div className={mostrarDestacados ? "mx-auto grid max-w-6xl min-w-0 gap-8 px-4 py-10 md:grid-cols-2 md:items-center md:gap-10 md:py-16 lg:gap-16" : ""}>
-        <div className={mostrarDestacados ? "min-w-0 text-center md:text-left" : "text-center py-8 px-4"}>
+        <div className={mostrarDestacados ? styles.featuredHero : undefined}>
+        <div className={mostrarDestacados ? "mx-auto grid max-w-6xl min-w-0 gap-10 px-4 py-10 md:grid-cols-[1.15fr_1fr] md:items-center md:gap-10 md:py-14 lg:gap-16" : ""}>
+        <div className={mostrarDestacados ? "min-w-0 text-center" : "text-center py-8 px-4"}>
           {/* Logo grande */}
           {restaurante.logo && (
             <div className="mb-6">
               <img
                 src={restaurante.logo}
                 alt={restaurante.nombre}
-                className={mostrarDestacados ? "h-40 w-auto max-w-full mx-auto object-contain md:mx-0 md:h-48 lg:h-56" : "h-40 w-auto mx-auto object-contain"}
+                className={mostrarDestacados ? "h-48 w-auto max-w-full mx-auto object-contain md:h-64 lg:h-80" : "h-40 w-auto mx-auto object-contain"}
               />
             </div>
           )}
 
-          <h1 className={`font-display text-3xl md:text-4xl font-bold mb-6 ${mostrarDestacados ? "lg:text-5xl" : ""}`}>
+          <h1 className={`font-display font-bold mb-6 ${mostrarDestacados ? "text-4xl md:text-5xl lg:text-6xl tracking-tight" : "text-3xl md:text-4xl"}`}>
             {restaurante.nombre}
           </h1>
 
           {restaurante.descripcion && (
-            <p className={`text-lg text-gray-600 max-w-2xl mx-auto ${mostrarDestacados ? "md:mx-0" : ""}`}>
+            <p className={`text-gray-600 mx-auto ${mostrarDestacados ? "max-w-sm text-lg lg:text-xl font-medium" : "text-lg max-w-2xl"}`}>
               {restaurante.descripcion}
             </p>
           )}
         </div>
 
         {mostrarDestacados && (
-          <section className="min-w-0 [&>div]:mb-0" aria-labelledby="destacados-titulo">
-            <h2 id="destacados-titulo" className="font-display text-3xl md:text-4xl font-bold text-center mb-6">
+          <section className="w-full max-w-md mx-auto min-w-0 [&>div]:mb-0" aria-labelledby="destacados-titulo">
+            <h2 id="destacados-titulo" className="font-display text-2xl lg:text-3xl font-bold text-center mb-6">
               Lo mejor de la casa
             </h2>
             <CarouselDestacados platos={platosDestacados} mostrarDetalles={false} />
           </section>
         )}
+        </div>
         </div>
 
         {/* Categorías */}

@@ -1,0 +1,9 @@
+.featuredHero {
+  background: #eee9e2;
+  padding-bottom: clamp(2rem, 5vw, 4rem);
+  margin-bottom: 2rem;
+  /* La máscara deja ver el mantel por debajo del cierre ondulado. */
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath fill='white' d='M0 0H100V94C80 100 65 94 50 96S20 100 0 95Z'/%3E%3C/svg%3E");
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+}

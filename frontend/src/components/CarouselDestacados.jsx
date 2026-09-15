@@ -136,7 +136,7 @@ export default function CarouselDestacados({ platos = [], mostrarDetalles = true
           ))}
         </div>
       </div>
-      {count > 1 && (
+      {count > 1 && mostrarDetalles && (
         <>
           {mostrarDetalles && <>
           <button type="button" aria-label="Plato anterior" onClick={() => move(-1)} className="absolute left-1 top-1/2 -translate-y-1/2 rounded-full bg-wine text-white p-2.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
