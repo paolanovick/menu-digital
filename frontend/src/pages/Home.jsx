@@ -34,7 +34,11 @@ export default function Home() {
       setPlatosDestacados([]);
       try {
         const resRestaurante = await getRestauranteBySlug(slug);
-        const rest = resRestaurante.data.data;
+        const rest = { ...resRestaurante.data.data };
+        // Copia local del mismo logo; respetar otro logo si se cambia desde la API.
+        if (slug === "tucomida" && rest.logo === "https://i.ibb.co/23xq4LnD/logo-Menu-R.png") {
+          rest.logo = "/logoMenuR.png";
+        }
         if (cancelled) return;
         setRestaurante(rest);
 
@@ -94,6 +98,8 @@ export default function Home() {
     );
   }
 
+  const mostrarDestacados = slug === "tucomida" && platosDestacados.length > 0;
+
   return (
     <ThemeProvider tema={restaurante.tema}>
       <div
@@ -111,38 +117,40 @@ export default function Home() {
         <Header restaurante={restaurante} />
         <AnunciosTicker restauranteId={restaurante._id} />
 
-        {/* Hero */}
-        <div className="text-center py-8 px-4">
+        {/* Presentación y platos: dos columnas en desktop, apiladas en móvil. */}
+        <div className={mostrarDestacados ? "mx-auto grid max-w-6xl min-w-0 gap-8 px-4 py-10 md:grid-cols-2 md:items-center md:gap-10 md:py-16 lg:gap-16" : ""}>
+        <div className={mostrarDestacados ? "min-w-0 text-center md:text-left" : "text-center py-8 px-4"}>
           {/* Logo grande */}
           {restaurante.logo && (
             <div className="mb-6">
               <img
                 src={restaurante.logo}
                 alt={restaurante.nombre}
-                className="h-40 w-auto mx-auto object-contain" // Antes h-32, ahora h-40
+                className={mostrarDestacados ? "h-40 w-auto max-w-full mx-auto object-contain md:mx-0 md:h-48 lg:h-56" : "h-40 w-auto mx-auto object-contain"}
               />
             </div>
           )}
 
-          <h1 className="font-display text-3xl md:text-4xl font-bold mb-6">
+          <h1 className={`font-display text-3xl md:text-4xl font-bold mb-6 ${mostrarDestacados ? "lg:text-5xl" : ""}`}>
             {restaurante.nombre}
           </h1>
 
           {restaurante.descripcion && (
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className={`text-lg text-gray-600 max-w-2xl mx-auto ${mostrarDestacados ? "md:mx-0" : ""}`}>
               {restaurante.descripcion}
             </p>
           )}
         </div>
 
-        {slug === "tucomida" && platosDestacados.length > 0 && (
-          <section className="container mx-auto px-4" aria-labelledby="destacados-titulo">
+        {mostrarDestacados && (
+          <section className="min-w-0 [&>div]:mb-0" aria-labelledby="destacados-titulo">
             <h2 id="destacados-titulo" className="font-display text-3xl md:text-4xl font-bold text-center mb-6">
               Lo mejor de la casa
             </h2>
             <CarouselDestacados platos={platosDestacados} mostrarDetalles={false} />
           </section>
         )}
+        </div>
 
         {/* Categorías */}
         <div className="container mx-auto px-4">
